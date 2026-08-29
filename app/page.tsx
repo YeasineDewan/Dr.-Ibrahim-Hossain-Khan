@@ -4,7 +4,8 @@ import { useState } from 'react'
 import {
   Activity, ArrowRight, CalendarDays, Check, ChevronDown, Clock3, HeartPulse, Menu, Search, ShieldCheck,
   ShoppingBag, Stethoscope, Users, X, Package, LayoutDashboard, ClipboardList,
-  UserRound, BarChart3, Bell, Plus, SlidersHorizontal, MoreHorizontal, Sparkles
+  UserRound, BarChart3, Bell, Plus, SlidersHorizontal, MoreHorizontal, Sparkles,
+  Facebook, Phone, Instagram, MessageCircle, MapPin, Mail, ArrowUp
 } from 'lucide-react'
 import { AboutPage } from '../components/about-page'
 import { ChambersPage, UpgradeAppointment, MedicineUpgrade, Checkout, VideoStrip } from '../components/clinic-upgrade'
@@ -14,6 +15,7 @@ import { PricingPackages } from '../components/pricing-packages'
 import { FAQSection } from '../components/faq-section'
 import { BlogSection } from '../components/blog-section'
 import { ServicesDetail } from '../components/services-detail'
+import { AdminPanel } from '../components/admin-panel'
 
 const nav = ['Home', 'About', 'Services', 'Team', 'Pricing', 'Blog', 'Chambers', 'Appointment', 'Medicine', 'Contact']
 const services = [
@@ -40,16 +42,143 @@ function Pill({ children, tone = 'blue' }: { children: React.ReactNode; tone?: s
 
 function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
   const [open, setOpen] = useState(false)
+  const navLinks = ['Home', 'About', 'Services', 'Patient Gallery', 'Chambers & Map', 'Contact', 'Shop']
+  
   return <>
-    <div className="notice"><span>Accepting new patients</span><span className="notice-dot" /> Book a consultation today <ArrowRight size={14}/></div>
-    <header className="site-header"><div className="container header-inner">
-      <button className="brand" onClick={() => onNavigate('Home')}><span className="brand-mark"><Activity size={19}/></span><span>Dr. Ibrahim<small>CLINIC & WELLNESS</small></span></button>
-      <nav className={`main-nav ${open ? 'is-open' : ''}`}>{nav.map(item => <button key={item} onClick={() => { onNavigate(item); setOpen(false) }} className="nav-link">{item}</button>)}</nav>
-      <div className="header-actions"><button className="icon-btn" aria-label="Search"><Search size={18}/></button><Button onClick={() => onNavigate('Appointment')} className="header-cta">Book appointment <ArrowRight size={16}/></Button><button className="menu-btn" onClick={() => setOpen(!open)} aria-label="Open menu">{open ? <X/> : <Menu/>}</button></div>
-    </div></header>
+    {/* Top Bar */}
+    <div className="top-bar">
+      <div className="container top-bar-inner">
+        <div className="social-icons">
+          <a href="#" className="social-icon" aria-label="Facebook"><Facebook size={16} /></a>
+          <a href="#" className="social-icon" aria-label="WhatsApp"><MessageCircle size={16} /></a>
+          <a href="#" className="social-icon" aria-label="Instagram"><Instagram size={16} /></a>
+          <a href="#" className="social-icon" aria-label="Messenger"><MessageCircle size={16} /></a>
+        </div>
+        <div className="top-bar-text">
+          <span>consultation for skin and gut health</span>
+          <span className="special-offer">Special Offer: Up to 50% discount</span>
+        </div>
+        <div className="top-bar-phone">
+          <Phone size={16} />
+          <span>+880 1719 395 553</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Main Navigation */}
+    <header className="site-header">
+      <div className="container header-inner">
+        <button className="brand" onClick={() => onNavigate('Home')}>
+          <span className="brand-mark"><HeartPulse size={24}/></span>
+          <span className="brand-text">
+            Dr. Ibrahim Hossain Khan
+            <small>Skin & Integrative Medicine</small>
+          </span>
+        </button>
+        <nav className={`main-nav ${open ? 'is-open' : ''}`}>
+          {navLinks.map(item => <button key={item} onClick={() => { onNavigate(item); setOpen(false) }} className="nav-link">{item}</button>)}
+        </nav>
+        <div className="header-actions">
+          <Button onClick={() => onNavigate('Appointment')} className="header-cta">Book Appointment</Button>
+          <button className="menu-btn" onClick={() => setOpen(!open)} aria-label="Open menu">{open ? <X/> : <Menu/>}</button>
+        </div>
+      </div>
+    </header>
   </>
 }
-function Footer({ onNavigate }: { onNavigate: (p: string) => void }) { return <footer><div className="container footer-grid"><div><button className="brand footer-brand" onClick={() => onNavigate('Home')}><span className="brand-mark"><Activity size={19}/></span><span>Dr. Ibrahim<small>CLINIC & WELLNESS</small></span></button><p className="muted footer-copy">Modern medicine, delivered with patience, precision and genuine care.</p></div><div><h4>Explore</h4>{['About','Services','Chambers','Gallery'].map(x=><button key={x} onClick={()=>onNavigate(x)} className="footer-link">{x}</button>)}</div><div><h4>Visit</h4><p className="muted">12 Independence Avenue<br/>Accra, Ghana</p><p className="muted">Mon–Fri · 08:00–17:00</p></div><div><h4>Contact</h4><p className="muted">+233 30 290 4420</p><p className="muted">hello@dribrahim.clinic</p></div></div><div className="container footer-bottom"><span>© 2026 Dr. Ibrahim Clinic</span><span>Patient-first care, always.</span></div></footer> }
+function Footer({ onNavigate }: { onNavigate: (p: string) => void }) {
+  const [showScrollTop, setShowScrollTop] = useState(false)
+
+  // Handle scroll to show/hide scroll to top button
+  if (typeof window !== 'undefined') {
+    window.addEventListener('scroll', () => {
+      setShowScrollTop(window.scrollY > 300)
+    })
+  }
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const quickLinks = ['Home', 'About', 'Services', 'Chambers & Map', 'Gallery & Seminars', 'FAQ', 'Track Appointment', 'Contact Us']
+  const treatments = ['PRP Therapy', 'Psoriasis Treatment', 'Vitiligo Treatment', 'IBS & Gut Health']
+
+  return <footer className="new-footer">
+    <div className="container footer-container">
+      <div className="footer-grid">
+        {/* Column 1: Doctor Info */}
+        <div className="footer-column doctor-column">
+          <div className="footer-logo">
+            <div className="footer-logo-icon"><HeartPulse size={28} /></div>
+            <div className="footer-logo-text">
+              <h3>Dr. Ibrahim Hossain Khan</h3>
+              <p>Skin & Integrative Medicine</p>
+            </div>
+          </div>
+          <p className="doctor-description">A trusted approach to personalized skin, gut and integrative medical care.</p>
+          <div className="social-links">
+            <a href="#" className="social-link" aria-label="Facebook"><Facebook size={20} /></a>
+          </div>
+        </div>
+
+        {/* Column 2: Quick Links */}
+        <div className="footer-column">
+          <h4>Quick Links</h4>
+          <ul className="footer-links">
+            {quickLinks.map(link => <li key={link}><button onClick={() => onNavigate(link)}>{link}</button></li>)}
+          </ul>
+        </div>
+
+        {/* Column 3: Treatments */}
+        <div className="footer-column">
+          <h4>Treatments</h4>
+          <ul className="footer-links">
+            {treatments.map(treatment => <li key={treatment}><button onClick={() => onNavigate('Services')}>{treatment}</button></li>)}
+          </ul>
+        </div>
+
+        {/* Column 4: Chambers & Contact */}
+        <div className="footer-column contact-column">
+          <h4>Chambers & Contact</h4>
+          <div className="contact-item">
+            <MapPin size={18} />
+            <div>
+              <strong>Chamber Location</strong>
+              <p>Your chamber address will be here</p>
+            </div>
+          </div>
+          <div className="contact-item">
+            <Phone size={18} />
+            <div>
+              <strong>+880 1719 395 553</strong>
+              <p>Daily appointment support</p>
+            </div>
+          </div>
+          <div className="contact-item">
+            <Mail size={18} />
+            <div>
+              <strong>Official Email</strong>
+              <p>info@drkhan.com</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer Bottom */}
+      <div className="footer-bottom">
+        <div className="copyright">© 2026 Dr. Ibrahim Hossain Khan. All Rights Reserved.</div>
+        <div className="developer-credit">Developed by Your Developer Name</div>
+      </div>
+    </div>
+
+    {/* Scroll to Top Button */}
+    {showScrollTop && (
+      <button className="scroll-to-top" onClick={scrollToTop} aria-label="Scroll to top">
+        <ArrowUp size={20} />
+      </button>
+    )}
+  </footer>
+}
 
 function Home({ onNavigate }: { onNavigate: (p: string) => void }) { return <>
   <section className="hero"><div className="container hero-grid"><div className="hero-copy"><Pill>Trusted care in Accra</Pill><h1>Healthcare that feels <em>human.</em></h1><p>Expert medical care with the time, clarity and warmth you deserve. From preventive medicine to personalised wellness.</p><div className="hero-buttons"><Button onClick={() => onNavigate('Appointment')}>Book an appointment <ArrowRight size={17}/></Button><Button variant="ghost" onClick={() => onNavigate('Services')}>Explore our services</Button></div><div className="trust-row"><div className="avatar-stack"><span>AM</span><span>KO</span><span>DN</span></div><div><div className="stars">★★★★★ <b>4.9/5</b></div><small className="muted">Loved by 2,000+ patients</small></div></div></div><div className="hero-visual"><img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=1000&q=85" alt="Dr. Ibrahim in the clinic"/><div className="hero-card"><span className="status-dot"/><div><strong>Available today</strong><small>Next opening at 14:30</small></div><ArrowRight size={18}/></div><div className="hero-seal"><ShieldCheck size={20}/><span>15+<small>years of care</small></span></div></div></div></section>
