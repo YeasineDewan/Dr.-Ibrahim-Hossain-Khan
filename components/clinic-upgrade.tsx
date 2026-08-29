@@ -1,0 +1,330 @@
+'use client'
+import { useState } from 'react'
+import { ArrowRight, CalendarDays, Check, Clock3, Download, MapPin, Minus, Package, Phone, Plus, Play, ShoppingBag, Star, X } from 'lucide-react'
+
+const chambers = [
+  { name:'Dhanmondi Chamber', area:'Dhanmondi, Dhaka', address:'House 45, Road 22, Islam Tower, Lift 3rd floor', hours:'Sat–Thu · 9:00 AM – 2:00 PM', phone:'+880 1719 939553', map:'https://maps.google.com/?q=Dhanmondi+Dhaka', color:'blue' },
+  { name:'Banglamotor Chamber', area:'Banglamotor, Dhaka', address:'Rupayan Trade Center, Lift 3, 114 Kazi Nazrul Islam Avenue', hours:'Sun–Wed · 4:00 PM – 9:00 PM', phone:'+880 1719 939553', map:'https://maps.google.com/?q=Banglamotor+Dhaka', color:'teal' },
+  { name:'Uttara Wellness Studio', area:'Uttara, Dhaka', address:'Sector 7, Road 12, House 18, Level 2', hours:'Fri · 10:00 AM – 6:00 PM', phone:'+880 1719 939553', map:'https://maps.google.com/?q=Uttara+Dhaka', color:'sand' },
+]
+
+const products = [
+  { id:1, name:'Dr. Ibrahim Daily Defence SPF 50', desc:'Mineral sunscreen for sensitive, reactive skin.', price:28, category:'Skin care', image:'https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=700&q=80' },
+  { id:2, name:'Calm + Restore Serum', desc:'Barrier-supporting serum with ceramides and niacinamide.', price:34, category:'Skin care', image:'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=700&q=80' },
+  { id:3, name:'Magnesium Complex', desc:'A gentle evening formula for everyday wellbeing.', price:22, category:'Wellness', image:'https://images.unsplash.com/photo-1550572017-edd951aa8f72?auto=format&fit=crop&w=700&q=80' },
+  { id:4, name:'Gut Balance Probiotic', desc:'Daily support for a healthier, happier gut.', price:31, category:'Gut health', image:'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=700&q=80' },
+]
+
+const shopReviews = [
+  { name:'Amara M.', product:'Daily Defence SPF 50', text:'Genuinely the best SPF I have used. Lightweight and no white cast.', rating:5 },
+  { name:'Daniel O.', product:'Calm + Restore Serum', text:'My skin barrier has never felt better. Doctor-recommended and it shows.', rating:5 },
+  { name:'Sofia B.', product:'Gut Balance Probiotic', text:'Noticed a real difference within two weeks. Will keep reordering.', rating:5 },
+]
+
+function Button({children,onClick,variant='primary'}:{children:React.ReactNode;onClick?:()=>void;variant?:string}){
+  return <button className={`btn btn-${variant}`} onClick={onClick}>{children}</button>
+}
+
+export function ChambersPage({onNavigate}:{onNavigate:(p:string)=>void}){
+  const [active, setActive] = useState(0)
+  return (
+    <main className="page-section chambers-page">
+      <div className="container">
+        <span className="pill">Three ways to see us</span>
+        <h1>Find your <em>nearest chamber.</em></h1>
+        <p className="lead max-copy">Our care is available across Dhaka. Choose the location that fits your day, then book a time with Dr. Ibrahim.</p>
+        <div className="chamber-tabs">
+          {chambers.map((c,i)=>(
+            <button key={c.name} className={`chamber-tab${active===i?' active':''}`} onClick={()=>setActive(i)}>
+              <MapPin size={14}/>{c.name}
+            </button>
+          ))}
+        </div>
+        <div className="chamber-grid">
+          {chambers.map((c,i)=>(
+            <article className={`chamber-card chamber-${c.color}${active===i?' chamber-active':''}`} key={c.name} onClick={()=>setActive(i)}>
+              <div className="chamber-top">
+                <span className="map-pin"><MapPin size={19}/></span>
+                <span className="open-now">Open today</span>
+              </div>
+              <h2>{c.name}</h2>
+              <p className="chamber-area">{c.area}</p>
+              <p>{c.address}</p>
+              <div className="chamber-line"><Clock3 size={16}/><span>{c.hours}</span></div>
+              <div className="chamber-line"><Phone size={16}/><span>{c.phone}</span></div>
+              <div className="chamber-actions">
+                <a className="btn btn-outline" href={c.map} target="_blank" rel="noreferrer">Google Maps <ArrowRight size={15}/></a>
+                <Button onClick={()=>onNavigate('Appointment')}>Book here</Button>
+              </div>
+            </article>
+          ))}
+        </div>
+        <div className="map-banner">
+          <div>
+            <span className="pill pill-teal">Easy to reach</span>
+            <h2>Care, wherever you are.</h2>
+            <p>All chambers are close to public transport with clear directions, accessible entrances and welcoming reception teams.</p>
+            <Button onClick={()=>onNavigate('Appointment')}>Book an appointment <ArrowRight size={15}/></Button>
+          </div>
+          <div className="map-art"><MapPin size={30}/><span>DHAKA<br/><small>3 connected locations</small></span></div>
+        </div>
+      </div>
+    </main>
+  )
+}
+
+export function UpgradeAppointment({onNavigate}:{onNavigate:(p:string)=>void}){
+  const [step,setStep]=useState(1)
+  const [chamber,setChamber]=useState('')
+  const [service,setService]=useState('')
+  const [selectedDate,setSelectedDate]=useState(1)
+  const [selectedTime,setSelectedTime]=useState('')
+  const dates=['18 Jun','19 Jun','20 Jun','21 Jun']
+  const times=['09:00 AM','10:30 AM','01:00 PM','04:30 PM','06:00 PM']
+  return (
+    <main className="page-section appointment-upgrade">
+      <div className="container narrow">
+        <span className="pill">Personalised booking</span>
+        <h1>Book care around <em>your life.</em></h1>
+        <p className="lead">A simple, thoughtful booking experience. Most visits take 30–45 minutes.</p>
+        <div className="booking-progress">
+          {['Service','Chamber','Time','Details','Confirm'].map((x,i)=>(
+            <div className={step>i?'progress-item active':'progress-item'} key={x}>
+              <span>{step>i+1?<Check size={13}/>:i+1}</span>{x}
+            </div>
+          ))}
+        </div>
+        <div className="booking-card advanced-booking">
+          {step===1&&<>
+            <h2>What would you like help with?</h2>
+            <div className="booking-options">
+              {['Skin & VD Integrative Medicine','PRP Therapy','Psoriasis Treatment','Vitiligo Treatment','IBS & Gut Health','General consultation'].map(x=>(
+                <button className={service===x?'booking-option selected':'booking-option'} onClick={()=>setService(x)} key={x}>
+                  <span>{x}</span><ArrowRight size={16}/>
+                </button>
+              ))}
+            </div>
+          </>}
+          {step===2&&<>
+            <h2>Select a chamber</h2>
+            <div className="mini-chambers">
+              {chambers.map(c=>(
+                <button className={chamber===c.name?'mini-chamber selected':'mini-chamber'} onClick={()=>setChamber(c.name)} key={c.name}>
+                  <MapPin size={16}/><strong>{c.name}</strong><small>{c.hours}</small>
+                </button>
+              ))}
+            </div>
+          </>}
+          {step===3&&<>
+            <h2>Choose a time</h2>
+            <div className="date-row">
+              {dates.map((x,i)=>(
+                <button className={selectedDate===i?'date selected':'date'} onClick={()=>setSelectedDate(i)} key={x}>
+                  <strong>{x.split(' ')[0]}</strong><small>{x.split(' ')[1]}</small>
+                </button>
+              ))}
+            </div>
+            <div className="time-grid">
+              {times.map(x=>(
+                <button className={selectedTime===x?'time selected':'time'} onClick={()=>setSelectedTime(x)} key={x}>
+                  <Clock3 size={15}/>{x}
+                </button>
+              ))}
+            </div>
+          </>}
+          {step===4&&<>
+            <h2>Your details</h2>
+            <div className="form-grid">
+              <label>Full name<input placeholder="Your full name"/></label>
+              <label>Phone number<input placeholder="+880"/></label>
+              <label>Email address<input placeholder="you@example.com"/></label>
+              <label>Short note<input placeholder="What would you like us to know?"/></label>
+            </div>
+          </>}
+          {step===5&&<>
+            <div className="success-icon"><Check/></div>
+            <h2>Ready to confirm</h2>
+            <div className="review-row"><span>Specialist service</span><strong>{service||'General consultation'}</strong></div>
+            <div className="review-row"><span>Chamber</span><strong>{chamber||'Dhanmondi Chamber'}</strong></div>
+            <div className="review-row"><span>Date</span><strong>{dates[selectedDate]}</strong></div>
+            <div className="review-row"><span>Time</span><strong>{selectedTime||'10:30 AM'}</strong></div>
+            <p className="muted">Your reference will be <strong>DRI-260618</strong>. A confirmation will be sent to your phone.</p>
+          </>}
+          <div className="booking-actions">
+            {step>1&&<Button variant="ghost" onClick={()=>setStep(step-1)}>Back</Button>}
+            <Button onClick={()=>step<5?setStep(step+1):onNavigate('Home')}>{step===5?'Finish booking':'Continue'} <ArrowRight size={16}/></Button>
+          </div>
+        </div>
+      </div>
+    </main>
+  )
+}
+
+export function ShopUpgrade({onNavigate}:{onNavigate:(p:string)=>void}){
+  const [cart,setCart]=useState<Record<number,number>>({})
+  const [checkout,setCheckout]=useState(false)
+  const [filter,setFilter]=useState('All')
+  const categories=['All','Skin care','Wellness','Gut health']
+  const filtered=filter==='All'?products:products.filter(p=>p.category===filter)
+  const items=products.filter(p=>cart[p.id])
+  const total=items.reduce((s,p)=>s+p.price*(cart[p.id]||0),0)
+  const add=(id:number)=>setCart({...cart,[id]:(cart[id]||0)+1})
+  const invoice=()=>{
+    const w=window.open('','_blank')
+    if(w){
+      w.document.write(`<html><head><title>Invoice DRI-2026-018</title></head><body style="font-family:Arial;padding:48px;color:#173b5a"><h1>Dr. Ibrahim Clinic</h1><p>Invoice DRI-2026-018 · 18 June 2026</p><hr/><h2>Order summary</h2>${items.map(p=>`<p>${p.name} × ${cart[p.id]} — $${p.price*cart[p.id]}.00</p>`).join('')}<hr/><h2>Total: $${total}.00</h2><p>Thank you for choosing patient-first care.</p><script>window.print()</script></body></html>`)
+      w.document.close()
+    }
+  }
+  return (
+    <main className="page-section shop-upgrade">
+      <div className="container">
+        <div className="shop-title">
+          <div>
+            <span className="pill">The clinic shop</span>
+            <h1>Wellness, <em>curated.</em></h1>
+            <p className="lead">Doctor-recommended essentials for skin, gut health and everyday wellbeing.</p>
+          </div>
+          <button className="cart-trigger" onClick={()=>setCheckout(true)}>
+            <ShoppingBag size={18}/>
+            <span>{Object.values(cart).reduce((a,b)=>a+b,0)}</span> Cart · ${total}.00
+          </button>
+        </div>
+        <div className="shop-category-row">
+          {categories.map(c=>(
+            <button key={c} className={`filter${filter===c?' active':''}`} onClick={()=>setFilter(c)}>{c}</button>
+          ))}
+          <span className="muted" style={{marginLeft:'auto'}}>Free delivery over $75</span>
+        </div>
+        <div className="ecom-grid">
+          {filtered.map(p=>(
+            <article className="ecom-card" key={p.id}>
+              <div className="ecom-image">
+                <img src={p.image} alt={p.name}/>
+                <span>{p.category}</span>
+              </div>
+              <div className="ecom-copy">
+                <h3>{p.name}</h3>
+                <p>{p.desc}</p>
+                <div className="ecom-stars">{'★★★★★'}<small>(24)</small></div>
+                <div>
+                  <strong>${p.price}.00</strong>
+                  <button className="add-product" onClick={()=>add(p.id)}>
+                    {cart[p.id]?<><Check size={14}/> Added ({cart[p.id]})</>:<><Plus size={16}/> Add</>}
+                  </button>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+        <div className="shop-reviews-section">
+          <h2>What patients <em>are saying.</em></h2>
+          <div className="shop-reviews-grid">
+            {shopReviews.map(r=>(
+              <div className="shop-review-card" key={r.name}>
+                <div className="stars">{'★'.repeat(r.rating)}</div>
+                <p>"{r.text}"</p>
+                <div className="review-product-tag">{r.product}</div>
+                <strong>{r.name}</strong>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      {checkout&&(
+        <div className="cart-overlay">
+          <div className="cart-drawer">
+            <div className="drawer-head">
+              <div><span className="pill">Your basket</span><h2>{items.length?'Ready for checkout':'Your cart is empty'}</h2></div>
+              <button className="icon-btn" onClick={()=>setCheckout(false)}><X size={18}/></button>
+            </div>
+            {items.map(p=>(
+              <div className="cart-line" key={p.id}>
+                <img src={p.image} alt=""/>
+                <div><strong>{p.name}</strong><small>${p.price}.00 × {cart[p.id]}</small></div>
+                <div className="qty">
+                  <button onClick={()=>setCart({...cart,[p.id]:Math.max(0,(cart[p.id]||0)-1)})}><Minus size={13}/></button>
+                  <span>{cart[p.id]}</span>
+                  <button onClick={()=>add(p.id)}><Plus size={13}/></button>
+                </div>
+              </div>
+            ))}
+            {items.length>0&&<>
+              <div className="checkout-total"><span>Subtotal</span><strong>${total}.00</strong></div>
+              <Button onClick={()=>{setCheckout(false);onNavigate('Checkout')}}>Continue to checkout <ArrowRight size={16}/></Button>
+              <button className="invoice-link" onClick={invoice}><Download size={15}/> Download invoice PDF</button>
+            </>}
+          </div>
+        </div>
+      )}
+    </main>
+  )
+}
+
+export function Checkout({onNavigate}:{onNavigate:(p:string)=>void}){
+  const [done,setDone]=useState(false)
+  return (
+    <main className="page-section">
+      <div className="container narrow">
+        <span className="pill">Secure checkout</span>
+        <h1>Almost <em>there.</em></h1>
+        {done?(
+          <div className="booking-card order-success">
+            <div className="success-icon"><Check/></div>
+            <h2>Order confirmed</h2>
+            <p className="lead">Thank you. Your order DRI-2026-018 is being prepared and will be delivered within 3–5 business days.</p>
+            <div className="order-confirmed-details">
+              <div className="review-row"><span>Order reference</span><strong>DRI-2026-018</strong></div>
+              <div className="review-row"><span>Estimated delivery</span><strong>3–5 business days</strong></div>
+            </div>
+            <Button onClick={()=>onNavigate('Shop')}>Continue shopping <ArrowRight size={16}/></Button>
+          </div>
+        ):(
+          <div className="checkout-layout">
+            <div className="booking-card">
+              <h2>Delivery details</h2>
+              <div className="form-grid">
+                <label>Full name<input placeholder="Your full name"/></label>
+                <label>Phone number<input placeholder="+880"/></label>
+                <label>Delivery address<input placeholder="Street, area, city"/></label>
+                <label>Payment method
+                  <select><option>Cash on delivery</option><option>Card payment</option><option>bKash</option><option>Nagad</option></select>
+                </label>
+              </div>
+              <Button onClick={()=>setDone(true)}>Place order <Package size={16}/></Button>
+            </div>
+            <aside className="order-card">
+              <span className="pill pill-sand">Order summary</span>
+              <h3>Clinic essentials</h3>
+              <p>Daily Defence SPF 50 × 1</p>
+              <p>Calm + Restore Serum × 1</p>
+              <hr/>
+              <strong>Estimated total · $62.00</strong>
+              <div className="order-trust"><Check size={14}/> Secure payment<Check size={14}/> Free returns</div>
+            </aside>
+          </div>
+        )}
+      </div>
+    </main>
+  )
+}
+
+export function VideoStrip(){
+  const [playing,setPlaying]=useState(false)
+  return (
+    <section className="video-strip">
+      <div className="video-strip-image">
+        <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1400&q=85" alt="Dr. Ibrahim in conversation"/>
+        <button onClick={()=>setPlaying(!playing)} aria-label="Play clinic video">{playing?'Ⅱ':'▶'}</button>
+      </div>
+      <div>
+        <span className="pill pill-teal">Clinic video · 04:32</span>
+        <h2>The art of a good <em>consultation.</em></h2>
+        <p>Hear Dr. Ibrahim explain how integrated medicine, root-cause care and listening can change the way you experience healthcare.</p>
+        <button className="text-link" onClick={()=>setPlaying(!playing)}>{playing?'Pause video':'Play video'} <Play size={15}/></button>
+      </div>
+    </section>
+  )
+}
+
+export { chambers, products }
