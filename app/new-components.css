@@ -1431,6 +1431,11 @@
   display: flex;
   gap: 10px;
 }
+.admin-actions-right {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
 .admin-body {
   min-height: 400px;
 }
