@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowRight, Award, Check, Star, Users } from 'lucide-react'
+import { ArrowRight, Award, Check } from 'lucide-react'
 
 const team = [
   { name: 'Dr. Ibrahim Hossain Khan', role: 'Lead Physician & Founder', initials: 'IK', color: 'blue', bio: 'MBChB, MRCGP · 15+ years in family & integrative medicine.' },

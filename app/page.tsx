@@ -1,10 +1,10 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import {
   Activity, ArrowRight, CalendarDays, Check, ChevronDown, Clock3, HeartPulse, Menu, Search, ShieldCheck,
-  ShoppingBag, Stethoscope, Users, X, Phone, MapPin, Star, Package, LayoutDashboard, ClipboardList,
-  UserRound, Settings, BarChart3, Bell, Plus, SlidersHorizontal, MoreHorizontal, Sparkles
+  ShoppingBag, Stethoscope, Users, X, Package, LayoutDashboard, ClipboardList,
+  UserRound, BarChart3, Bell, Plus, SlidersHorizontal, MoreHorizontal, Sparkles
 } from 'lucide-react'
 import { AboutPage } from '../components/about-page'
 import { ChambersPage, UpgradeAppointment, MedicineUpgrade, Checkout, VideoStrip } from '../components/clinic-upgrade'
