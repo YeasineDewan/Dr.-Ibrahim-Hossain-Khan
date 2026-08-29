@@ -160,7 +160,7 @@ export function UpgradeAppointment({onNavigate}:{onNavigate:(p:string)=>void}){
   )
 }
 
-export function ShopUpgrade({onNavigate}:{onNavigate:(p:string)=>void}){
+export function MedicineUpgrade({onNavigate}:{onNavigate:(p:string)=>void}){
   const [cart,setCart]=useState<Record<number,number>>({})
   const [checkout,setCheckout]=useState(false)
   const [filter,setFilter]=useState('All')
@@ -177,11 +177,11 @@ export function ShopUpgrade({onNavigate}:{onNavigate:(p:string)=>void}){
     }
   }
   return (
-    <main className="page-section shop-upgrade">
+    <main className="page-section medicine-upgrade">
       <div className="container">
-        <div className="shop-title">
+        <div className="medicine-title">
           <div>
-            <span className="pill">The clinic shop</span>
+            <span className="pill">Medicine</span>
             <h1>Wellness, <em>curated.</em></h1>
             <p className="lead">Doctor-recommended essentials for skin, gut health and everyday wellbeing.</p>
           </div>
@@ -190,7 +190,7 @@ export function ShopUpgrade({onNavigate}:{onNavigate:(p:string)=>void}){
             <span>{Object.values(cart).reduce((a,b)=>a+b,0)}</span> Cart · ${total}.00
           </button>
         </div>
-        <div className="shop-category-row">
+        <div className="medicine-category-row">
           {categories.map(c=>(
             <button key={c} className={`filter${filter===c?' active':''}`} onClick={()=>setFilter(c)}>{c}</button>
           ))}
@@ -217,11 +217,11 @@ export function ShopUpgrade({onNavigate}:{onNavigate:(p:string)=>void}){
             </article>
           ))}
         </div>
-        <div className="shop-reviews-section">
+        <div className="medicine-reviews-section">
           <h2>What patients <em>are saying.</em></h2>
-          <div className="shop-reviews-grid">
+          <div className="medicine-reviews-grid">
             {shopReviews.map(r=>(
-              <div className="shop-review-card" key={r.name}>
+              <div className="medicine-review-card" key={r.name}>
                 <div className="stars">{'★'.repeat(r.rating)}</div>
                 <p>"{r.text}"</p>
                 <div className="review-product-tag">{r.product}</div>
@@ -277,7 +277,7 @@ export function Checkout({onNavigate}:{onNavigate:(p:string)=>void}){
               <div className="review-row"><span>Order reference</span><strong>DRI-2026-018</strong></div>
               <div className="review-row"><span>Estimated delivery</span><strong>3–5 business days</strong></div>
             </div>
-            <Button onClick={()=>onNavigate('Shop')}>Continue shopping <ArrowRight size={16}/></Button>
+            <Button onClick={()=>onNavigate('Medicine')}>Continue to medicine <ArrowRight size={16}/></Button>
           </div>
         ):(
           <div className="checkout-layout">
