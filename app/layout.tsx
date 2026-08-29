@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import './new-components.css'
 
@@ -15,5 +16,12 @@ export const viewport: Viewport = {
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" className="bg-background"><body className="antialiased">{children}</body></html>
+  return (
+    <html lang="en" className="bg-background">
+      <body className="antialiased">
+        {children}
+        <SpeedInsights />
+      </body>
+    </html>
+  )
 }
