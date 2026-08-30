@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
-import './new-components.css'
 
 export const metadata: Metadata = {
   title: 'Dr. Ibrahim Clinic | Human healthcare in Accra',
