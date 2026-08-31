@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import '@heroui/react/dist/styles.css'
+import '@heroui/react/styles'
 import './globals.css'
 
 export const metadata: Metadata = {
