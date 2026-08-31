@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { Noto_Sans_Bengali } from 'next/font/google'
+
+const bangla = Noto_Sans_Bengali({ subsets: ['bengali'], variable: '--font-bangla' })
 
 export const metadata: Metadata = {
   title: 'Dr. Ibrahim Clinic | Human healthcare in Accra',
@@ -14,5 +17,5 @@ export const viewport: Viewport = {
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" className="bg-background"><body className="antialiased">{children}</body></html>
+  return <html lang="en" className={`${bangla.variable} bg-background`}><body className="antialiased">{children}</body></html>
 }
