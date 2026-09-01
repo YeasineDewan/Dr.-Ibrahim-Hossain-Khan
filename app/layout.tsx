@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next'
-import '@heroui/react/styles'
 import './globals.css'
 import { Noto_Sans_Bengali } from 'next/font/google'
 
