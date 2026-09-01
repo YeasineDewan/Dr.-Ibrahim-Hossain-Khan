@@ -40,7 +40,7 @@ function Pill({ children, tone = 'blue' }: { children: React.ReactNode; tone?: s
 function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
   const [open, setOpen] = useState(false)
   return <>
-    <div className="notice"><span>Accepting new patients</span><span className="notice-dot" /> Book a consultation today <ArrowRight size={14}/></div>
+    <div className="notice notice-slider" aria-label="Clinic announcements"><div className="notice-track"><span><span className="notice-dot" /> New evening appointments available this week <ArrowRight size={14}/></span><span><span className="notice-dot" /> Free wellness screening with selected consultations <ArrowRight size={14}/></span><span><span className="notice-dot" /> Now welcoming new patients across three chambers <ArrowRight size={14}/></span></div></div>
     <header className="site-header"><div className="container header-inner">
       <button className="brand" onClick={() => onNavigate('Home')}><span className="brand-mark"><Activity size={19}/></span><span>Dr. Ibrahim<small>CLINIC & WELLNESS</small></span></button>
       <nav className={`main-nav ${open ? 'is-open' : ''}`}>{nav.map(item => <button key={item} onClick={() => { onNavigate(item); setOpen(false) }} className="nav-link">{item}</button>)}</nav>
