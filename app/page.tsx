@@ -31,7 +31,7 @@ const InvoiceButton = dynamic(() => import('../components/language-invoice').the
 const MotionShell = dynamic(() => import('../components/motion-shell').then(m => m.MotionShell), { ssr: false })
 
 // Home-page-only helpers — keep their static imports so they ship with the home bundle
-import { Tilt3D, Magnetic, Particles } from '../components/motion-3d'
+import { Tilt3D, Magnetic } from '../components/motion-3d'
 import { ScrollReveal } from '../components/scroll-reveal'
 import {
   HeartbeatArt, LeafArt, FamilyArt, StethoArt, PillArt, ShieldArt, CalendarArt,
@@ -448,14 +448,8 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
   return <ScrollReveal className="home-reveal"><>
     {/* ============ HERO ============ */}
     <section className="hero aurora-bg scene-3d" style={{ position: 'relative', overflow: 'hidden' }}>
-      <div className="grid-dots" style={{ position: 'absolute', inset: 0, opacity: 0.4, pointerEvents: 'none' }}/>
-      <div className="hero-glow" style={{ width: 500, height: 500, top: -150, left: -100, opacity: 0.45 }}/>
-      <div className="hero-glow" style={{ width: 400, height: 400, bottom: -100, right: -80, opacity: 0.35, animationDelay: '-8s' }}/>
-      <div className="blob blob-1" style={{ width: 360, height: 360, top: -80, left: -80 }}/>
-      <div className="blob blob-2" style={{ width: 280, height: 280, bottom: -40, right: 80 }}/>
-      <div className="blob blob-3" style={{ width: 240, height: 240, top: 100, right: -60 }}/>
-      <Particles count={12}/>
-      <div className="light-leak" style={{ width: 600, height: 600, top: -100, left: '40%', opacity: 0.35 }}/>
+      <div className="hero-glow" style={{ width: 500, height: 500, top: -150, left: -100, opacity: 0.25 }}/>
+      <div className="grid-dots" style={{ position: 'absolute', inset: 0, opacity: 0.18, pointerEvents: 'none' }}/>
 
       <div className="container hero-grid">
         <div className="hero-copy">
@@ -509,21 +503,7 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
           {/* Single main 3D heartbeat illustration — image takes priority, falls back to SVG */}
           <Tilt3D max={5} scale={1.01} className="float-3d hero-main-card">
             <div className="hero-main-bg hero-photo-wrap" style={{ borderRadius: '24px', overflow: 'hidden', position: 'relative', background: 'linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 50%, #ede9fe 100%)', boxShadow: '0 40px 80px -16px rgba(15,42,68,0.3)', border: '1px solid rgba(255,255,255,0.8)', aspectRatio: '1/1' }}>
-              {/* Drop your image URL into `HERO_IMAGE_URL` below to use a photo. Leave empty ('') to use the 3D SVG illustration. */}
-              {(() => {
-                const HERO_IMAGE_URL = ''
-                if (HERO_IMAGE_URL) {
-                  return (
-                    <img
-                      src={HERO_IMAGE_URL}
-                      alt="Dr. Ibrahim Hossain"
-                      className="hero-photo ken-burns"
-                      loading="eager"
-                    />
-                  )
-                }
-                return <HeartbeatArt style={{ position: 'absolute', inset: 0, opacity: 0.95 }}/>
-              })()}
+              <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-t0aIFTDc6pB1akFlYbJx4hrSfNncT0.png" alt="Dr. Ibrahim Hossain in a white coat" className="hero-photo" loading="eager" fetchPriority="high" />
               {/* Subtle ECG wave overlay */}
               <svg viewBox="0 0 400 100" preserveAspectRatio="none" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 80, opacity: 0.3 }}>
                 <path d="M0,50 L60,50 L80,50 L90,20 L100,80 L110,30 L130,50 L200,50 L220,50 L230,25 L240,75 L250,50 L320,50 L340,50 L350,30 L360,70 L370,50 L400,50" stroke="#14b8a6" strokeWidth="2" fill="none" className="ecg-stroke"/>
@@ -743,7 +723,6 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
     <section className="cta-section aurora-bg" style={{ position: 'relative', overflow: 'hidden' }}>
       <div className="blob blob-4" style={{ width: 300, height: 300, top: -100, right: -50 }}/>
       <div className="blob blob-5" style={{ width: 260, height: 260, bottom: -80, left: 80 }}/>
-      <Particles count={8}/>
       <div className="container cta-inner">
         <div className="appear-up" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           <span className="section-eyebrow">{n.ctaPill}</span>
