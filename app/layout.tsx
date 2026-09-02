@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { Noto_Sans_Bengali } from 'next/font/google'
+import { LanguageProvider } from '../lib/translations'
 
 const bangla = Noto_Sans_Bengali({ subsets: ['bengali'], variable: '--font-bangla' })
 
@@ -17,5 +18,9 @@ export const viewport: Viewport = {
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" className={`${bangla.variable} bg-background`}><body className="antialiased">{children}</body></html>
+  return (
+    <html lang="en" className={`${bangla.variable}`} style={{ ['--font-current' as any]: 'system-ui, -apple-system, Segoe UI, Roboto, sans-serif' }}>
+      <body className="antialiased"><LanguageProvider>{children}</LanguageProvider></body>
+    </html>
+  )
 }

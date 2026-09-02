@@ -1,13 +1,199 @@
 "use client"
 import { useState } from 'react'
-import { Activity, LayoutDashboard, CalendarDays, Users, ClipboardList, MapPin, ShoppingBag, Package, Receipt, UserRound, FileText, Image as ImageIcon, Video, Star, BarChart3, Bell, Settings, ShieldCheck, Search, ChevronDown, ChevronRight, Plus, MoreHorizontal, Menu, X, LogOut, ArrowUpRight } from 'lucide-react'
+import { Activity, LayoutDashboard, CalendarDays, Users, ClipboardList, MapPin, ShoppingBag, Package, Receipt, FileText, Image as ImageIcon, Video, Star, BarChart3, Bell, Settings, ShieldCheck, Search, ChevronDown, ChevronRight, Plus, MoreHorizontal, Menu, X, LogOut, ArrowUpRight } from 'lucide-react'
+import { adminCopy, useLanguage } from '../lib/translations'
 
-type Group={label:string;items:string[]}
-const groups:Group[]=[{label:'Overview',items:['Dashboard','Analytics','Activity log']},{label:'Care management',items:['Appointments','Calendar','Patients','Follow-ups','Chambers']},{label:'Commerce',items:['Products','Categories','Inventory','Orders','Customers','Coupons']},{label:'Content studio',items:['Services & CMS','Gallery','Videos','Reviews']},{label:'Reports & system',items:['Reports','Notifications','Users & roles','Settings']}]
-const iconFor=(x:string)=>({Dashboard:LayoutDashboard,Analytics:BarChart3,Appointments:CalendarDays,Calendar:CalendarDays,Patients:Users,'Follow-ups':ClipboardList,Chambers:MapPin,Products:ShoppingBag,Categories:Package,Inventory:Package,Orders:Receipt,Customers:Users,Coupons:Receipt,'Services & CMS':FileText,Gallery:ImageIcon,Videos:Video,Reviews:Star,Reports:BarChart3,Notifications:Bell,'Users & roles':ShieldCheck,Settings:Settings,'Activity log':ClipboardList}[x]||ClipboardList)
-const rows=['Amara Mensah','Daniel Owusu','Sofia Boateng','Michael Addo','Kwame Asante']
-export function AdminWorkspace({onExit}:{onExit:()=>void}){const [active,setActive]=useState('Dashboard');const [open,setOpen]=useState(true);const [expanded,setExpanded]=useState<string[]>(groups.map(g=>g.label));const toggle=(g:string)=>setExpanded(e=>e.includes(g)?e.filter(x=>x!==g):[...e,g]); return <div className="admin-workspace"><aside className={`pro-admin-sidebar ${open?'open':''}`}><button className="pro-admin-brand"><span className="brand-mark"><Activity size={18}/></span><span>Dr. Ibrahim<small>CLINIC ADMIN</small></span></button><div className="clinic-switch"><span className="clinic-avatar">DI</span><span><strong>Dr. Ibrahim</strong><small>Lead physician</small></span><ChevronDown size={14}/></div><nav className="pro-admin-nav">{groups.map(g=><div className="pro-nav-group" key={g.label}><button className="pro-group-title" onClick={()=>toggle(g.label)}>{g.label}<ChevronDown className={expanded.includes(g.label)?'rotate':''} size={13}/></button>{expanded.includes(g.label)&&g.items.map(item=>{const I=iconFor(item);return <button key={item} onClick={()=>setActive(item)} className={`pro-nav-item ${active===item?'active':''}`}><I size={16}/><span>{item}</span>{item==='Appointments'&&<b>4</b>}{item==='Notifications'&&<b className="coral">3</b>}</button>})}</div>)}</nav><button className="admin-exit" onClick={onExit}><LogOut size={15}/> Back to website</button></aside><main className="pro-admin-main"><header className="pro-admin-header"><button className="admin-mobile-menu" onClick={()=>setOpen(!open)}>{open?<X size={19}/>:<Menu size={19}/>}</button><div className="admin-breadcrumb">Workspace <span>/</span> <strong>{active}</strong></div><div className="admin-header-actions"><div className="pro-search"><Search size={15}/><input placeholder="Search anything..."/></div><button className="pro-icon-button"><Bell size={18}/><i/></button><button className="pro-profile"><span>DI</span><strong>Dr. Ibrahim</strong><ChevronDown size={14}/></button></div></header><div className="pro-admin-content"><div className="pro-admin-heading"><div><span className="pro-kicker">TUESDAY, 18 JUNE 2026</span><h1>{active==='Dashboard'?'Good morning, Doctor.':active}</h1><p>Stay on top of your clinic with a clear view of today&apos;s priorities.</p></div><div className="heading-actions"><button className="pro-outline"><CalendarDays size={15}/> Schedule</button><button className="pro-primary"><Plus size={15}/> New {active==='Patients'?'patient':'appointment'}</button></div></div>{active==='Dashboard'?<DashboardContent/>:<ModuleContent name={active}/>}</div></main></div>}
-function DashboardContent(){return <><section className="pulse-banner"><div><span className="pro-kicker">CLINIC PULSE</span><h2>Everything is in good rhythm today.</h2><p>18 appointments across 3 chambers · 2 follow-ups need attention</p></div><div className="pulse-status"><span className="live-dot"/> All systems operational</div></section><div className="pro-kpi-grid">{[['Appointments','18','+12%','teal'],['Active patients','2,084','+8.4%','blue'],['Shop revenue','$4,280','+16.2%','gold'],['Follow-ups due','07','Needs action','coral']].map(([a,b,c,d])=><div className="pro-kpi" key={a}><span className={`pro-kpi-mark ${d}`}>{a==='Appointments'?<CalendarDays size={18}/>:a==='Active patients'?<Users size={18}/>:a==='Shop revenue'?<ShoppingBag size={18}/>:<ClipboardList size={18}/>}</span><div><small>{a}</small><strong>{b}</strong><em className={d==='coral'?'warning':''}>{c}</em></div><ArrowUpRight size={15}/></div>)}</div><div className="pro-dashboard-grid"><section className="pro-panel schedule-panel"><div className="pro-panel-head"><div><span className="pro-kicker">TODAY · 18 APPOINTMENTS</span><h2>Schedule overview</h2></div><button className="panel-more"><MoreHorizontal size={18}/></button></div><div className="schedule-timeline">{[['09:00','Amara Mensah','General consultation','Confirmed'],['10:30','Daniel Owusu','Skin health review','Pending'],['13:00','Sofia Boateng','PRP therapy','Confirmed'],['14:30','Michael Addo','Follow-up visit','Confirmed'],['16:00','Kwame Asante','Gut health consultation','Waitlist']].map((r,i)=><div className="timeline-row" key={r[0]}><time>{r[0]}</time><span className="timeline-dot"/><div><strong>{r[1]}</strong><small>{r[2]}</small></div><span className={`status ${r[3].toLowerCase()}`}>{r[3]}</span></div>)}</div></section><section className="pro-panel"><div className="pro-panel-head"><div><span className="pro-kicker">JUNE 2026</span><h2>Clinic performance</h2></div><select><option>Last 30 days</option><option>Last 90 days</option></select></div><div className="chart"><div className="chart-y"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div><div className="chart-lines"><i/><i/><i/><i/><i/><div className="bars">{[45,62,48,72,58,80,67,91,76,84,68,95].map((n,i)=><span key={i} style={{height:`${n}%`}}><b/></span>)}</div></div></div><div className="chart-legend"><span><i className="legend-teal"/>Appointments <strong>284</strong></span><span><i className="legend-gold"/>Returning patients <strong>68%</strong></span></div></section></div><div className="pro-dashboard-grid bottom"><section className="pro-panel"><div className="pro-panel-head"><div><span className="pro-kicker">ATTENTION NEEDED</span><h2>Alerts & pending tasks</h2></div><span className="status pending">4 open</span></div><div className="alert-list"><div><span className="alert-icon coral">!</span><p><strong>4 appointments need confirmation</strong><small>Review the pending queue before 11:00</small></p><ChevronRight size={15}/></div><div><span className="alert-icon gold">!</span><p><strong>3 products are low in stock</strong><small>Update inventory before the weekend</small></p><ChevronRight size={15}/></div><div><span className="alert-icon teal">✓</span><p><strong>2 follow-ups are overdue</strong><small>Assign a reminder to the care team</small></p><ChevronRight size={15}/></div></div></section><section className="pro-panel"><div className="pro-panel-head"><div><span className="pro-kicker">REQUIRES ATTENTION</span><h2>Follow-up queue</h2></div><button className="text-link">View all <ChevronRight size={14}/></button></div>{rows.slice(0,3).map((x,i)=><div className="queue-row" key={x}><span className="person-avatar">{x.split(' ').map(y=>y[0]).join('')}</span><div><strong>{x}</strong><small>{['Lab results review','Treatment check-in','Medication renewal'][i]}</small></div><span className="queue-date">{i+1}d overdue</span></div>)}</section><section className="pro-panel quick-panel"><div className="pro-panel-head"><div><span className="pro-kicker">SHORTCUTS</span><h2>Quick actions</h2></div></div><div className="quick-grid">{['Add patient','Block a slot','Upload video','Create report'].map((x,i)=><button key={x}><span>{i===0?<Plus size={17}/>:i===1?<CalendarDays size={17}/>:i===2?<Video size={17}/>:<BarChart3 size={17}/> }</span>{x}<ArrowUpRight size={13}/></button>)}</div></section></div></>}
-const moduleFeatures:Record<string,string[]>={Patients:['Medical history','Prescriptions','Patient notes & documents','Appointment history'],Appointments:['Pending','Confirmed','Completed','Cancelled','Rescheduled','Appointment notes'],Calendar:['Available slots','Blocked time','Day / Week / Month','Chamber schedule'],'Follow-ups':['Upcoming','Overdue','Completed','Follow-up reminders'],Products:['Product pricing','Product images','Stock status','Publish status'],Inventory:['Stock overview','Low stock','Out of stock','Stock adjustment','Stock history'],Orders:['Order details','Payment details','Refund management','Delivery status'],'Services & CMS':['FAQ management','Homepage content','About doctor','SEO / Meta'],Gallery:['Albums','Upload images','Categories','Image management'],Reviews:['Pending','Approved','Rejected','Ratings','Reply to review'],Reports:['Appointment reports','Sales reports','Revenue reports','Inventory reports','Export reports'],'Users & roles':['Users','Roles','Permissions','User status','Login history'],Settings:['General','Payment settings','Email / SMS','Security','Backup'],Notifications:['Appointment notifications','Order notifications','Stock alerts','Patient notifications']};
-function FeatureRail({name}:{name:string}){const features=moduleFeatures[name]||['Overview','Recent activity','Pending tasks','Settings'];return <div className="feature-rail"><div className="feature-rail-head"><span className="pro-kicker">WORKSPACE TOOLS</span><strong>Manage {name}</strong></div><div className="feature-pills">{features.map((feature,i)=><button key={feature} className={i===0?'selected':''}>{feature}<ChevronRight size={13}/></button>)}</div></div>}
-function ModuleContent({name}:{name:string}){return <section className="pro-panel module-view"><div className="module-hero"><div><span className="pro-kicker">CLINIC OPERATIONS</span><h2>{name}</h2><p>Manage, review and update your {name.toLowerCase()} workspace from one place.</p></div><span className="module-icon">{(() => {const I=iconFor(name);return <I size={24}/>})()}</span></div><FeatureRail name={name}/><div className="module-toolbar"><div className="pro-search"><Search size={15}/><input placeholder={`Search ${name.toLowerCase()}...`}/></div><button className="pro-outline"><span>Filter</span><ChevronDown size={14}/></button><button className="pro-primary"><Plus size={15}/> Add {name.replace(' & CMS','')}</button></div><div className="pro-data-table"><div className="table-head"><span>Name / reference</span><span>Category</span><span>Status</span><span>Last updated</span><span/></div>{rows.map((x,i)=><div className="table-row" key={x}><div className="table-name"><span className="person-avatar">{x.split(' ').map(y=>y[0]).join('')}</span><strong>{name==='Patients'?x:`${name} #00${i+18}`}</strong></div><span>{name==='Patients'?'General medicine':i%2?'Published':'Wellness'}</span><span className={`status ${i===1?'pending':'confirmed'}`}>{i===1?'Pending':'Active'}</span><span>Today, {9+i}:30</span><button className="panel-more"><MoreHorizontal size={17}/></button></div>)}</div></section>}
+type Group = { label: string; items: string[] }
+const iconFor = (x: string) => ({
+  Dashboard: LayoutDashboard, Analytics: BarChart3, Appointments: CalendarDays, Calendar: CalendarDays,
+  Patients: Users, 'Follow-ups': ClipboardList, Chambers: MapPin, Products: ShoppingBag,
+  Categories: Package, Inventory: Package, Orders: Receipt, Customers: Users, Coupons: Receipt,
+  'Services & CMS': FileText, Gallery: ImageIcon, Videos: Video, Reviews: Star,
+  Reports: BarChart3, Notifications: Bell, 'Users & roles': ShieldCheck, Settings: Settings,
+  'Activity log': ClipboardList,
+}[x] || ClipboardList)
+
+export function AdminWorkspace({ onExit }: { onExit: () => void }) {
+  const { lang } = useLanguage()
+  const a = adminCopy[lang]
+  const [active, setActive] = useState('Dashboard')
+  const [open, setOpen] = useState(true)
+  const [expanded, setExpanded] = useState<string[]>(a.groups.map(g => g.label))
+  const toggle = (g: string) => setExpanded(e => e.includes(g) ? e.filter(x => x !== g) : [...e, g])
+  const groups: Group[] = a.groups as unknown as Group[]
+
+  return (
+    <div className="admin-workspace">
+      <aside className={`pro-admin-sidebar ${open ? 'open' : ''}`}>
+        <button className="pro-admin-brand">
+          <span className="brand-mark"><Activity size={18}/></span>
+          <span>{lang === 'bn' ? 'ডাঃ ইব্রাহিম' : 'Dr. Ibrahim'}<small>{a.brandSub}</small></span>
+        </button>
+        <div className="clinic-switch">
+          <span className="clinic-avatar">DI</span>
+          <span><strong>{lang === 'bn' ? 'ডাঃ ইব্রাহিম' : 'Dr. Ibrahim'}</strong><small>{lang === 'bn' ? 'প্রধান চিকিৎসক' : 'Lead physician'}</small></span>
+          <ChevronDown size={14}/>
+        </div>
+        <nav className="pro-admin-nav">
+          {groups.map(g => (
+            <div className="pro-nav-group" key={g.label}>
+              <button className="pro-group-title" onClick={() => toggle(g.label)}>{g.label}<ChevronDown className={expanded.includes(g.label) ? 'rotate' : ''} size={13}/></button>
+              {expanded.includes(g.label) && g.items.map(item => {
+                const I = iconFor(item)
+                return <button key={item} onClick={() => setActive(item)} className={`pro-nav-item ${active === item ? 'active' : ''}`}><I size={16}/><span>{item}</span>{item === a.groups[1].items[0] && <b>4</b>}{item === a.groups[4].items[1] && <b className="coral">3</b>}</button>
+              })}
+            </div>
+          ))}
+        </nav>
+        <button className="admin-exit" onClick={onExit}><LogOut size={15}/> {a.backToWebsite}</button>
+      </aside>
+      <main className="pro-admin-main">
+        <header className="pro-admin-header">
+          <button className="admin-mobile-menu" onClick={() => setOpen(!open)}>{open ? <X size={19}/> : <Menu size={19}/>}</button>
+          <div className="admin-breadcrumb">{a.workspace} <span>/</span> <strong>{active}</strong></div>
+          <div className="admin-header-actions">
+            <div className="pro-search"><Search size={15}/><input placeholder={a.searchPh}/></div>
+            <button className="pro-icon-button"><Bell size={18}/><i/></button>
+            <button className="pro-profile"><span>DI</span><strong>{lang === 'bn' ? 'ডাঃ ইব্রাহিম' : 'Dr. Ibrahim'}</strong><ChevronDown size={14}/></button>
+          </div>
+        </header>
+        <div className="pro-admin-content">
+          {active === 'Dashboard' || active === a.groups[0].items[0] ? <DashboardContent copy={a} /> : <ModuleContent name={active} copy={a} />}
+        </div>
+      </main>
+    </div>
+  )
+}
+
+function DashboardContent({ copy }: { copy: typeof adminCopy.en }) {
+  const { lang } = useLanguage()
+  return (
+    <>
+      <section className="pulse-banner">
+        <div>
+          <span className="pro-kicker">{copy.pulseKicker}</span>
+          <h2>{copy.pulseTitle}</h2>
+          <p>{copy.pulseBody}</p>
+        </div>
+        <div className="pulse-status"><span className="live-dot"/> {copy.pulseStatus}</div>
+      </section>
+      <div className="pro-kpi-grid">
+        {copy.kpis.map((k, i) => {
+          const icons = [CalendarDays, Users, ShoppingBag, ClipboardList]
+          const tones = ['teal', 'blue', 'gold', 'coral']
+          const I = icons[i]
+          return (
+            <div className="pro-kpi" key={k.label}>
+              <span className={`pro-kpi-mark ${tones[i]}`}><I size={18}/></span>
+              <div><small>{k.label}</small><strong>{k.value}</strong><em className={tones[i] === 'coral' ? 'warning' : ''}>{k.delta}</em></div>
+              <ArrowUpRight size={15}/>
+            </div>
+          )
+        })}
+      </div>
+      <div className="pro-dashboard-grid">
+        <section className="pro-panel schedule-panel">
+          <div className="pro-panel-head">
+            <div><span className="pro-kicker">{copy.scheduleKicker}</span><h2>{copy.scheduleTitle}</h2></div>
+            <button className="panel-more"><MoreHorizontal size={18}/></button>
+          </div>
+          <div className="schedule-timeline">
+            {copy.schedule.map((r, i) => (
+              <div className="timeline-row" key={i}>
+                <time>{r.time}</time>
+                <span className="timeline-dot"/>
+                <div><strong>{r.name}</strong><small>{r.desc}</small></div>
+                <span className={`status ${r.status.toLowerCase()}`}>{r.status}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+        <section className="pro-panel">
+          <div className="pro-panel-head">
+            <div><span className="pro-kicker">{lang === 'bn' ? 'জুন ২০২৬' : 'JUNE 2026'}</span><h2>{lang === 'bn' ? 'ক্লিনিক পারফরম্যান্স' : 'Clinic performance'}</h2></div>
+            <select><option>{lang === 'bn' ? 'গত ৩০ দিন' : 'Last 30 days'}</option><option>{lang === 'bn' ? 'গত ৯০ দিন' : 'Last 90 days'}</option></select>
+          </div>
+          <div className="performance-chart">
+            {[40, 55, 48, 70, 62, 80, 75, 90, 85, 95, 88, 100].map((h, i) => (
+              <span key={i} style={{ height: `${h}%` }}/>
+            ))}
+          </div>
+        </section>
+      </div>
+    </>
+  )
+}
+
+const moduleFeatures: Record<string, { en: string[]; bn: string[] }> = {
+  Patients: { en: ['Medical history', 'Prescriptions', 'Patient notes & documents', 'Appointment history'], bn: ['মেডিকেল ইতিহাস', 'প্রেসক্রিপশন', 'রোগীর নোট ও ডকুমেন্ট', 'অ্যাপয়েন্টমেন্ট ইতিহাস'] },
+  Appointments: { en: ['Pending', 'Confirmed', 'Completed', 'Cancelled', 'Rescheduled', 'Appointment notes'], bn: ['বিচারাধীন', 'নিশ্চিত', 'সম্পন্ন', 'বাতিল', 'পুনঃনির্ধারিত', 'অ্যাপয়েন্টমেন্ট নোট'] },
+  Calendar: { en: ['Available slots', 'Blocked time', 'Day / Week / Month', 'Chamber schedule'], bn: ['উপলব্ধ স্লট', 'ব্লক করা সময়', 'দিন / সপ্তাহ / মাস', 'চেম্বার শিডিউল'] },
+  'Follow-ups': { en: ['Upcoming', 'Overdue', 'Completed', 'Follow-up reminders'], bn: ['আসন্ন', 'বিলম্বিত', 'সম্পন্ন', 'ফলো-আপ রিমাইন্ডার'] },
+  Products: { en: ['Product pricing', 'Product images', 'Stock status', 'Publish status'], bn: ['পণ্যের মূল্য', 'পণ্যের ছবি', 'স্টক স্ট্যাটাস', 'প্রকাশের স্ট্যাটাস'] },
+  Inventory: { en: ['Stock overview', 'Low stock', 'Out of stock', 'Stock adjustment', 'Stock history'], bn: ['স্টক সংক্ষিপ্ত বিবরণ', 'কম স্টক', 'স্টক শেষ', 'স্টক সমন্বয়', 'স্টক ইতিহাস'] },
+  Orders: { en: ['Order details', 'Payment details', 'Refund management', 'Delivery status'], bn: ['অর্ডার বিস্তারিত', 'পেমেন্ট বিস্তারিত', 'রিফান্ড ব্যবস্থাপনা', 'ডেলিভারি স্ট্যাটাস'] },
+  'Services & CMS': { en: ['FAQ management', 'Homepage content', 'About doctor', 'SEO / Meta'], bn: ['FAQ ব্যবস্থাপনা', 'হোমপেজ কনটেন্ট', 'ডাক্তার সম্পর্কে', 'SEO / Meta'] },
+  Gallery: { en: ['Albums', 'Upload images', 'Categories', 'Image management'], bn: ['অ্যালবাম', 'ছবি আপলোড', 'ক্যাটাগরি', 'ছবি ব্যবস্থাপনা'] },
+  Reviews: { en: ['Pending', 'Approved', 'Rejected', 'Ratings', 'Reply to review'], bn: ['বিচারাধীন', 'অনুমোদিত', 'প্রত্যাখ্যাত', 'রেটিং', 'রিভিউতে উত্তর'] },
+  Reports: { en: ['Appointment reports', 'Sales reports', 'Revenue reports', 'Inventory reports', 'Export reports'], bn: ['অ্যাপয়েন্টমেন্ট রিপোর্ট', 'সেলস রিপোর্ট', 'রেভিনিউ রিপোর্ট', 'ইনভেন্টরি রিপোর্ট', 'রিপোর্ট এক্সপোর্ট'] },
+  'Users & roles': { en: ['Users', 'Roles', 'Permissions', 'User status', 'Login history'], bn: ['ইউজার', 'রোল', 'অনুমতি', 'ইউজার স্ট্যাটাস', 'লগইন ইতিহাস'] },
+  Settings: { en: ['General', 'Payment settings', 'Email / SMS', 'Security', 'Backup'], bn: ['সাধারণ', 'পেমেন্ট সেটিংস', 'ইমেইল / এসএমএস', 'নিরাপত্তা', 'ব্যাকআপ'] },
+  Notifications: { en: ['Appointment notifications', 'Order notifications', 'Stock alerts', 'Patient notifications'], bn: ['অ্যাপয়েন্টমেন্ট নোটিফিকেশন', 'অর্ডার নোটিফিকেশন', 'স্টক সতর্কতা', 'রোগী নোটিফিকেশন'] },
+}
+
+function FeatureRail({ name, copy }: { name: string; copy: typeof adminCopy.en }) {
+  const { lang } = useLanguage()
+  const features = moduleFeatures[name] ? moduleFeatures[name][lang] : (lang === 'bn' ? ['সংক্ষিপ্ত বিবরণ', 'সাম্প্রতিক কার্যকলাপ', 'বিচারাধীন কাজ', 'সেটিংস'] : ['Overview', 'Recent activity', 'Pending tasks', 'Settings'])
+  return (
+    <div className="feature-rail">
+      <div className="feature-rail-head">
+        <span className="pro-kicker">{lang === 'bn' ? 'ওয়ার্কস্পেস টুলস' : 'WORKSPACE TOOLS'}</span>
+        <strong>{lang === 'bn' ? `${name} পরিচালনা করুন` : `Manage ${name}`}</strong>
+      </div>
+      <div className="feature-pills">
+        {features.map((feature, i) => <button key={feature} className={i === 0 ? 'selected' : ''}>{feature}<ChevronRight size={13}/></button>)}
+      </div>
+    </div>
+  )
+}
+
+function ModuleContent({ name, copy }: { name: string; copy: typeof adminCopy.en }) {
+  const { lang } = useLanguage()
+  const patients = copy.patients
+  return (
+    <section className="pro-panel module-view">
+      <div className="module-hero">
+        <div>
+          <span className="pro-kicker">{lang === 'bn' ? 'ক্লিনিক অপারেশনস' : 'CLINIC OPERATIONS'}</span>
+          <h2>{name}</h2>
+          <p>{lang === 'bn' ? `আপনার ${name} ওয়ার্কস্পেস এক জায়গা থেকে পরিচালনা, পর্যালোচনা ও আপডেট করুন।` : `Manage, review and update your ${name.toLowerCase()} workspace from one place.`}</p>
+        </div>
+        <span className="module-icon">{(() => { const I = iconFor(name); return <I size={24}/> })()}</span>
+      </div>
+      <FeatureRail name={name} copy={copy} />
+      <div className="module-toolbar">
+        <div className="pro-search"><Search size={15}/><input placeholder={lang === 'bn' ? `${name} অনুসন্ধান...` : `Search ${name.toLowerCase()}...`}/></div>
+        <button className="pro-outline"><span>{copy.filter}</span><ChevronDown size={14}/></button>
+        <button className="pro-primary"><Plus size={15}/> {copy.add} {name.replace(' & CMS', '')}</button>
+      </div>
+      <div className="pro-data-table">
+        <div className="table-head">
+          {copy.tableHead.map(h => <span key={h}>{h}</span>)}
+          <span/>
+        </div>
+        {patients.map((x, i) => (
+          <div className="table-row" key={x}>
+            <div className="table-name">
+              <span className="person-avatar">{x.split(' ').map(y => y[0]).join('').slice(0,2)}</span>
+              <strong>{name === copy.patients[0] || name === 'Patients' ? x : `${name} #00${i+18}`}</strong>
+            </div>
+            <span>{name === 'Patients' ? copy.categories[0] : i % 2 ? copy.categories[2] : copy.categories[1]}</span>
+            <span className={`status ${i === 1 ? 'pending' : 'confirmed'}`}>{i === 1 ? copy.statuses[1] : copy.statuses[0]}</span>
+            <span>{copy.lastUpdated}, {9+i}:30</span>
+            <button className="panel-more"><MoreHorizontal size={17}/></button>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
