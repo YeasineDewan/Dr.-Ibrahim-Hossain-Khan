@@ -1,16 +1,134 @@
-"use client"
+'use client'
 
 import { ArrowLeft, ArrowRight, CheckCircle2, Clock3, HeartPulse, ShieldCheck } from 'lucide-react'
+import { serviceDetailsCopy, useLanguage, t as tT, common } from '../lib/translations'
 
-export const serviceDetails = {
-  prp: { title:'PRP Therapy', label:'Regenerative care', intro:'A carefully guided platelet-rich plasma treatment designed to support natural healing and renewal.', points:['Personalised consultation and assessment','Clinician-led treatment planning','Clear aftercare and follow-up support'] },
-  psoriasis: { title:'Psoriasis Treatment', label:'Dermatology care', intro:'Long-term support for calmer skin, fewer flare-ups, and a treatment plan built around your daily life.', points:['Trigger and symptom review','Evidence-informed treatment options','Ongoing progress reviews'] },
-  vitiligo: { title:'Vitiligo Treatment', label:'Skin confidence', intro:'Compassionate, individualised care to help you understand vitiligo and explore suitable treatment pathways.', points:['Detailed skin assessment','Personalised care planning','Support for confidence and wellbeing'] },
-  ibs: { title:'IBS & Gut Health', label:'Digestive wellbeing', intro:'Practical, whole-person support for better digestion, energy, and confidence around food.', points:['Lifestyle and symptom mapping','Nutrition-aware guidance','Measured follow-up milestones'] },
-  integrative: { title:'Integrative Medicine', label:'Whole-person care', intro:'A connected approach that brings clinical expertise, prevention, lifestyle, and your own goals into one plan.', points:['Whole-person health review','Collaborative care plan','Sustainable habits and check-ins'] },
-} as const
+type ServiceKey = 'prp' | 'psoriasis' | 'vitiligo' | 'ibs' | 'integrative' | 'preventive'
 
-export function ServiceDetailPage({ slug, onNavigate }: { slug: keyof typeof serviceDetails; onNavigate: (page:string)=>void }) {
+const details: Record<ServiceKey, { title: { en: string; bn: string }; label: { en: string; bn: string }; intro: { en: string; bn: string }; points: { en: string; bn: string }[] }> = {
+  prp: {
+    title: { en: 'PRP Therapy', bn: 'PRP থেরাপি' },
+    label: { en: 'Regenerative care', bn: 'রিজেনারেটিভ কেয়ার' },
+    intro: { en: 'A carefully guided platelet-rich plasma treatment designed to support natural healing and renewal.', bn: 'প্রাকৃতিক নিরাময় ও পুনর্নবীকরণ সমর্থনে সতর্কভাবে পরিচালিত প্লেটলেট-রিচ প্লাজমা চিকিৎসা।' },
+    points: [
+      { en: 'Personalised consultation and assessment', bn: 'ব্যক্তিগত কনসালটেশন ও মূল্যায়ন' },
+      { en: 'Clinician-led treatment planning', bn: 'ক্লিনিশিয়ান-নেতৃত্বাধীন চিকিৎসা পরিকল্পনা' },
+      { en: 'Clear aftercare and follow-up support', bn: 'স্পষ্ট আফটারকেয়ার ও ফলো-আপ সহায়তা' },
+    ],
+  },
+  psoriasis: {
+    title: { en: 'Psoriasis Treatment', bn: 'সোরিয়াসিস চিকিৎসা' },
+    label: { en: 'Dermatology care', bn: 'চর্মরোগ সেবা' },
+    intro: { en: 'Long-term support for calmer skin, fewer flare-ups, and a treatment plan built around your daily life.', bn: 'শান্ত ত্বক, কম ফ্লেয়ার এবং আপনার দৈনন্দিন জীবনের সাথে মানানসই চিকিৎসা পরিকল্পনার জন্য দীর্ঘমেয়াদি সহায়তা।' },
+    points: [
+      { en: 'Trigger and symptom review', bn: 'ট্রিগার ও উপসর্গ পর্যালোচনা' },
+      { en: 'Evidence-informed treatment options', bn: 'প্রমাণ-ভিত্তিক চিকিৎসা অপশন' },
+      { en: 'Ongoing progress reviews', bn: 'চলমান অগ্রগতি পর্যালোচনা' },
+    ],
+  },
+  vitiligo: {
+    title: { en: 'Vitiligo Treatment', bn: 'শ্বেতী (Vitiligo) চিকিৎসা' },
+    label: { en: 'Skin confidence', bn: 'ত্বকের আত্মবিশ্বাস' },
+    intro: { en: 'Compassionate, individualised care to help you understand vitiligo and explore suitable treatment pathways.', bn: 'শ্বেতী বুঝতে এবং উপযুক্ত চিকিৎসার পথ অন্বেষণে সহানুভূতিশীল ও ব্যক্তিগতকৃত যত্ন।' },
+    points: [
+      { en: 'Detailed skin assessment', bn: 'বিস্তারিত ত্বক মূল্যায়ন' },
+      { en: 'Personalised care planning', bn: 'ব্যক্তিগত যত্ন পরিকল্পনা' },
+      { en: 'Support for confidence and wellbeing', bn: 'আত্মবিশ্বাস ও সুস্থতার জন্য সহায়তা' },
+    ],
+  },
+  ibs: {
+    title: { en: 'IBS & Gut Health', bn: 'আইবিএস ও অন্ত্রের স্বাস্থ্য' },
+    label: { en: 'Digestive wellbeing', bn: 'হজম সংক্রান্ত সুস্থতা' },
+    intro: { en: 'Practical, whole-person support for better digestion, energy, and confidence around food.', bn: 'উন্নত হজম, শক্তি এবং খাদ্যের প্রতি আত্মবিশ্বাসের জন্য বাস্তবসম্মত ও সামগ্রিক সহায়তা।' },
+    points: [
+      { en: 'Lifestyle and symptom mapping', bn: 'জীবনযাত্রা ও উপসর্গ ম্যাপিং' },
+      { en: 'Nutrition-aware guidance', bn: 'পুষ্টি-সচেতন নির্দেশনা' },
+      { en: 'Measured follow-up milestones', bn: 'পরিমাপযোগ্য ফলো-আপ মাইলস্টোন' },
+    ],
+  },
+  integrative: {
+    title: { en: 'Integrative Medicine', bn: 'ইন্টিগ্রেটিভ মেডিসিন' },
+    label: { en: 'Whole-person care', bn: 'সামগ্রিক যত্ন' },
+    intro: { en: 'A connected approach that brings clinical expertise, prevention, lifestyle, and your own goals into one plan.', bn: 'ক্লিনিক্যাল দক্ষতা, প্রতিরোধ, জীবনযাত্রা এবং আপনার নিজের লক্ষ্যকে একটি পরিকল্পনায় সংযুক্ত করার একটি সামগ্রিক দৃষ্টিভঙ্গি।' },
+    points: [
+      { en: 'Whole-person health review', bn: 'সামগ্রিক স্বাস্থ্য পর্যালোচনা' },
+      { en: 'Collaborative care plan', bn: 'সহযোগিতামূলক যত্ন পরিকল্পনা' },
+      { en: 'Sustainable habits and check-ins', bn: 'টেকসই অভ্যাস ও চেক-ইন' },
+    ],
+  },
+  preventive: {
+    title: { en: 'Preventive Wellness', bn: 'প্রতিরোধমূলক ওয়েলনেস' },
+    label: { en: 'Annual check-up', bn: 'বার্ষিক চেকআপ' },
+    intro: { en: 'A complete annual review with screening guidance, labs and a clear next-step plan.', bn: 'স্ক্রিনিং নির্দেশনা, ল্যাব এবং স্পষ্ট পরবর্তী ধাপ সহ সম্পূর্ণ বার্ষিক পর্যালোচনা।' },
+    points: [
+      { en: 'Comprehensive annual review', bn: 'ব্যাপক বার্ষিক পর্যালোচনা' },
+      { en: 'Personalised screening guidance', bn: 'ব্যক্তিগত স্ক্রিনিং নির্দেশনা' },
+      { en: 'Clear next-step plan', bn: 'স্পষ্ট পরবর্তী ধাপ পরিকল্পনা' },
+    ],
+  },
+}
+
+export const serviceDetails = details
+
+export function ServiceDetailPage({ slug, onNavigate }: { slug: keyof typeof serviceDetails; onNavigate: (page: string) => void }) {
+  const { lang } = useLanguage()
+  const c = serviceDetailsCopy[lang]
+  const cm = common[lang]
   const service = serviceDetails[slug]
-  return <main className="service-detail-page"><section className="service-detail-hero"><div className="container service-detail-grid"><div className="service-detail-copy"><button className="back-link" onClick={()=>onNavigate('Services')}><ArrowLeft size={15}/> Back to services</button><span className="pill pill-teal">{service.label}</span><h1>{service.title} for <em>lasting wellbeing.</em></h1><p className="lead">{service.intro}</p><div className="detail-actions"><button className="btn btn-primary" onClick={()=>onNavigate('Appointment')}>Book a consultation <ArrowRight size={15}/></button><button className="btn btn-outline" onClick={()=>onNavigate('Contact')}>Ask a question</button></div></div><div className="service-detail-art"><HeartPulse size={42}/><span>Thoughtful care</span><small>Designed around you</small></div></div></section><section className="section service-detail-body"><div className="container service-detail-columns"><div><span className="pill">Your care plan</span><h2>Clear steps, <em>kindly delivered.</em></h2><p className="muted detail-intro">Every plan begins with listening. We explain your options clearly, set realistic goals, and stay connected as your needs change.</p><div className="service-point-list">{service.points.map(point=><div key={point}><CheckCircle2 size={18}/><span>{point}</span></div>)}</div></div><aside className="service-info-card"><ShieldCheck size={22}/><h3>What your visit includes</h3><p>Private consultation, clear recommendations, written next steps, and follow-up guidance from our care team.</p><div className="service-info-row"><Clock3 size={16}/><span>Typically 30–45 minutes</span></div><button className="text-link" onClick={()=>onNavigate('Chambers')}>Choose your chamber <ArrowRight size={14}/></button></aside></div></section><section className="section service-faq"><div className="container narrow"><span className="pill pill-sand">Before you book</span><h2>Questions we hear <em>often.</em></h2><div className="faq-list"><details open><summary>Is this service right for me?</summary><p>Your first consultation is designed to understand your needs and recommend the most appropriate path. You do not need to decide before speaking with us.</p></details><details><summary>What happens after my first visit?</summary><p>You will leave with clear next steps and a follow-up plan tailored to your goals.</p></details></div></div></section></main>
+  if (!service) return null
+  const title = service.title[lang]
+  const label = service.label[lang]
+  const intro = service.intro[lang]
+  const points = service.points.map(p => p[lang])
+  return (
+    <main className="service-detail-page">
+      <section className="service-detail-hero">
+        <div className="container service-detail-grid">
+          <div className="service-detail-copy">
+            <button className="back-link" onClick={() => onNavigate('Services')}><ArrowLeft size={15}/> {c.back}</button>
+            <span className="pill pill-teal">{label}</span>
+            <h1>{title} {lang === 'bn' ? 'দীর্ঘস্থায়ী সুস্থতার জন্য' : 'for lasting wellbeing.'}</h1>
+            <p className="lead">{intro}</p>
+            <div className="detail-actions">
+              <button className="btn btn-primary" onClick={() => onNavigate('Appointment')}>{c.bookConsult} <ArrowRight size={15}/></button>
+              <button className="btn btn-outline" onClick={() => onNavigate('Contact')}>{c.askQuestion}</button>
+            </div>
+          </div>
+          <div className="service-detail-art">
+            <HeartPulse size={42}/>
+            <span>{lang === 'bn' ? 'চিন্তাশীল যত্ন' : 'Thoughtful care'}</span>
+            <small>{lang === 'bn' ? 'আপনাকে ঘিরে ডিজাইন করা' : 'Designed around you'}</small>
+          </div>
+        </div>
+      </section>
+      <section className="section service-detail-body">
+        <div className="container service-detail-columns">
+          <div>
+            <span className="pill">{c.planPill}</span>
+            <h2>{c.planTitle1} <em>{c.planTitleEm}</em></h2>
+            <p className="muted detail-intro">{c.planBody}</p>
+            <div className="service-point-list">
+              {points.map((point, i) => <div key={i}><CheckCircle2 size={18}/><span>{point}</span></div>)}
+            </div>
+          </div>
+          <aside className="service-info-card">
+            <ShieldCheck size={22}/>
+            <h3>{c.infoHeading}</h3>
+            <p>{c.infoBody}</p>
+            <div className="service-info-row"><Clock3 size={16}/><span>{c.infoTime}</span></div>
+            <button className="text-link" onClick={() => onNavigate('Chambers')}>{c.chooseChamber} <ArrowRight size={14}/></button>
+          </aside>
+        </div>
+      </section>
+      <section className="cta-section">
+        <div className="container cta-inner">
+          <div><span className="pill pill-teal">{c.ctaPill}</span><h2>{c.ctaTitle1}<br/><em>{c.ctaTitleEm}</em></h2></div>
+          <div>
+            <p>{c.ctaBody}</p>
+            <button className="btn btn-primary" onClick={() => onNavigate('Appointment')}>{c.ctaBtn} <ArrowRight size={17}/></button>
+          </div>
+        </div>
+      </section>
+    </main>
+  )
 }
