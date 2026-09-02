@@ -1,10 +1,10 @@
 'use client'
 import { useState, useMemo } from 'react'
 import {
-  Activity, LayoutDashboard, CalendarDays, Users, ClipboardList, MapPin, ShoppingBag, Package, Receipt,
+  Activity, LayoutDashboard, CalendarDays, Users, ClipboardList, MapPin,
   FileText, Image as ImageIcon, Video, Star, BarChart3, Bell, Settings, ShieldCheck, Search,
   ChevronDown, ChevronRight, Plus, MoreHorizontal, Menu, X, LogOut, ArrowUpRight, ListChecks,
-  Stethoscope, UserCog, Tag, FolderTree, History, LineChart, Globe
+  Stethoscope, UserCog, History, LineChart, Globe, HeartPulse, CalendarCheck
 } from 'lucide-react'
 import { adminCopy, useLanguage, t as tT } from '../lib/translations'
 import { useAdminData } from '../lib/admin-data'
@@ -13,14 +13,12 @@ import { DashboardView } from './admin/dashboard'
 import { AnalyticsView, ActivityLogView } from './admin/analytics'
 import { AppointmentsView, CalendarView, FollowUpsView, ChambersView } from './admin/care'
 import { PatientsView } from './admin/patients'
-import { ProductsView, CategoriesView, InventoryView, OrdersView, CustomersView, CouponsView } from './admin/commerce'
 import { ServicesCMSView, GalleryView, VideosView, ReviewsView } from './admin/content'
 import { ReportsView, NotificationsView, UsersView, SettingsView } from './admin/system'
 
 const iconFor = (x: string) => ({
   Dashboard: LayoutDashboard, Analytics: BarChart3, 'Activity log': ListChecks,
   Appointments: CalendarDays, Calendar: CalendarDays, Patients: Users, 'Follow-ups': ClipboardList, Chambers: MapPin,
-  Products: ShoppingBag, Categories: FolderTree, Inventory: Package, Orders: Receipt, Customers: Users, Coupons: Tag,
   'Services & CMS': Stethoscope, Gallery: ImageIcon, Videos: Video, Reviews: Star,
   Reports: BarChart3, Notifications: Bell, 'Users & roles': UserCog, Settings: Settings,
 }[x] || ClipboardList)
@@ -52,7 +50,6 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
     if (item === 'Appointments') return data.appointments.filter(x => x.date === '2026-06-18' && (x.status === 'Pending' || x.status === 'Confirmed')).length
     if (item === 'Notifications') return data.notifications.filter(n => !n.read).length
     if (item === 'Follow-ups') return data.followUps.filter(f => f.status === 'Overdue').length
-    if (item === 'Orders') return data.orders.filter(o => o.status === 'Processing').length
     return 0
   }
 
@@ -66,12 +63,6 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
       case 'Patients': return <PatientsView data={data} copy={a} onLog={data.logActivity} toast={toast} />
       case 'Follow-ups': return <FollowUpsView data={data} copy={a} onLog={data.logActivity} toast={toast} />
       case 'Chambers': return <ChambersView data={data} copy={a} onLog={data.logActivity} toast={toast} />
-      case 'Products': return <ProductsView data={data} copy={a} onLog={data.logActivity} toast={toast} />
-      case 'Categories': return <CategoriesView data={data} copy={a} onLog={data.logActivity} toast={toast} />
-      case 'Inventory': return <InventoryView data={data} copy={a} onLog={data.logActivity} toast={toast} />
-      case 'Orders': return <OrdersView data={data} copy={a} onLog={data.logActivity} toast={toast} />
-      case 'Customers': return <CustomersView data={data} copy={a} />
-      case 'Coupons': return <CouponsView data={data} copy={a} onLog={data.logActivity} toast={toast} />
       case 'Services & CMS': return <ServicesCMSView copy={a} />
       case 'Gallery': return <GalleryView data={data} copy={a} onLog={data.logActivity} toast={toast} />
       case 'Videos': return <VideosView data={data} copy={a} onLog={data.logActivity} toast={toast} />

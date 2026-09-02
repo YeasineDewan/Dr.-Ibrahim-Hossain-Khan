@@ -1,25 +1,95 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, lazy, Suspense } from 'react'
+import dynamic from 'next/dynamic'
 import {
   Activity, ArrowRight, CalendarDays, CalendarCheck, Check, ChevronDown, Clock3, HeartPulse, Menu, Search, ShieldCheck,
   Stethoscope, Users, X, Phone, MapPin, Star, LayoutDashboard, ClipboardList,
   UserRound, Settings, BarChart3, Bell, Plus, SlidersHorizontal, MoreHorizontal, Sparkles, Mail
 } from 'lucide-react'
 import { AboutPage } from '../components/about-page'
-import { PatientPortal } from '../components/patient-portal'
-import { GalleryPage, ChambersPage, AppointmentFlow, CheckoutPage, SuccessPage } from '../components/page-experiences'
-import { ServicesPage, ContactPage } from '../components/expanded-pages'
-import { AdminWorkspace } from '../components/admin-workspace'
-import { LanguageGate, LanguageControl, InvoiceButton } from '../components/language-invoice'
-import { LanguageRuntime } from '../components/language-runtime'
-import { ScrollReveal } from '../components/scroll-reveal'
-import { Tilt3D, Magnetic, Particles } from '../components/motion-3d'
-import { MotionShell } from '../components/motion-shell'
-import { HeartbeatArt, LeafArt, FamilyArt, StethoArt, PillArt, ShieldArt, CalendarArt, HourglassArt, DoctorArt, DnaArt, InfinityArt, StarsArt, ChatArt, GlobeArt, MapPinArt, CubeArt } from '../components/illust-svg'
 import { ServiceDetailPage, serviceDetails } from '../components/service-detail-page'
-import { common, navCopy, t as tT } from '../lib/translations'
-import { useLanguage, type Lang } from '../lib/translations'
+import { common, navCopy, t as tT, useLanguage, type Lang } from '../lib/translations'
+
+// Lazy-load heavy route components — they only ship when the user navigates
+const PatientPortal = dynamic(() => import('../components/patient-portal').then(m => m.PatientPortal), {
+  ssr: false, loading: () => <RouteSkeleton/>
+})
+const AdminWorkspace = dynamic(() => import('../components/admin-workspace').then(m => m.AdminWorkspace), {
+  ssr: false, loading: () => <RouteSkeleton/>
+})
+const GalleryPage = dynamic(() => import('../components/page-experiences').then(m => m.GalleryPage), { ssr: false, loading: () => <RouteSkeleton/> })
+const ChambersPage = dynamic(() => import('../components/page-experiences').then(m => m.ChambersPage), { ssr: false, loading: () => <RouteSkeleton/> })
+const AppointmentFlow = dynamic(() => import('../components/page-experiences').then(m => m.AppointmentFlow), { ssr: false, loading: () => <RouteSkeleton/> })
+const CheckoutPage = dynamic(() => import('../components/page-experiences').then(m => m.CheckoutPage), { ssr: false, loading: () => <RouteSkeleton/> })
+const SuccessPage = dynamic(() => import('../components/page-experiences').then(m => m.SuccessPage), { ssr: false, loading: () => <RouteSkeleton/> })
+const ServicesPage = dynamic(() => import('../components/expanded-pages').then(m => m.ServicesPage), { ssr: false, loading: () => <RouteSkeleton/> })
+const ContactPage = dynamic(() => import('../components/expanded-pages').then(m => m.ContactPage), { ssr: false, loading: () => <RouteSkeleton/> })
+const LanguageGate = dynamic(() => import('../components/language-invoice').then(m => m.LanguageGate), { ssr: false })
+const LanguageControl = dynamic(() => import('../components/language-invoice').then(m => m.LanguageControl))
+const InvoiceButton = dynamic(() => import('../components/language-invoice').then(m => m.InvoiceButton))
+const MotionShell = dynamic(() => import('../components/motion-shell').then(m => m.MotionShell), { ssr: false })
+
+// Home-page-only helpers — keep their static imports so they ship with the home bundle
+import { Tilt3D, Magnetic } from '../components/motion-3d'
+import { ScrollReveal } from '../components/scroll-reveal'
+import {
+  HeartbeatArt, LeafArt, FamilyArt, StethoArt, PillArt, ShieldArt, CalendarArt,
+  DoctorArt, StarsArt, ChatArt, InfinityArt, DnaArt
+} from '../components/illust-svg'
+
+// Smart navigation button: prefetches the target route chunk on hover/focus/touch
+function NavBtn({ to, onNavigate, className = '', children, style, ...rest }: { to: string; onNavigate: (p: string) => void; className?: string; children: React.ReactNode; style?: any; [k: string]: any }) {
+  return (
+    <button
+      onClick={() => onNavigate(to)}
+      onMouseEnter={() => prefetchRoute(to)}
+      onFocus={() => prefetchRoute(to)}
+      onTouchStart={() => prefetchRoute(to)}
+      className={className}
+      style={style}
+      {...rest}
+    >
+      {children}
+    </button>
+  )
+}
+
+function RouteSkeleton() {
+  return (
+    <div style={{ minHeight: '60vh', display: 'grid', placeItems: 'center', padding: 40 }}>
+      <div className="route-skeleton">
+        <div className="route-skeleton-spin"/>
+      </div>
+      <style>{`@keyframes rs{to{transform:rotate(360deg)}}.route-skeleton{display:grid;place-items:center}.route-skeleton-spin{width:36px;height:36px;border:3px solid rgba(20,184,166,0.15);border-top-color:#14b8a6;border-radius:50%;animation:rs 0.9s linear infinite}`}</style>
+    </div>
+  )
+}
+
+// Route prefetcher — fires the dynamic import on hover/touch so navigation is instant
+const prefetchers: Record<string, () => Promise<any>> = {
+  Gallery: () => import('../components/page-experiences').then(m => m.GalleryPage),
+  Chambers: () => import('../components/page-experiences').then(m => m.ChambersPage),
+  Appointment: () => import('../components/page-experiences').then(m => m.AppointmentFlow),
+  Checkout: () => import('../components/page-experiences').then(m => m.CheckoutPage),
+  Success: () => import('../components/page-experiences').then(m => m.SuccessPage),
+  Services: () => import('../components/expanded-pages').then(m => m.ServicesPage),
+  Contact: () => import('../components/expanded-pages').then(m => m.ContactPage),
+  Admin: () => import('../components/admin-workspace').then(m => m.AdminWorkspace),
+  Patient: () => import('../components/patient-portal').then(m => m.PatientPortal),
+  About: () => import('../components/about-page').then(m => m.AboutPage),
+}
+const prefetched = new Set<string>()
+function prefetchRoute(name: string) {
+  if (prefetched.has(name)) return
+  const fn = prefetchers[name] || (name.startsWith('Service:') ? () => import('../components/service-detail-page') : null)
+  if (fn) {
+    prefetched.add(name)
+    // Defer to idle to never block input
+    if ('requestIdleCallback' in window) (window as any).requestIdleCallback(() => fn().catch(() => {}))
+    else setTimeout(() => fn().catch(() => {}), 200)
+  }
+}
 
 function useT() {
   const { lang } = useLanguage()
@@ -101,7 +171,9 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
             <button
               key={item}
               onClick={() => { onNavigate(item); setOpen(false) }}
-              onMouseEnter={() => setHovered(item)}
+              onMouseEnter={() => { setHovered(item); prefetchRoute(item) }}
+              onFocus={() => { setHovered(item); prefetchRoute(item) }}
+              onTouchStart={() => prefetchRoute(item)}
               onMouseLeave={() => setHovered(null)}
               className={`nav-link link-underline ${hovered === item ? 'is-hover' : ''}`}
               style={{ animationDelay: `${0.05 + i * 0.04}s` }}
@@ -113,9 +185,6 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
         </nav>
 
         <div className="header-actions">
-          <div className="header-status" title={n.statusBadge}>
-            <span className="status-dot"/> <span>{n.openToday}</span>
-          </div>
           <button className="icon-btn press" aria-label={n.searchAria} onClick={() => setSearchOpen(true)}>
             <Search size={18}/>
             <span className="icon-glow" aria-hidden="true"/>
@@ -379,14 +448,8 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
   return <ScrollReveal className="home-reveal"><>
     {/* ============ HERO ============ */}
     <section className="hero aurora-bg scene-3d" style={{ position: 'relative', overflow: 'hidden' }}>
-      <div className="grid-dots" style={{ position: 'absolute', inset: 0, opacity: 0.4, pointerEvents: 'none' }}/>
-      <div className="hero-glow" style={{ width: 500, height: 500, top: -150, left: -100, opacity: 0.45 }}/>
-      <div className="hero-glow" style={{ width: 400, height: 400, bottom: -100, right: -80, opacity: 0.35, animationDelay: '-8s' }}/>
-      <div className="blob blob-1" style={{ width: 360, height: 360, top: -80, left: -80 }}/>
-      <div className="blob blob-2" style={{ width: 280, height: 280, bottom: -40, right: 80 }}/>
-      <div className="blob blob-3" style={{ width: 240, height: 240, top: 100, right: -60 }}/>
-      <Particles count={20}/>
-      <div className="light-leak" style={{ width: 600, height: 600, top: -100, left: '40%', opacity: 0.35 }}/>
+      <div className="hero-glow" style={{ width: 500, height: 500, top: -150, left: -100, opacity: 0.25 }}/>
+      <div className="grid-dots" style={{ position: 'absolute', inset: 0, opacity: 0.18, pointerEvents: 'none' }}/>
 
       <div className="container hero-grid">
         <div className="hero-copy">
@@ -440,21 +503,7 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
           {/* Single main 3D heartbeat illustration — image takes priority, falls back to SVG */}
           <Tilt3D max={5} scale={1.01} className="float-3d hero-main-card">
             <div className="hero-main-bg hero-photo-wrap" style={{ borderRadius: '24px', overflow: 'hidden', position: 'relative', background: 'linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 50%, #ede9fe 100%)', boxShadow: '0 40px 80px -16px rgba(15,42,68,0.3)', border: '1px solid rgba(255,255,255,0.8)', aspectRatio: '1/1' }}>
-              {/* Drop your image URL into `HERO_IMAGE_URL` below to use a photo. Leave empty ('') to use the 3D SVG illustration. */}
-              {(() => {
-                const HERO_IMAGE_URL = ''
-                if (HERO_IMAGE_URL) {
-                  return (
-                    <img
-                      src={HERO_IMAGE_URL}
-                      alt="Dr. Ibrahim Hossain"
-                      className="hero-photo ken-burns"
-                      loading="eager"
-                    />
-                  )
-                }
-                return <HeartbeatArt style={{ position: 'absolute', inset: 0, opacity: 0.95 }}/>
-              })()}
+              <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-t0aIFTDc6pB1akFlYbJx4hrSfNncT0.png" alt="Dr. Ibrahim Hossain in a white coat" className="hero-photo" loading="eager" fetchPriority="high" />
               {/* Subtle ECG wave overlay */}
               <svg viewBox="0 0 400 100" preserveAspectRatio="none" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 80, opacity: 0.3 }}>
                 <path d="M0,50 L60,50 L80,50 L90,20 L100,80 L110,30 L130,50 L200,50 L220,50 L230,25 L240,75 L250,50 L320,50 L340,50 L350,30 L360,70 L370,50 L400,50" stroke="#14b8a6" strokeWidth="2" fill="none" className="ecg-stroke"/>
@@ -674,7 +723,6 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
     <section className="cta-section aurora-bg" style={{ position: 'relative', overflow: 'hidden' }}>
       <div className="blob blob-4" style={{ width: 300, height: 300, top: -100, right: -50 }}/>
       <div className="blob blob-5" style={{ width: 260, height: 260, bottom: -80, left: 80 }}/>
-      <Particles count={12}/>
       <div className="container cta-inner">
         <div className="appear-up" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           <span className="section-eyebrow">{n.ctaPill}</span>
@@ -750,7 +798,6 @@ export default function Page() {
   return (
     <>
       <LanguageGate onChange={setLang} />
-      <LanguageRuntime lang={lang} />
       <MotionShell />
       <div className="utility-bar">
         <div className="container utility-inner">

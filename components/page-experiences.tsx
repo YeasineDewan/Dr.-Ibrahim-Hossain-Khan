@@ -20,10 +20,17 @@ export function GalleryPage() {
   const g = galleryCopy[lang]
   const [slide, setSlide] = useState(0)
   const [lightbox, setLightbox] = useState<number | null>(null)
+  const videoSlides = [
+    { title: lang === 'bn' ? 'নরওয়ে: এক সময়-ভ্রমণ' : 'Norway: A time-lapse adventure', meta: lang === 'bn' ? 'ভ্রমণ • ০৪:১২' : 'Travel film • 04:12' },
+    { title: lang === 'bn' ? 'চিকিৎসার নেপথ্যে' : 'Behind the care', meta: lang === 'bn' ? 'ক্লিনিক • ০২:৪৮' : 'Clinic story • 02:48' },
+    { title: lang === 'bn' ? 'সুস্থতার গল্প' : 'Stories of recovery', meta: lang === 'bn' ? 'রোগীর গল্প • ০৩:২০' : 'Patient story • 03:20' },
+    { title: lang === 'bn' ? 'আমাদের চেম্বার' : 'Inside our chambers', meta: lang === 'bn' ? 'পরিদর্শন • ০১:৫৬' : 'Clinic tour • 01:56' },
+  ]
   useEffect(() => {
-    const t = setInterval(() => setSlide(s => (s + 1) % 3), 4500)
-    return () => clearInterval(t)
-  }, [])
+    const timer = window.setInterval(() => setSlide(current => (current + 1) % videoSlides.length), 6000)
+    return () => window.clearInterval(timer)
+  }, [videoSlides.length])
+  const videoImage = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-VvLb8utyvJRSqBnQiP8yeuq4NcQ5fr.png'
   return (
     <main className="page-section" style={{ position: 'relative', overflow: 'hidden' }}>
       <div className="aurora-bg" style={{ position: 'absolute', inset: 0, opacity: 0.5, pointerEvents: 'none' }}/>
@@ -40,19 +47,11 @@ export function GalleryPage() {
             </div>
           ))}
         </div>
-        <div className="video-feature premium-card shine-card" style={{ marginTop: 40, padding: 28, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, alignItems: 'center', overflow: 'hidden' }}>
-          <div className="img-zoom clip-reveal" style={{ borderRadius: 18, overflow: 'hidden' }}>
-            <img src={photo(['photo-1576091160550-2173dba999ef','photo-1576091160399-112ba8d25d1d','photo-1559757175-0eb30cd8c063'][slide])} alt="Clinic video feature" style={{ width: '100%', height: 320, objectFit: 'cover' }}/>
-          </div>
-          <div>
-            <span className="section-eyebrow">{g.videoEyebrow} · 0{slide+1}</span>
-            <h2 style={{ marginTop: 14 }}>{g.videoTitle1} <em>{g.videoTitleEm}</em></h2>
-            <p>{g.videoBody}</p>
-            <Magnetic>
-              <button className="btn btn-primary btn-pro shadow-glow-teal btn-tilt" onClick={() => setSlide((slide + 1) % 3)}>{lang === 'bn' ? 'পরবর্তী ভিডিও' : 'Next video'} <ArrowRight size={16} className="float-x"/></button>
-            </Magnetic>
-          </div>
-        </div>
+        <section className="gallery-video-showcase" aria-label={g.videoEyebrow}>
+          <div className="gallery-video-head"><div><span className="section-eyebrow">{g.videoEyebrow}</span><h2>{g.videoTitle1} <em>{g.videoTitleEm}</em></h2><p>{g.videoBody}</p></div><div className="gallery-video-controls"><button aria-label={lang === 'bn' ? 'আগের ভিডিও' : 'Previous video'} onClick={() => setSlide((slide - 1 + videoSlides.length) % videoSlides.length)}><ArrowRight size={18} style={{ transform: 'rotate(180deg)' }}/></button><span>{String(slide + 1).padStart(2, '0')} / {String(videoSlides.length).padStart(2, '0')}</span><button aria-label={lang === 'bn' ? 'পরের ভিডিও' : 'Next video'} onClick={() => setSlide((slide + 1) % videoSlides.length)}><ArrowRight size={18}/></button></div></div>
+          <div className="gallery-video-grid">{[0, 1].map((offset) => { const item = videoSlides[(slide + offset) % videoSlides.length]; return <article className="gallery-video-card" key={`${slide}-${offset}`}><div className="gallery-video-media"><img src={videoImage} alt={item.title} loading="lazy"/><span className="gallery-video-wash"/><button className="gallery-video-play" aria-label={`${lang === 'bn' ? 'প্লে' : 'Play'} ${item.title}`}><span>▶</span></button><span className="gallery-video-index">0{((slide + offset) % videoSlides.length) + 1}</span></div><div className="gallery-video-meta"><div><span>{item.meta}</span><h3>{item.title}</h3></div><ArrowRight size={18}/></div></article> })}</div>
+          <div className="gallery-video-dots">{videoSlides.map((_, index) => <button key={index} aria-label={`${lang === 'bn' ? 'ভিডিও' : 'Video'} ${index + 1}`} className={index === slide ? 'active' : ''} onClick={() => setSlide(index)}/>)}</div>
+        </section>
       </div>
       {lightbox !== null && (
         <div className="admin-modal-backdrop" style={{ zIndex: 200 }} onClick={() => setLightbox(null)}>
@@ -238,7 +237,7 @@ export function SuccessPage({ onNavigate }: { onNavigate: (p: string) => void })
   return (
     <main className="page-section" style={{ position: 'relative', overflow: 'hidden' }}>
       <div className="aurora-bg" style={{ position: 'absolute', inset: 0, opacity: 0.6, pointerEvents: 'none' }}/>
-      <Particles count={40}/>
+      <Particles count={18}/>
       <div className="container narrow success-page" style={{ position: 'relative', textAlign: 'center' }}>
         <div className="appear-zoom" style={{ width: 96, height: 96, margin: '0 auto 24px', borderRadius: '50%', background: 'linear-gradient(135deg, #14b8a6, #6366f1)', color: '#fff', display: 'grid', placeItems: 'center', boxShadow: '0 24px 60px -12px rgba(20,184,166,0.5)' }}>
           <Check size={48} strokeWidth={3}/>
