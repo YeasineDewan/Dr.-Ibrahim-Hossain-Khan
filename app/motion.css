@@ -102,6 +102,11 @@
 .tilt-3d { transition: transform 0.5s cubic-bezier(0.22,1,0.36,1), box-shadow 0.5s ease; transform-style: preserve-3d; }
 .tilt-3d:hover { transform: perspective(1200px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateZ(20px); }
 
+/* Keep dashboard transitions cheap: compositor-friendly transforms only, and defer off-screen work. */
+.admin-workspace .pro-admin-content > * { content-visibility: auto; contain-intrinsic-size: 720px; }
+.admin-workspace .blob, .admin-workspace .aurora-bg::before, .admin-workspace .aurora-bg::after { animation: none; }
+@media (max-width: 700px) { .admin-workspace .float-3d, .admin-workspace .spin-3d, .admin-workspace .tilt-3d { animation: none; transform: none; } }
+
 /* ---------- Floating animation utility ---------- */
 .float        { animation: mx-float-y 5s ease-in-out infinite; }
 .float-soft   { animation: mx-float-y-soft 4s ease-in-out infinite; }

@@ -431,6 +431,7 @@ function PatientView({ name, copy, data }: { name: string; copy: any; data: any 
   const past = myAppts.filter((a: any) => a.status === 'Completed')
 
   const [apptFilter, setApptFilter] = useState<'upcoming' | 'past' | 'all'>('upcoming')
+  const [profileSaved, setProfileSaved] = useState(false)
   const filtered = apptFilter === 'upcoming' ? upcoming : apptFilter === 'past' ? past : myAppts
 
   return (
@@ -456,7 +457,7 @@ function PatientView({ name, copy, data }: { name: string; copy: any; data: any 
           </Magnetic>
         )}
         {isBilling && <button className="pro-outline btn-pro"><Download size={14}/> {copy.download}</button>}
-        {isProfile && <button className="pro-primary btn-pro shadow-glow-teal"><Check size={14}/> {copy.save}</button>}
+        {isProfile && <button className="pro-primary btn-pro shadow-glow-teal" onClick={() => { setProfileSaved(true); window.setTimeout(() => setProfileSaved(false), 2400) }}><Check size={14}/> {profileSaved ? (bn ? 'সংরক্ষিত' : 'Saved') : copy.save}</button>}
       </div>
 
       {isAppts && (
@@ -598,7 +599,7 @@ function PatientView({ name, copy, data }: { name: string; copy: any; data: any 
       )}
 
       {isProfile && (
-        <div className="pro-panel card-3d lift"><div className="pro-panel-head"><div><span className="pro-kicker">{bn ? 'অ্যাকাউন্ট' : 'ACCOUNT'}</span><h2>{bn ? 'প্রোফাইল ও পছন্দ' : 'Profile & preferences'}</h2><small className="muted-light">{bn ? 'আপনার ব্যক্তিগত তথ্য ও যোগাযোগের পছন্দ নিয়ন্ত্রণ করুন।' : 'Control your personal details and communication preferences.'}</small></div><Avatar name={me.name} size={56}/></div><div className="pp-profile-form"><label>{bn ? 'পূর্ণ নাম' : 'Full name'}<input defaultValue={me.name}/></label><label>{bn ? 'ইমেইল' : 'Email'}<input defaultValue={me.email}/></label><label>{bn ? 'ফোন' : 'Phone'}<input defaultValue={me.phone}/></label><label>{bn ? 'জন্মতারিখ' : 'Date of birth'}<input defaultValue={me.dob}/></label></div><div className="adm-task-list"><div><ShieldCheck size={16}/><span>{bn ? 'স্বাস্থ্য তথ্যের গোপনীয়তা সক্রিয়' : 'Health data privacy is enabled'}</span><PillUI tone="teal">{bn ? 'সক্রিয়' : 'Active'}</PillUI></div><div><Bell size={16}/><span>{bn ? 'অ্যাপয়েন্টমেন্ট রিমাইন্ডার' : 'Appointment reminders'}</span><PillUI tone="teal">{bn ? 'ইমেইল' : 'Email'}</PillUI></div></div></div>
+        <div className="pro-panel card-3d lift"><div className="pro-panel-head"><div><span className="pro-kicker">{bn ? 'অ্যাকাউন্ট' : 'ACCOUNT'}</span><h2>{bn ? 'প্রোফাইল ও পছন্দ' : 'Profile & preferences'}</h2><small className="muted-light">{bn ? 'আপনার ব্যক্তিগত তথ্য ও যোগাযোগের পছন্দ নিয়ন্ত্রণ করুন।' : 'Control your personal details and communication preferences.'}</small></div><Avatar name={me.name} size={56}/></div><div className="pp-profile-form"><label>{bn ? 'পূর্ণ নাম' : 'Full name'}<input defaultValue={me.name}/></label><label>{bn ? 'ইমেইল' : 'Email'}<input defaultValue={me.email}/></label><label>{bn ? 'ফোন' : 'Phone'}<input defaultValue={me.phone}/></label><label>{bn ? 'জন্মতারিখ' : 'Date of birth'}<input defaultValue={me.dob}/></label></div><div className="adm-task-list"><div><ShieldCheck size={16}/><span>{bn ? 'স্বাস্থ্য তথ্যের গোপনীয়তা সক্রিয়' : 'Health data privacy is enabled'}</span><PillUI tone="teal">{bn ? 'সক্রিয়' : 'Active'}</PillUI></div><div><Bell size={16}/><span>{bn ? 'অ্যাপয়েন্টমেন্ট রিমাইন্ডার' : 'Appointment reminders'}</span><PillUI tone="teal">{bn ? 'ইমেইল' : 'Email'}</PillUI></div><div><Phone size={16}/><span>{bn ? 'জরুরি যোগাযোগ' : 'Emergency contact'}</span><strong>{bn ? 'সাদিয়া খান' : 'Sadia Khan'}</strong></div></div>{profileSaved && <div className="pp-save-note"><Check size={14}/> {bn ? 'আপনার প্রোফাইল আপডেট হয়েছে।' : 'Your profile has been updated securely.'}</div>}</div>
       )}
 
       {isCare && (

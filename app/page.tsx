@@ -185,9 +185,6 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
         </nav>
 
         <div className="header-actions">
-          <div className="header-status" title={n.statusBadge}>
-            <span className="status-dot"/> <span>{n.openToday}</span>
-          </div>
           <button className="icon-btn press" aria-label={n.searchAria} onClick={() => setSearchOpen(true)}>
             <Search size={18}/>
             <span className="icon-glow" aria-hidden="true"/>

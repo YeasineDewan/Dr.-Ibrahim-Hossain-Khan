@@ -2215,3 +2215,10 @@ h1 em,h2 em{font-family:Georgia,serif;font-weight:400;background:linear-gradient
 @media(max-width: 600px) {
   .language-fixed { top: auto !important; bottom: 18px !important; right: 18px !important; transform: none !important; }
 }
+
+/* Dashboard performance and profile polish */
+.admin-workspace .pro-admin-content > *, .patient-app .pp-view > * { content-visibility: auto; contain-intrinsic-size: 720px; }
+.pp-profile-form input { transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+.pp-profile-form input:focus { transform: translateY(-1px); }
+.pp-save-note { display:flex; align-items:center; gap:8px; margin-top:18px; padding:12px 14px; border-radius:8px; background:#e2f2ed; color:#287b75; font-size:13px; animation: rise .35s ease both; }
+@media (max-width: 700px) { .pp-profile-form { grid-template-columns:1fr; } .admin-workspace .float-3d, .admin-workspace .spin-3d { animation:none; } }
