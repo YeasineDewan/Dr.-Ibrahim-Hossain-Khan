@@ -238,7 +238,7 @@ export function SuccessPage({ onNavigate }: { onNavigate: (p: string) => void })
   return (
     <main className="page-section" style={{ position: 'relative', overflow: 'hidden' }}>
       <div className="aurora-bg" style={{ position: 'absolute', inset: 0, opacity: 0.6, pointerEvents: 'none' }}/>
-      <Particles count={40}/>
+      <Particles count={18}/>
       <div className="container narrow success-page" style={{ position: 'relative', textAlign: 'center' }}>
         <div className="appear-zoom" style={{ width: 96, height: 96, margin: '0 auto 24px', borderRadius: '50%', background: 'linear-gradient(135deg, #14b8a6, #6366f1)', color: '#fff', display: 'grid', placeItems: 'center', boxShadow: '0 24px 60px -12px rgba(20,184,166,0.5)' }}>
           <Check size={48} strokeWidth={3}/>

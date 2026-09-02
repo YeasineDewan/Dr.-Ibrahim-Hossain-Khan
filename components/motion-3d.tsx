@@ -1,32 +1,45 @@
 "use client"
 
-import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+
+const canAnimate = typeof window !== 'undefined' && !window.matchMedia('(pointer: coarse)').matches
 
 export function Tilt3D({ children, max = 8, scale = 1.02, className = '', style }: { children: ReactNode; max?: number; scale?: number; className?: string; style?: CSSProperties }) {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    if (!el || !canAnimate) return
+    let raf = 0
+    let pending = false
+    let lastEvent: MouseEvent | null = null
     const onMove = (e: MouseEvent) => {
-      const rect = el.getBoundingClientRect()
-      const px = (e.clientX - rect.left) / rect.width
-      const py = (e.clientY - rect.top) / rect.height
-      const ry = (px - 0.5) * 2 * max
-      const rx = (0.5 - py) * 2 * max
-      el.style.setProperty('--rx', `${rx.toFixed(2)}deg`)
-      el.style.setProperty('--ry', `${ry.toFixed(2)}deg`)
-      el.style.setProperty('--tx', `${(px - 0.5) * 10}px`)
-      el.style.setProperty('--ty', `${(py - 0.5) * 10}px`)
-      el.style.transform = `perspective(1100px) rotateX(${rx}deg) rotateY(${ry}deg) translate3d(${(px - 0.5) * 4}px, ${(py - 0.5) * 4}px, 12px) scale(${scale})`
+      lastEvent = e
+      if (pending) return
+      pending = true
+      raf = requestAnimationFrame(() => {
+        pending = false
+        if (!lastEvent) return
+        const ev = lastEvent
+        const rect = el.getBoundingClientRect()
+        const px = (ev.clientX - rect.left) / rect.width
+        const py = (ev.clientY - rect.top) / rect.height
+        const ry = (px - 0.5) * 2 * max
+        const rx = (0.5 - py) * 2 * max
+        el.style.setProperty('--rx', `${rx.toFixed(2)}deg`)
+        el.style.setProperty('--ry', `${ry.toFixed(2)}deg`)
+        el.style.transform = `perspective(1100px) rotateX(${rx}deg) rotateY(${ry}deg) translate3d(${(px - 0.5) * 4}px, ${(py - 0.5) * 4}px, 12px) scale(${scale})`
+      })
     }
     const onLeave = () => {
+      cancelAnimationFrame(raf)
       el.style.transform = ''
       el.style.setProperty('--rx', '0deg')
       el.style.setProperty('--ry', '0deg')
     }
-    el.addEventListener('mousemove', onMove)
+    el.addEventListener('mousemove', onMove, { passive: true })
     el.addEventListener('mouseleave', onLeave)
     return () => {
+      cancelAnimationFrame(raf)
       el.removeEventListener('mousemove', onMove)
       el.removeEventListener('mouseleave', onLeave)
     }
@@ -38,17 +51,29 @@ export function Magnetic({ children, strength = 0.25, className = '' }: { childr
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    if (!el || !canAnimate) return
+    let raf = 0
+    let pending = false
+    let lastEvent: MouseEvent | null = null
     const onMove = (e: MouseEvent) => {
-      const rect = el.getBoundingClientRect()
-      const x = e.clientX - rect.left - rect.width / 2
-      const y = e.clientY - rect.top - rect.height / 2
-      el.style.transform = `translate(${x * strength}px, ${y * strength}px)`
+      lastEvent = e
+      if (pending) return
+      pending = true
+      raf = requestAnimationFrame(() => {
+        pending = false
+        if (!lastEvent) return
+        const ev = lastEvent
+        const rect = el.getBoundingClientRect()
+        const x = ev.clientX - rect.left - rect.width / 2
+        const y = ev.clientY - rect.top - rect.height / 2
+        el.style.transform = `translate(${x * strength}px, ${y * strength}px)`
+      })
     }
-    const onLeave = () => { el.style.transform = '' }
-    el.addEventListener('mousemove', onMove)
+    const onLeave = () => { cancelAnimationFrame(raf); el.style.transform = '' }
+    el.addEventListener('mousemove', onMove, { passive: true })
     el.addEventListener('mouseleave', onLeave)
     return () => {
+      cancelAnimationFrame(raf)
       el.removeEventListener('mousemove', onMove)
       el.removeEventListener('mouseleave', onLeave)
     }
@@ -62,6 +87,7 @@ export function Particles({ count = 24, colors = ['#14b8a6', '#6366f1', '#ec4899
     const el = ref.current
     if (!el) return
     el.innerHTML = ''
+    const frag = document.createDocumentFragment()
     for (let i = 0; i < count; i++) {
       const p = document.createElement('span')
       p.className = 'particle'
@@ -73,18 +99,10 @@ export function Particles({ count = 24, colors = ['#14b8a6', '#6366f1', '#ec4899
       const dur = 4 + Math.random() * 6
       const size = 3 + Math.random() * 5
       const color = colors[Math.floor(Math.random() * colors.length)]
-      p.style.left = `${x}%`
-      p.style.top = `${y}%`
-      p.style.width = `${size}px`
-      p.style.height = `${size}px`
-      p.style.background = color
-      p.style.boxShadow = `0 0 ${size * 2}px ${color}`
-      p.style.setProperty('--dx', `${dx}px`)
-      p.style.setProperty('--dy', `${dy}px`)
-      p.style.animationDelay = `${delay}s`
-      p.style.animationDuration = `${dur}s`
-      el.appendChild(p)
+      p.style.cssText = `left:${x}%;top:${y}%;width:${size}px;height:${size}px;background:${color};box-shadow:0 0 ${size * 2}px ${color};--dx:${dx}px;--dy:${dy}px;animation-delay:${delay}s;animation-duration:${dur}s`
+      frag.appendChild(p)
     }
+    el.appendChild(frag)
   }, [count, colors])
   return <div ref={ref} className="particles" aria-hidden="true" />
 }
