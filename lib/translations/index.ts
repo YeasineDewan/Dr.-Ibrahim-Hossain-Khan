@@ -4,7 +4,7 @@ import { common } from './common'
 import { navCopy } from './nav'
 import { aboutCopy, doctorBio, sexualMedicineCopy } from './about'
 import { servicesCopy, serviceDetailsCopy, chambersCopy, galleryCopy, contactCopy } from './services'
-import { appointmentCopy, shopCopy, checkoutCopy, successCopy, reviewsCopy } from './shop'
+import { appointmentCopy, checkoutCopy, successCopy } from './shop'
 import { adminCopy, patientCopy } from './admin'
 import type { Lang } from './i18n'
 
@@ -23,10 +23,8 @@ export {
   galleryCopy,
   contactCopy,
   appointmentCopy,
-  shopCopy,
   checkoutCopy,
   successCopy,
-  reviewsCopy,
   adminCopy,
   patientCopy,
 }
@@ -43,10 +41,8 @@ export const translations = {
   gallery: galleryCopy,
   contact: contactCopy,
   appointment: appointmentCopy,
-  shop: shopCopy,
   checkout: checkoutCopy,
   success: successCopy,
-  reviews: reviewsCopy,
   admin: adminCopy,
   patient: patientCopy,
 } as const

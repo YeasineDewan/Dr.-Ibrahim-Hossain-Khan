@@ -49,10 +49,10 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
   )
 }
 
-export function LanguageControl({ lang, onChange }: { lang: 'en' | 'bn'; onChange: (lang: 'en' | 'bn') => void }) {
+export function LanguageControl({ lang, onChange, compact = false }: { lang: 'en' | 'bn'; onChange: (lang: 'en' | 'bn') => void; compact?: boolean }) {
   const t = common[lang]
   return (
-    <div className="language-hover">
+    <div className={`language-hover ${compact ? 'is-compact' : ''}`}>
       <button aria-label={t.language}>
         <Globe2 size={15}/>
         <span>{lang === 'en' ? 'EN' : 'বাং'}</span>

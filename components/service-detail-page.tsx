@@ -82,22 +82,25 @@ export function ServiceDetailPage({ slug, onNavigate }: { slug: keyof typeof ser
   const points = service.points.map(p => p[lang])
   return (
     <main className="service-detail-page">
-      <section className="service-detail-hero">
+      <section className="service-detail-hero aurora-bg" style={{ position: 'relative', overflow: 'hidden' }}>
+        <div className="blob blob-2" style={{ width: 280, height: 280, top: -60, right: -40 }} />
+        <div className="blob blob-5" style={{ width: 220, height: 220, bottom: -50, left: -30 }} />
         <div className="container service-detail-grid">
-          <div className="service-detail-copy">
+          <div className="service-detail-copy appear-up">
             <button className="back-link" onClick={() => onNavigate('Services')}><ArrowLeft size={15}/> {c.back}</button>
-            <span className="pill pill-teal">{label}</span>
-            <h1>{title} {lang === 'bn' ? 'দীর্ঘস্থায়ী সুস্থতার জন্য' : 'for lasting wellbeing.'}</h1>
+            <span className="pill pill-teal float-soft">{label}</span>
+            <h1 className="gradient-text">{title} {lang === 'bn' ? 'দীর্ঘস্থায়ী সুস্থতার জন্য' : 'for lasting wellbeing.'}</h1>
             <p className="lead">{intro}</p>
             <div className="detail-actions">
-              <button className="btn btn-primary" onClick={() => onNavigate('Appointment')}>{c.bookConsult} <ArrowRight size={15}/></button>
-              <button className="btn btn-outline" onClick={() => onNavigate('Contact')}>{c.askQuestion}</button>
+              <button className="btn btn-primary btn-pro shadow-glow-teal" onClick={() => onNavigate('Appointment')}>{c.bookConsult} <ArrowRight size={15}/></button>
+              <button className="btn btn-outline btn-pro" onClick={() => onNavigate('Contact')}>{c.askQuestion}</button>
             </div>
           </div>
-          <div className="service-detail-art">
-            <HeartPulse size={42}/>
+          <div className="service-detail-art perspective tilt-3d" style={{ perspective: 1200 }}>
+            <HeartPulse size={42} className="heartbeat" style={{ color: '#fff' }}/>
             <span>{lang === 'bn' ? 'চিন্তাশীল যত্ন' : 'Thoughtful care'}</span>
             <small>{lang === 'bn' ? 'আপনাকে ঘিরে ডিজাইন করা' : 'Designed around you'}</small>
+            <div className="orbit" style={{ width: 160, height: 160, top: -30, right: -30, position: 'absolute' }}><span className="orbit-dot" style={{ background: '#fff', boxShadow: '0 0 8px 2px #fff' }}/></div>
           </div>
         </div>
       </section>
@@ -107,16 +110,16 @@ export function ServiceDetailPage({ slug, onNavigate }: { slug: keyof typeof ser
             <span className="pill">{c.planPill}</span>
             <h2>{c.planTitle1} <em>{c.planTitleEm}</em></h2>
             <p className="muted detail-intro">{c.planBody}</p>
-            <div className="service-point-list">
-              {points.map((point, i) => <div key={i}><CheckCircle2 size={18}/><span>{point}</span></div>)}
+            <div className="service-point-list reveal-stagger is-visible">
+              {points.map((point, i) => <div key={i} className="lift"><CheckCircle2 size={18} className="pulse" style={{ color: '#14b8a6' }}/><span>{point}</span></div>)}
             </div>
           </div>
-          <aside className="service-info-card">
-            <ShieldCheck size={22}/>
+          <aside className="service-info-card card-3d lift tilt-3d">
+            <ShieldCheck size={22} className="float-soft" style={{ color: '#14b8a6' }}/>
             <h3>{c.infoHeading}</h3>
             <p>{c.infoBody}</p>
             <div className="service-info-row"><Clock3 size={16}/><span>{c.infoTime}</span></div>
-            <button className="text-link" onClick={() => onNavigate('Chambers')}>{c.chooseChamber} <ArrowRight size={14}/></button>
+            <button className="text-link link-underline" onClick={() => onNavigate('Chambers')}>{c.chooseChamber} <ArrowRight size={14}/></button>
           </aside>
         </div>
       </section>

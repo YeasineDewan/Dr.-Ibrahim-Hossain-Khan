@@ -91,13 +91,13 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
     <div className="admin-workspace">
       <aside className={`pro-admin-sidebar ${open ? 'open' : ''}`}>
         <button className="pro-admin-brand" onClick={onExit}>
-          <span className="brand-mark"><Activity size={18}/></span>
+          <span className="brand-mark float-soft"><Activity size={18}/></span>
           <span>{lang === 'bn' ? 'ডাঃ ইব্রাহিম' : 'Dr. Ibrahim'}<small>{a.brandSub}</small></span>
         </button>
-        <div className="clinic-switch">
-          <span className="clinic-avatar">DI</span>
+        <div className="clinic-switch lift">
+          <span className="clinic-avatar avatar-ring" style={{ display: 'grid', placeItems: 'center' }}>DI</span>
           <span><strong>{lang === 'bn' ? 'ডাঃ ইব্রাহিম' : 'Dr. Ibrahim'}</strong><small>{a.leadPhysician}</small></span>
-          <ChevronDown size={14}/>
+          <ChevronDown size={14} className="float-x"/>
         </div>
         <nav className="pro-admin-nav">
           {groups.map((g, groupIndex) => (
@@ -107,35 +107,35 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
                 const I = iconFor(item)
                 const badge = badgeFor(item)
                 return (
-                  <button key={item} onClick={() => setActive(item)} className={`pro-nav-item ${active === item ? 'active' : ''}`}>
-                    <I size={16}/><span>{localizedGroups[groupIndex]?.items[itemIndex] || item}</span>
-                    {badge > 0 && <b className={item === 'Follow-ups' ? 'coral' : ''}>{badge}</b>}
+                  <button key={item} onClick={() => setActive(item)} className={`pro-nav-item ${active === item ? 'active' : ''} press`}>
+                    <I size={16} className={active === item ? 'float-soft' : ''}/><span>{localizedGroups[groupIndex]?.items[itemIndex] || item}</span>
+                    {badge > 0 && <b className={item === 'Follow-ups' ? 'coral pulse' : 'pulse'}>{badge}</b>}
                   </button>
                 )
               })}
             </div>
           ))}
         </nav>
-        <button className="admin-exit" onClick={onExit}><LogOut size={15}/> {a.backToWebsite}</button>
+        <button className="admin-exit press btn-pro" onClick={onExit}><LogOut size={15}/> {a.backToWebsite}</button>
       </aside>
 
       <main className="pro-admin-main">
         <header className="pro-admin-header">
-          <button className="admin-mobile-menu" onClick={() => setOpen(!open)}>{open ? <X size={19}/> : <Menu size={19}/>}</button>
+          <button className="admin-mobile-menu press" onClick={() => setOpen(!open)}>{open ? <X size={19}/> : <Menu size={19}/>}</button>
           <div className="admin-breadcrumb">{a.workspace} <span>/</span> <strong>{labelFor(currentItem)}</strong></div>
           <div className="admin-header-actions">
-            <div className="pro-search"><Search size={15}/><input placeholder={a.searchPh}/></div>
-            <button className="pro-icon-button" onClick={() => setActive('Notifications')} title="Notifications">
-              <Bell size={18}/>{unread > 0 && <i/>}
+            <div className="pro-search glow-focus"><Search size={15}/><input placeholder={a.searchPh}/></div>
+            <button className="pro-icon-button press" onClick={() => setActive('Notifications')} title="Notifications">
+              <Bell size={18}/>{unread > 0 && <i className="pulse"/>}
             </button>
-            <button className="pro-profile" onClick={() => setActive('Users & roles')}>
+            <button className="pro-profile press" onClick={() => setActive('Users & roles')}>
               <Avatar name="Dr. Ibrahim" size={32}/>
               <strong>{lang === 'bn' ? 'ডাঃ ইব্রাহিম' : 'Dr. Ibrahim'}</strong>
               <ChevronDown size={14}/>
             </button>
           </div>
         </header>
-        <div className="pro-admin-content" key={active}>{renderModule()}</div>
+        <div className="pro-admin-content appear-zoom" key={active}>{renderModule()}</div>
       </main>
       {toast.node}
     </div>
