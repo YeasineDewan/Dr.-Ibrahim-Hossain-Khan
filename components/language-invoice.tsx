@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Download, Globe2, X } from 'lucide-react'
-import { jsPDF } from 'jspdf'
+import { Download, Globe2, Sparkles, Check, ArrowRight, Languages } from 'lucide-react'
 import { common, useLanguage } from '../lib/translations'
 
 export function copy() {
@@ -11,10 +10,16 @@ export function copy() {
 
 export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => void }) {
   const [open, setOpen] = useState(false)
+  const [hovered, setHovered] = useState<'en' | 'bn' | null>(null)
+  const [closing, setClosing] = useState(false)
   useEffect(() => {
     try {
-      const stored = window.localStorage.getItem('dribrahim.lang.gate')
-      if (!stored) setOpen(true)
+      const stored = window.localStorage.getItem('dribrahim.lang.gate-seen')
+      if (!stored) {
+        // tiny delay so the language font + primary content can paint first
+        const t = setTimeout(() => setOpen(true), 380)
+        return () => clearTimeout(t)
+      }
     } catch {
       setOpen(true)
     }
@@ -22,27 +27,76 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
   if (!open) return null
   const t = common.en
   const choose = (lang: 'en' | 'bn') => {
-    onChange(lang)
-    try { window.localStorage.setItem('dribrahim.lang.gate', '1') } catch {}
-    setOpen(false)
+    setClosing(true)
+    setTimeout(() => {
+      onChange(lang)
+      try { window.localStorage.setItem('dribrahim.lang.gate-seen', '1') } catch {}
+      try { window.localStorage.setItem('dribrahim.lang', lang) } catch {}
+      setOpen(false)
+    }, 260)
+  }
+  const dismiss = () => {
+    setClosing(true)
+    setTimeout(() => {
+      try { window.localStorage.setItem('dribrahim.lang.gate-seen', '1') } catch {}
+      setOpen(false)
+    }, 200)
   }
   return (
-    <div className="language-backdrop">
-      <div className="language-card">
-        <button className="language-close" onClick={() => { setOpen(false); try { window.localStorage.setItem('dribrahim.lang.gate', '1') } catch {} }} aria-label={t.close}><X/></button>
-        <span className="language-orb"><Globe2/></span>
-        <span className="eyebrow">{t.chooseLanguage.includes('Choose') ? 'DR. IBRAHIM CLINIC' : 'ডাঃ ইব্রাহিম ক্লিনিক'}</span>
-        <h2>{t.chooseLanguage}</h2>
-        <p>{t.chooseLanguageSub}</p>
-        <div className="language-options">
-          <button onClick={() => choose('en')}>
-            <strong>English</strong>
-            <small>Continue in English</small>
+    <div className={`lang-gate-backdrop ${closing ? 'is-closing' : ''}`} role="dialog" aria-modal="true" aria-label="Choose your language">
+      <div className="lang-gate-bg" aria-hidden="true">
+        <div className="lang-gate-orb lang-gate-orb-1"/>
+        <div className="lang-gate-orb lang-gate-orb-2"/>
+        <div className="lang-gate-orb lang-gate-orb-3"/>
+        <div className="lang-gate-grid"/>
+      </div>
+      <button className="lang-gate-skip" onClick={dismiss}>Skip for now</button>
+      <div className={`lang-gate-card ${closing ? 'is-closing' : ''}`}>
+        <div className="lang-gate-eyebrow">
+          <Sparkles size={11}/> <span>DR. IBRAHIM CLINIC</span> <Sparkles size={11}/>
+        </div>
+        <div className="lang-gate-flag" aria-hidden="true">
+          <Languages size={32}/>
+        </div>
+        <h2 className="lang-gate-title">Choose your language</h2>
+        <p className="lang-gate-sub">Pick the language you'd like to use across the clinic. You can switch any time from the top-right.</p>
+        <div className="lang-gate-options">
+          <button
+            className={`lang-gate-opt ${hovered === 'en' ? 'is-hover' : ''}`}
+            onClick={() => choose('en')}
+            onMouseEnter={() => setHovered('en')}
+            onMouseLeave={() => setHovered(null)}
+          >
+            <span className="lang-gate-opt-flag" aria-hidden="true">
+              <span className="lang-gate-opt-flag-en"/>
+            </span>
+            <span className="lang-gate-opt-text">
+              <strong>English</strong>
+              <small>Continue in English</small>
+            </span>
+            <span className="lang-gate-opt-arrow"><ArrowRight size={16}/></span>
+            <span className="lang-gate-opt-glow" aria-hidden="true"/>
           </button>
-          <button onClick={() => choose('bn')}>
-            <strong>বাংলা</strong>
-            <small>বাংলায় চালিয়ে যান</small>
+          <button
+            className={`lang-gate-opt lang-gate-opt-bn ${hovered === 'bn' ? 'is-hover' : ''}`}
+            onClick={() => choose('bn')}
+            onMouseEnter={() => setHovered('bn')}
+            onMouseLeave={() => setHovered(null)}
+          >
+            <span className="lang-gate-opt-flag" aria-hidden="true">
+              <span className="lang-gate-opt-flag-bn"/>
+            </span>
+            <span className="lang-gate-opt-text">
+              <strong>বাংলা</strong>
+              <small>বাংলায় চালিয়ে যান</small>
+            </span>
+            <span className="lang-gate-opt-arrow"><ArrowRight size={16}/></span>
+            <span className="lang-gate-opt-glow" aria-hidden="true"/>
           </button>
+        </div>
+        <div className="lang-gate-foot">
+          <span className="lang-gate-foot-pip"><Check size={10}/> No account needed</span>
+          <span className="lang-gate-foot-pip"><Globe2 size={10}/> Switch any time</span>
         </div>
       </div>
     </div>
@@ -53,14 +107,19 @@ export function LanguageControl({ lang, onChange, compact = false }: { lang: 'en
   const t = common[lang]
   return (
     <div className={`language-hover ${compact ? 'is-compact' : ''}`}>
-      <button aria-label={t.language}>
+      <button aria-label={t.language} title={t.language}>
         <Globe2 size={15}/>
         <span>{lang === 'en' ? 'EN' : 'বাং'}</span>
+        <span className="language-caret" aria-hidden="true"/>
       </button>
       <div className="language-tooltip">
         <strong>{t.language}</strong>
-        <button onClick={() => onChange('en')}>English</button>
-        <button onClick={() => onChange('bn')}>বাংলা</button>
+        <button onClick={() => onChange('en')} className={lang === 'en' ? 'is-on' : ''}>
+          <span className="lang-pill-dot"/> English
+        </button>
+        <button onClick={() => onChange('bn')} className={lang === 'bn' ? 'is-on' : ''}>
+          <span className="lang-pill-dot"/> বাংলা
+        </button>
       </div>
     </div>
   )
@@ -75,7 +134,8 @@ export function InvoiceButton({ type = 'appointment', lang = 'en' }: { type?: 'a
     : (lang === 'bn' ? 'বিশেষজ্ঞ কনসালটেশন' : 'Specialist consultation')
   const total = type === 'order' ? (lang === 'bn' ? '৳ ৬,৮০০' : '$68.00') : (lang === 'bn' ? '৳ ৪,৫০০' : '$45.00')
 
-  const download = () => {
+  const download = async () => {
+    const { jsPDF } = await import('jspdf')
     const pdf = new jsPDF()
     pdf.setTextColor(23, 75, 120)
     pdf.setFontSize(20)

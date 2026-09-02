@@ -1920,3 +1920,303 @@ h1 em,h2 em{font-family:Georgia,serif;font-weight:400;background:linear-gradient
   0%   { transform: scale(1)    translate(0, 0); }
   100% { transform: scale(1.12) translate(-1.5%, -1%); }
 }
+
+/* ================================================================
+   LANGUAGE GATE — professional first-visit popup
+   ================================================================ */
+.lang-gate-backdrop {
+  position: fixed; inset: 0; z-index: 200;
+  display: grid; place-items: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  animation: langGateIn 0.4s cubic-bezier(0.22,1,0.36,1) both;
+}
+.lang-gate-backdrop.is-closing { animation: langGateOut 0.3s ease both; }
+@keyframes langGateIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes langGateOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* Decorative background */
+.lang-gate-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.lang-gate-grid {
+  position: absolute; inset: 0; opacity: 0.3;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%);
+}
+.lang-gate-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(70px); opacity: 0.55; pointer-events: none;
+  animation: orb-float 16s ease-in-out infinite;
+}
+.lang-gate-orb-1 { width: 320px; height: 320px; top: -80px; left: -80px; background: radial-gradient(circle, #14b8a6, transparent 70%); }
+.lang-gate-orb-2 { width: 280px; height: 280px; bottom: -60px; right: -60px; background: radial-gradient(circle, #6366f1, transparent 70%); animation-delay: 4s; }
+.lang-gate-orb-3 { width: 220px; height: 220px; top: 50%; left: 50%; transform: translate(-50%, -50%); background: radial-gradient(circle, #ec4899, transparent 70%); animation-delay: 8s; opacity: 0.3; }
+
+.lang-gate-skip {
+  position: absolute; top: 24px; right: 28px;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 8px 16px; border-radius: 100px;
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.25s ease;
+  z-index: 2;
+}
+.lang-gate-skip:hover { background: rgba(255,255,255,0.15); color: #fff; transform: translateY(-1px); }
+
+/* The main card */
+.lang-gate-card {
+  position: relative; z-index: 2;
+  width: min(520px, 100%);
+  background: rgba(255,255,255,0.97);
+  border: 1px solid rgba(255,255,255,0.7);
+  border-radius: 28px;
+  padding: 40px 36px 32px;
+  text-align: center;
+  box-shadow:
+    0 40px 100px -20px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(20,184,166,0.08);
+  animation: langGateCardIn 0.5s cubic-bezier(0.22,1,0.36,1) both;
+  animation-delay: 0.1s;
+}
+.lang-gate-card.is-closing { animation: langGateCardOut 0.25s ease both; }
+@keyframes langGateCardIn  { from { opacity: 0; transform: translateY(20px) scale(0.96); } to { opacity: 1; transform: none; } }
+@keyframes langGateCardOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(10px) scale(0.98); } }
+
+.lang-gate-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px; border-radius: 100px;
+  background: linear-gradient(135deg, rgba(20,184,166,0.12), rgba(99,102,241,0.08));
+  color: #0f766e;
+  font-size: 10px; font-weight: 800; letter-spacing: 0.18em;
+  border: 1px solid rgba(20,184,166,0.18);
+  margin-bottom: 18px;
+}
+.lang-gate-flag {
+  width: 64px; height: 64px;
+  margin: 0 auto 18px;
+  border-radius: 18px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, #14b8a6 0%, #6366f1 100%);
+  color: #fff;
+  box-shadow: 0 18px 36px -10px rgba(20,184,166,0.5);
+  position: relative;
+}
+.lang-gate-flag::after {
+  content: ''; position: absolute; inset: -6px; border-radius: 24px;
+  background: linear-gradient(135deg, rgba(20,184,166,0.3), rgba(99,102,241,0.3));
+  z-index: -1;
+  animation: flag-pulse 2.4s ease-in-out infinite;
+}
+@keyframes flag-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.06); }
+}
+.lang-gate-title {
+  font-size: 28px; font-weight: 800; color: #174b78;
+  margin: 0 0 8px; letter-spacing: -0.02em; line-height: 1.15;
+}
+.lang-gate-sub {
+  font-size: 13.5px; color: #475569; line-height: 1.6;
+  margin: 0 0 26px; max-width: 380px; margin-left: auto; margin-right: auto;
+}
+.lang-gate-options {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  margin-bottom: 22px;
+}
+@media(max-width: 480px) { .lang-gate-options { grid-template-columns: 1fr; } }
+
+.lang-gate-opt {
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: auto 1fr auto;
+  align-items: center; gap: 12px;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, #fff 0%, #f4f8f7 100%);
+  border: 1.5px solid #e0e8e8;
+  border-radius: 16px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
+  font-family: inherit;
+}
+.lang-gate-opt:hover, .lang-gate-opt.is-hover {
+  transform: translateY(-3px);
+  border-color: rgba(20,184,166,0.4);
+  box-shadow: 0 16px 32px -10px rgba(20,184,166,0.3);
+  background: linear-gradient(135deg, #fff 0%, #ecfdf5 100%);
+}
+.lang-gate-opt-bn { font-family: var(--font-bangla), 'Noto Sans Bengali', sans-serif; }
+
+.lang-gate-opt-flag {
+  width: 44px; height: 44px; border-radius: 12px;
+  overflow: hidden; position: relative;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, #1e40af, #dc2626);
+  box-shadow: 0 4px 12px -4px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+.lang-gate-opt-flag-en {
+  display: block; width: 100%; height: 100%;
+  background:
+    linear-gradient(180deg, #1e3a8a 0%, #1e3a8a 33%, #fff 33%, #fff 36%, #dc2626 36%, #dc2626 64%, #fff 64%, #fff 67%, #1e3a8a 67%);
+  position: relative;
+}
+.lang-gate-opt-flag-en::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 45%; height: 56%;
+  background: #1e3a8a;
+}
+.lang-gate-opt-flag-en::after {
+  content: '✦'; position: absolute; top: 4px; left: 4px; color: #fff; font-size: 8px; line-height: 1;
+}
+.lang-gate-opt-flag-bn {
+  display: block; width: 100%; height: 100%;
+  background: #006a4e;
+  position: relative;
+}
+.lang-gate-opt-flag-bn::before {
+  content: ''; position: absolute;
+  width: 18px; height: 18px;
+  background: #f42a41;
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+.lang-gate-opt-text { display: flex; flex-direction: column; min-width: 0; }
+.lang-gate-opt-text strong {
+  font-size: 16px; font-weight: 800; color: #174b78;
+  line-height: 1.2; white-space: nowrap;
+}
+.lang-gate-opt-text small {
+  font-size: 10.5px; color: #94a3b8; margin-top: 2px;
+  white-space: nowrap;
+}
+.lang-gate-opt-arrow {
+  color: #94a3b8;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+.lang-gate-opt:hover .lang-gate-opt-arrow { transform: translateX(4px); color: #14b8a6; }
+.lang-gate-opt-glow {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(20,184,166,0.18), transparent 50%);
+  opacity: 0; transition: opacity 0.3s ease;
+}
+.lang-gate-opt:hover .lang-gate-opt-glow { opacity: 1; }
+
+.lang-gate-foot {
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  padding-top: 18px; border-top: 1px dashed #e0e8e8;
+  flex-wrap: wrap;
+}
+.lang-gate-foot-pip {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10.5px; color: #94a3b8; font-weight: 600;
+}
+.lang-gate-foot-pip svg { color: #14b8a6; }
+
+/* ================================================================
+   IMPROVED LANGUAGE TOGGLE (top-right floating widget)
+   ================================================================ */
+.language-hover { position: relative; display: inline-block; }
+.language-hover > button {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 11px 7px 10px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(20,184,166,0.2);
+  border-radius: 100px;
+  color: #174b78; font-size: 11px; font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px -4px rgba(15,42,68,0.12);
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+.language-hover > button:hover {
+  border-color: #14b8a6;
+  background: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px -6px rgba(20,184,166,0.3);
+}
+.language-caret {
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid currentColor;
+  margin-left: 2px;
+  transition: transform 0.25s ease;
+}
+.language-hover:hover .language-caret { transform: rotate(180deg); }
+
+.language-tooltip {
+  position: absolute; right: 0; top: calc(100% + 8px);
+  width: 160px;
+  background: #fff;
+  border: 1px solid #e0e8e8;
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 18px 40px -8px rgba(15,42,68,0.18);
+  opacity: 0; visibility: hidden; transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  z-index: 30;
+}
+.language-hover:hover .language-tooltip,
+.language-hover:focus-within .language-tooltip { opacity: 1; visibility: visible; transform: translateY(0); }
+.language-tooltip strong {
+  display: block; font-size: 10px; color: #94a3b8; font-weight: 800;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 6px 8px 4px;
+}
+.language-tooltip button {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%;
+  padding: 8px 10px; border: 0; background: transparent;
+  border-radius: 8px; text-align: left; cursor: pointer;
+  color: #475569; font-size: 12px; font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease;
+  font-family: inherit;
+}
+.language-tooltip button:hover { background: #f0f9f8; color: #174b78; }
+.language-tooltip button.is-on { background: linear-gradient(135deg, #f0f9f8, #ecfdf5); color: #0f766e; font-weight: 700; }
+.lang-pill-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #cbd5e1; transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+.language-tooltip button.is-on .lang-pill-dot { background: #14b8a6; box-shadow: 0 0 0 3px rgba(20,184,166,0.2); }
+
+/* === Compact variant (in footer) === */
+.language-hover.is-compact > button {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.12);
+  color: #cbd5e1;
+  box-shadow: none;
+}
+.language-hover.is-compact > button:hover {
+  background: rgba(255,255,255,0.12);
+  color: #5eead4;
+  border-color: rgba(20,184,166,0.4);
+}
+.language-hover.is-compact .language-tooltip {
+  position: absolute; right: 0; top: calc(100% + 8px);
+  background: #0f172a;
+  border-color: rgba(255,255,255,0.1);
+}
+.language-hover.is-compact .language-tooltip strong { color: #94a3b8; }
+.language-hover.is-compact .language-tooltip button { color: #cbd5e1; }
+.language-hover.is-compact .language-tooltip button:hover { background: rgba(20,184,166,0.15); color: #5eead4; }
+.language-hover.is-compact .language-tooltip button.is-on { background: rgba(20,184,166,0.2); color: #5eead4; }
+
+/* === Prominent floating language widget === */
+.language-fixed {
+  position: fixed !important;
+  right: 22px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 25 !important;
+}
+@media(max-width: 600px) {
+  .language-fixed { top: auto !important; bottom: 18px !important; right: 18px !important; transform: none !important; }
+}
