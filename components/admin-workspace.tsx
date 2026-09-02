@@ -19,6 +19,9 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
   const [active, setActive] = useState('Dashboard')
   const [open, setOpen] = useState(true)
   const [expanded, setExpanded] = useState<string[]>(a.groups.map(g => g.label))
+  const [query, setQuery] = useState('')
+  const [showForm, setShowForm] = useState(false)
+  const [records, setRecords] = useState<string[]>(['Amina Rahman','Sadia Khan','Fahim Ahmed','Nusrat Jahan'])
   const toggle = (g: string) => setExpanded(e => e.includes(g) ? e.filter(x => x !== g) : [...e, g])
   const groups: Group[] = a.groups as unknown as Group[]
 
@@ -58,11 +61,19 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
           </div>
         </header>
         <div className="pro-admin-content">
-          {active === 'Dashboard' || active === a.groups[0].items[0] ? <DashboardContent copy={a} /> : <ModuleContent name={active} copy={a} />}
+          {active === 'Dashboard' || active === a.groups[0].items[0] ? <DashboardContent copy={a} /> : <ModuleContent name={active} copy={a} records={records} query={query} setQuery={setQuery} onAdd={() => setShowForm(true)} />}
         </div>
       </main>
+      {showForm && <AdminForm name={active} lang={lang} onClose={() => setShowForm(false)} onSave={(value) => { setRecords(r => [value, ...r]); setShowForm(false) }} />}
     </div>
   )
+}
+
+function AdminForm({ name, lang, onClose, onSave }: { name: string; lang: 'en'|'bn'; onClose: () => void; onSave: (value: string) => void }) {
+  const [value, setValue] = useState('')
+  const [email, setEmail] = useState('')
+  const title = lang === 'bn' ? `${name} যোগ করুন` : `Add ${name}`
+  return <div className="admin-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="admin-form-title"><form className="admin-form-card" onSubmit={e => { e.preventDefault(); if (value.trim()) onSave(value.trim()) }}><button type="button" className="modal-close" onClick={onClose}>×</button><span className="pro-kicker">{lang === 'bn' ? 'নতুন রেকর্ড' : 'NEW RECORD'}</span><h2 id="admin-form-title">{title}</h2><label>{lang === 'bn' ? 'নাম / শিরোনাম' : 'Name / title'}<input value={value} onChange={e => setValue(e.target.value)} required autoFocus placeholder={lang === 'bn' ? 'তথ্য লিখুন' : 'Enter details'} /></label><label>{lang === 'bn' ? 'ইমেইল বা নোট' : 'Email or notes'}<textarea value={email} onChange={e => setEmail(e.target.value)} placeholder={lang === 'bn' ? 'অতিরিক্ত তথ্য' : 'Additional information'} /></label><div className="form-actions"><button type="button" className="pro-outline" onClick={onClose}>{lang === 'bn' ? 'বাতিল' : 'Cancel'}</button><button type="submit" className="pro-primary">{lang === 'bn' ? 'সংরক্ষণ করুন' : 'Save record'}</button></div></form></div>
 }
 
 function DashboardContent({ copy }: { copy: typeof adminCopy.en }) {
@@ -157,7 +168,7 @@ function FeatureRail({ name, copy }: { name: string; copy: typeof adminCopy.en }
   )
 }
 
-function ModuleContent({ name, copy }: { name: string; copy: typeof adminCopy.en }) {
+function ModuleContent({ name, copy, records, query, setQuery, onAdd }: { name: string; copy: typeof adminCopy.en; records: string[]; query: string; setQuery: (value: string) => void; onAdd: () => void }) {
   const { lang } = useLanguage()
   const patients = copy.patients
   return (
@@ -172,16 +183,16 @@ function ModuleContent({ name, copy }: { name: string; copy: typeof adminCopy.en
       </div>
       <FeatureRail name={name} copy={copy} />
       <div className="module-toolbar">
-        <div className="pro-search"><Search size={15}/><input placeholder={lang === 'bn' ? `${name} অনুসন্ধান...` : `Search ${name.toLowerCase()}...`}/></div>
+        <div className="pro-search"><Search size={15}/><input value={query} onChange={e => setQuery(e.target.value)} placeholder={lang === 'bn' ? `${name} অনুসন্ধান...` : `Search ${name.toLowerCase()}...`}/></div>
         <button className="pro-outline"><span>{copy.filter}</span><ChevronDown size={14}/></button>
-        <button className="pro-primary"><Plus size={15}/> {copy.add} {name.replace(' & CMS', '')}</button>
+        <button className="pro-primary" onClick={onAdd}><Plus size={15}/> {copy.add} {name.replace(' & CMS', '')}</button>
       </div>
       <div className="pro-data-table">
         <div className="table-head">
           {copy.tableHead.map(h => <span key={h}>{h}</span>)}
           <span/>
         </div>
-        {patients.map((x, i) => (
+        {records.filter(x => x.toLowerCase().includes(query.toLowerCase())).map((x, i) => (
           <div className="table-row" key={x}>
             <div className="table-name">
               <span className="person-avatar">{x.split(' ').map(y => y[0]).join('').slice(0,2)}</span>
