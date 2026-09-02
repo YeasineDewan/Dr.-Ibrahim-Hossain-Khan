@@ -20,8 +20,10 @@ const toBnTime = (t: string) => t.replace(/\d/g, d => '০১২৩৪৫৬৭�
 const navIcons: Record<string, any> = {
   Overview: LayoutDashboard, Appointments: CalendarDays, 'Health records': FileText,
   Prescriptions: PillIcon, Messages: MessageCircle, 'Care plans': HeartPulse,
+  Billing: BarChart3, 'Profile & settings': UserRound,
   'সারসংক্ষেপ': LayoutDashboard, 'অ্যাপয়েন্টমেন্ট': CalendarDays, 'স্বাস্থ্য রেকর্ড': FileText,
   'প্রেসক্রিপশন': PillIcon, 'বার্তা': MessageCircle, 'কেয়ার প্ল্যান': HeartPulse,
+  'বিলিং': BarChart3, 'প্রোফাইল ও সেটিংস': UserRound,
 }
 
 const userName = 'Amara Mensah'
@@ -30,7 +32,7 @@ export function PatientPortal({ onExit }: { onExit: () => void }) {
   const { lang } = useLanguage()
   const p = patientCopy[lang]
   const data = useAdminData()
-  const labels = (p.nav || []) as readonly string[]
+  const labels = ((p.ppDetail?.nav || []).map((item: any) => item.label)) as readonly string[]
   const [active, setActive] = useState<string>(labels[0] || 'Overview')
   const [menu, setMenu] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
@@ -418,6 +420,8 @@ function PatientView({ name, copy, data }: { name: string; copy: any; data: any 
   const isRx = name === 'Prescriptions' || name === 'প্রেসক্রিপশন'
   const isMsgs = name === 'Messages' || name === 'বার্তা'
   const isCare = name === 'Care plans' || name === 'কেয়ার প্ল্যান'
+  const isBilling = name === 'Billing' || name === 'বিলিং'
+  const isProfile = name === 'Profile & settings' || name === 'প্রোফাইল ও সেটিংস'
 
   const myAppts = data.appointments.filter((a: any) => a.patient === me.name)
   const upcoming = myAppts.filter((a: any) => a.status === 'Confirmed' || a.status === 'Pending')
@@ -448,6 +452,8 @@ function PatientView({ name, copy, data }: { name: string; copy: any; data: any 
             <button className="pro-primary btn-pro shadow-glow-teal"><Send size={14}/> {copy.newMessage}</button>
           </Magnetic>
         )}
+        {isBilling && <button className="pro-outline btn-pro"><Download size={14}/> {copy.download}</button>}
+        {isProfile && <button className="pro-primary btn-pro shadow-glow-teal"><Check size={14}/> {copy.save}</button>}
       </div>
 
       {isAppts && (
@@ -581,6 +587,17 @@ function PatientView({ name, copy, data }: { name: string; copy: any; data: any 
         </div>
       )}
 
+      {isBilling && (
+        <div className="pp-grid">
+          <section className="pro-panel card-3d lift"><div className="pro-panel-head"><div><span className="pro-kicker">{bn ? 'পেমেন্ট সারসংক্ষেপ' : 'PAYMENT SUMMARY'}</span><h2>{bn ? 'স্বাস্থ্যসেবার বিল' : 'Care billing'}</h2></div><PillUI tone="teal">{bn ? 'সুরক্ষিত' : 'Secure'}</PillUI></div><div className="adm-detail-grid"><div><FileText size={14}/><span>{bn ? 'সর্বশেষ বিল' : 'Latest invoice'}</span><strong>INV-20481</strong></div><div><Calendar size={14}/><span>{bn ? 'তারিখ' : 'Issued'}</span><strong>18 Jun 2026</strong></div><div><HeartPulse size={14}/><span>{bn ? 'সেবার মূল্য' : 'Care total'}</span><strong>৳ 4,500</strong></div><div><Check size={14}/><span>{bn ? 'অবস্থা' : 'Status'}</span><strong>{bn ? 'পরিশোধিত' : 'Paid'}</strong></div></div><div className="panel-foot"><button className="pro-outline btn-pro"><Download size={14}/> {copy.download}</button><button className="pro-text-link">{copy.viewDetails} <ArrowRight size={14}/></button></div></section>
+          <section className="pro-panel card-3d lift"><div className="pro-panel-head"><div><span className="pro-kicker">{bn ? 'পেমেন্ট পদ্ধতি' : 'PAYMENT METHOD'}</span><h2>{bn ? 'পছন্দের পদ্ধতি' : 'Preferred method'}</h2></div></div><div className="pp-next-card"><div className="pp-next-date"><Shield size={28}/><div><strong>{bn ? 'বিকাশ •••• 2048' : 'bKash •••• 2048'}</strong><small>{bn ? 'নিরাপদ পেমেন্ট' : 'Secure payment method'}</small></div></div></div><button className="pro-text-link">{bn ? 'পেমেন্ট পদ্ধতি পরিবর্তন করুন' : 'Update payment method'} <ArrowRight size={14}/></button></section>
+        </div>
+      )}
+
+      {isProfile && (
+        <div className="pro-panel card-3d lift"><div className="pro-panel-head"><div><span className="pro-kicker">{bn ? 'অ্যাকাউন্ট' : 'ACCOUNT'}</span><h2>{bn ? 'প্রোফাইল ও পছন্দ' : 'Profile & preferences'}</h2><small className="muted-light">{bn ? 'আপনার ব্যক্তিগত তথ্য ও যোগাযোগের পছন্দ নিয়ন্ত্রণ করুন।' : 'Control your personal details and communication preferences.'}</small></div><Avatar name={me.name} size={56}/></div><div className="pp-profile-form"><label>{bn ? 'পূর্ণ নাম' : 'Full name'}<input defaultValue={me.name}/></label><label>{bn ? 'ইমেইল' : 'Email'}<input defaultValue={me.email}/></label><label>{bn ? 'ফোন' : 'Phone'}<input defaultValue={me.phone}/></label><label>{bn ? 'জন্মতারিখ' : 'Date of birth'}<input defaultValue={me.dob}/></label></div><div className="adm-task-list"><div><ShieldCheck size={16}/><span>{bn ? 'স্বাস্থ্য তথ্যের গোপনীয়তা সক্রিয়' : 'Health data privacy is enabled'}</span><PillUI tone="teal">{bn ? 'সক্রিয়' : 'Active'}</PillUI></div><div><Bell size={16}/><span>{bn ? 'অ্যাপয়েন্টমেন্ট রিমাইন্ডার' : 'Appointment reminders'}</span><PillUI tone="teal">{bn ? 'ইমেইল' : 'Email'}</PillUI></div></div></div>
+      )}
+
       {isCare && (
         <ul className="pp-care-list-view">
           {me.visits.map((v: any, i: number) => (
@@ -597,7 +614,7 @@ function PatientView({ name, copy, data }: { name: string; copy: any; data: any 
         </ul>
       )}
 
-      {!isAppts && !isRecords && !isRx && !isMsgs && !isCare && (
+      {!isAppts && !isRecords && !isRx && !isMsgs && !isCare && !isBilling && !isProfile && (
         <div className="pro-panel empty-state">
           <Sparkles size={56} style={{ color: '#94a3b8', opacity: 0.5 }}/>
           <p className="muted-light">{copy.comingSoon}</p>
