@@ -32,8 +32,11 @@ export function PatientPortal({ onExit }: { onExit: () => void }) {
   const { lang } = useLanguage()
   const p = patientCopy[lang]
   const data = useAdminData()
+  const englishLabels = ['Overview', 'Appointments', 'Health records', 'Prescriptions', 'Messages', 'Care plans', 'Billing', 'Profile & settings']
   const labels = ((p.ppDetail?.nav || []).map((item: any) => item.label)) as readonly string[]
-  const [active, setActive] = useState<string>(labels[0] || 'Overview')
+  const [activeKey, setActiveKey] = useState('Overview')
+  const active = labels[englishLabels.indexOf(activeKey)] || activeKey
+  const setActive = (label: string) => setActiveKey(englishLabels[labels.indexOf(label)] || label)
   const [menu, setMenu] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
