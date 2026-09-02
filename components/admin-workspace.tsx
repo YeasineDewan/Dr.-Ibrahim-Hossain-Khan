@@ -30,10 +30,19 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
   const a = adminCopy[lang]
   const [active, setActive] = useState('Dashboard')
   const [open, setOpen] = useState(true)
-  const [expanded, setExpanded] = useState<string[]>(a.groups.map(g => g.label))
+  const [expanded, setExpanded] = useState<string[]>(adminCopy.en.groups.map(g => g.label))
   const toggle = (g: string) => setExpanded(e => e.includes(g) ? e.filter(x => x !== g) : [...e, g])
 
-  const groups = a.groups as unknown as { label: string; items: string[] }[]
+  const groups = adminCopy.en.groups as unknown as { label: string; items: string[] }[]
+  const localizedGroups = a.groups as unknown as { label: string; items: string[] }[]
+  const labelFor = (value: string) => {
+    for (let i = 0; i < groups.length; i++) {
+      const itemIndex = groups[i].items.indexOf(value)
+      if (itemIndex >= 0) return localizedGroups[i]?.items[itemIndex] || value
+      if (groups[i].label === value) return localizedGroups[i]?.label || value
+    }
+    return value
+  }
   const data = useAdminData()
   const toast = useToast()
 
@@ -91,15 +100,15 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
           <ChevronDown size={14}/>
         </div>
         <nav className="pro-admin-nav">
-          {groups.map(g => (
+          {groups.map((g, groupIndex) => (
             <div className="pro-nav-group" key={g.label}>
-              <button className="pro-group-title" onClick={() => toggle(g.label)}>{g.label}<ChevronDown className={expanded.includes(g.label) ? 'rotate' : ''} size={13}/></button>
-              {expanded.includes(g.label) && g.items.map(item => {
+              <button className="pro-group-title" onClick={() => toggle(g.label)}>{localizedGroups[groupIndex]?.label || g.label}<ChevronDown className={expanded.includes(g.label) ? 'rotate' : ''} size={13}/></button>
+              {expanded.includes(g.label) && g.items.map((item, itemIndex) => {
                 const I = iconFor(item)
                 const badge = badgeFor(item)
                 return (
                   <button key={item} onClick={() => setActive(item)} className={`pro-nav-item ${active === item ? 'active' : ''}`}>
-                    <I size={16}/><span>{item}</span>
+                    <I size={16}/><span>{localizedGroups[groupIndex]?.items[itemIndex] || item}</span>
                     {badge > 0 && <b className={item === 'Follow-ups' ? 'coral' : ''}>{badge}</b>}
                   </button>
                 )
@@ -113,7 +122,7 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
       <main className="pro-admin-main">
         <header className="pro-admin-header">
           <button className="admin-mobile-menu" onClick={() => setOpen(!open)}>{open ? <X size={19}/> : <Menu size={19}/>}</button>
-          <div className="admin-breadcrumb">{a.workspace} <span>/</span> <strong>{currentItem}</strong></div>
+          <div className="admin-breadcrumb">{a.workspace} <span>/</span> <strong>{labelFor(currentItem)}</strong></div>
           <div className="admin-header-actions">
             <div className="pro-search"><Search size={15}/><input placeholder={a.searchPh}/></div>
             <button className="pro-icon-button" onClick={() => setActive('Notifications')} title="Notifications">

@@ -1,6 +1,6 @@
 'use client'
 import {
-  CalendarDays, Users, ShoppingBag, ClipboardList, ArrowUpRight, ChevronRight, MoreHorizontal,
+  CalendarDays, Users, ShoppingBag, ClipboardList, ArrowUpRight, ChevronRight, MoreHorizontal, Plus,
   TrendingUp, Activity as ActivityIcon, Clock, CheckCircle2, AlertCircle, Sparkles
 } from 'lucide-react'
 import { Avatar, BarChart, Donut, Pill, Sparkline, Stat } from '../admin-ui'
@@ -14,6 +14,7 @@ export function DashboardView({ data, copy, onNavigate }: { data: AdminData; cop
 
   return (
     <>
+      <section className="admin-welcome-row"><div><span className="pro-kicker">{copy.today}</span><h1>{copy.goodMorning}</h1><p>{copy.dashboardSub}</p></div><div className="admin-quick-actions"><button className="pro-primary" onClick={() => onNavigate('Appointments')}><Plus size={15}/> {copy.newAppt}</button><button className="pro-outline" onClick={() => onNavigate('Patients')}><Users size={15}/> {copy.addVisit}</button><button className="pro-icon-button" onClick={() => onNavigate('Reports')} aria-label={copy.reports}><ArrowUpRight size={16}/></button></div></section>
       <section className="pulse-banner">
         <div>
           <span className="pro-kicker">{copy.pulseKicker}</span>
@@ -61,7 +62,7 @@ export function DashboardView({ data, copy, onNavigate }: { data: AdminData; cop
               <h2>{copy.scheduleTitle}</h2>
             </div>
             <div className="panel-head-actions">
-              <button className="pro-pill-btn" onClick={() => onNavigate('Calendar')}><CalendarDays size={13}/> Calendar</button>
+              <button className="pro-pill-btn" onClick={() => onNavigate('Calendar')}><CalendarDays size={13}/> {copy.calendar}</button>
               <button className="panel-more"><MoreHorizontal size={18}/></button>
             </div>
           </div>
@@ -97,8 +98,8 @@ export function DashboardView({ data, copy, onNavigate }: { data: AdminData; cop
           </div>
           <BarChart values={[42, 58, 49, 71, 63, 82, 76, 91, 86, 96, 89, 100]} labels={['J','F','M','A','M','J','J','A','S','O','N','D']} color="#174b78"/>
           <div className="perf-legend">
-            <div><span className="dot teal"/> Appointments</div>
-            <div><span className="dot gold"/> Revenue</div>
+            <div><span className="dot teal"/> {copy.appointmentsLabel}</div>
+            <div><span className="dot gold"/> {copy.revenueLabel}</div>
           </div>
         </section>
       </div>
@@ -107,16 +108,16 @@ export function DashboardView({ data, copy, onNavigate }: { data: AdminData; cop
         <section className="pro-panel">
           <div className="pro-panel-head">
             <div><span className="pro-kicker">{copy.patientFlowKicker}</span><h2>{copy.patientFlowTitle}</h2></div>
-            <select className="pro-mini-select"><option>Last 30 days</option><option>Last 90 days</option></select>
+            <select className="pro-mini-select"><option>{copy.last30Days}</option><option>{copy.last90Days}</option></select>
           </div>
           <div className="donut-row">
-            <Donut value={68} total={100} label="Returning" color="#174b78"/>
-            <Donut value={32} total={100} label="New" color="#3b9b91"/>
+            <Donut value={68} total={100} label={copy.returning} color="#174b78"/>
+            <Donut value={32} total={100} label={copy.newPatients} color="#3b9b91"/>
           </div>
           <ul className="adm-list">
-            <li><span className="dot blue"/> Returning patients <strong>1,418</strong></li>
-            <li><span className="dot teal"/> New patients <strong>666</strong></li>
-            <li><span className="dot gold"/> Average visits/patient <strong>3.2</strong></li>
+            <li><span className="dot blue"/> {copy.returning} <strong>1,418</strong></li>
+            <li><span className="dot teal"/> {copy.newPatients} <strong>666</strong></li>
+            <li><span className="dot gold"/> {copy.averageVisits} <strong>3.2</strong></li>
           </ul>
         </section>
 

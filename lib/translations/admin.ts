@@ -37,6 +37,8 @@ export const adminCopy = {
     patientFlowTitle: 'New vs returning',
     viewSchedule: 'View schedule',
     newAppt: 'New appointment',
+    reports: 'Reports', addVisit: 'Add patient visit',
+    calendar: 'Calendar', viewAllAppointments: 'View all appointments', last30Days: 'Last 30 days', last90Days: 'Last 90 days', returning: 'Returning patients', newPatients: 'New patients', averageVisits: 'Average visits/patient', followUps: 'FOLLOW-UPS', actionRequired: 'Action required', viewAll: 'View all', recentActivity: 'RECENT ACTIVITY', fullLog: 'Full log', todayLabel: 'Today', appointmentsLabel: 'Appointments', revenueLabel: 'Revenue',
     // Schedule list
     schedule: [
       { time: '09:00', name: 'Amara Mensah', desc: 'General consultation', status: 'Confirmed' },
@@ -158,7 +160,7 @@ export const adminCopy = {
     backToWebsite: 'ওয়েবসাইটে ফিরে যান',
     today: 'মঙ্গলবার, ১৮ জুন ২০২৬',
     goodMorning: 'শুভ সকাল, ডাঃ ইব্রাহিম।',
-    dashboardSub: 'আজ ক্লিনিকে কী হচ্ছে তার সারসংক্ষেপ।',
+    dashboardSub: 'আজ ক্লিনিকে কী হচ্ছে তার সারসংক���ষেপ।',
     pulseKicker: 'ক্লিনিক পালস',
     pulseTitle: 'আজ সবকিছু ভালো ছন্দে চলছে।',
     pulseBody: '৩টি চেম্বারে ১৮টি অ্যাপয়েন্টমেন্ট · ২টি ফলো-আপ মনোযোগ প্রয়োজন',
@@ -179,6 +181,8 @@ export const adminCopy = {
     patientFlowTitle: 'নতুন বনাম পুরাতন',
     viewSchedule: 'শিডিউল দেখুন',
     newAppt: 'নতুন অ্যাপয়েন্টমেন্ট',
+    reports: 'রিপোর্ট', addVisit: 'রোগীর ভিজিট যোগ করুন',
+    calendar: 'ক্যালেন্ডার', viewAllAppointments: 'সব অ্যাপয়েন্টমেন্ট দেখুন', last30Days: 'গত ৩০ দিন', last90Days: 'গত ৯০ দিন', returning: 'ফেরত আসা রোগী', newPatients: 'নতুন রোগী', averageVisits: 'রোগী প্রতি গড় ভিজিট', followUps: 'ফলো-আপ', actionRequired: 'পদক্ষেপ প্রয়োজন', viewAll: 'সব দেখুন', recentActivity: 'সাম্প্রতিক কার্যক্রম', fullLog: 'সম্পূর্ণ লগ', todayLabel: 'আজ', appointmentsLabel: 'অ্যাপয়েন্টমেন্ট', revenueLabel: 'আয়',
     schedule: [
       { time: '০৯:০০', name: 'আমারা মেনসাহ', desc: 'সাধারণ কনসালটেশন', status: 'নিশ্চিত' },
       { time: '১০:৩০', name: 'ড্যানিয়েল ওউসু', desc: 'ত্বকের স্বাস্থ্য পর্যালোচনা', status: 'বিচারাধীন' },
@@ -275,4 +279,9 @@ export const adminCopy = {
     leadPhysician: 'প্রধান চিকিৎসক',
     administrator: 'অ্যাডমিনিস্ট্রেটর',
   },
+}
+
+export const patientCopy = {
+  en: { today: 'TODAY', goodMorning: 'Good morning, Amina.', todayBody: 'Your care plan is on track. Here is your health overview.', bookBtn: 'Book an appointment', nextAppt: 'NEXT APPOINTMENT', nextApptTitle: 'Your upcoming visit', nextApptWith: 'Dr. Ibrahim · General consultation', joinVideo: 'Join video', viewDetails: 'View details', yourProgress: 'YOUR PROGRESS', carePlan: 'Care plan', carePlanMeta: '3 of 5 milestones complete', openCarePlan: 'Open care plan', currentMed: 'CURRENT MEDICATION', prescriptions: 'Prescriptions', active: 'Active', viewPrescriptions: 'View prescriptions', recentActivity: 'RECENT ACTIVITY', recentVisits: 'Recent visits', viewAll: 'View all', recordsTitle: 'Your records are protected', recordsBody: 'Your health information is private and securely stored.', privacyBtn: 'Privacy settings', careSteps: ['Initial consultation', 'Lab review', 'Treatment plan', 'Follow-up', 'Wellness review'], meds: [{name:'Vitamin D3', dose:'Once daily'}, {name:'Omega 3', dose:'With breakfast'}], visits: [{date:'18 Jun 2026', type:'General consultation', doctor:'Dr. Ibrahim'}, {date:'04 May 2026', type:'Follow-up visit', doctor:'Dr. Ibrahim'}], detail: { Dashboard: [], Appointments: [], Prescriptions: [], Records: [], Settings: [] } },
+  bn: { today: 'আজ', goodMorning: 'শুভ সকাল, আমিনা।', todayBody: 'আপনার কেয়ার প্ল্যান সঠিক পথে আছে। এখানে আপনার স্বাস্থ্য সংক্ষিপ্তসার।', bookBtn: 'অ্যাপয়েন্টমেন্ট নিন', nextAppt: 'পরবর্তী অ্যাপয়েন্টমেন্ট', nextApptTitle: 'আপনার আসন্ন ভিজিট', nextApptWith: 'ডাঃ ইব্রাহিম · সাধারণ কনসালটেশন', joinVideo: 'ভিডিওতে যোগ দিন', viewDetails: 'বিস্তারিত দেখুন', yourProgress: 'আপনার অগ্রগতি', carePlan: 'কেয়ার প্ল্যান', carePlanMeta: '৫টির মধ্যে ৩টি মাইলস্টোন সম্পন্ন', openCarePlan: 'কেয়ার প্ল্যান খুলুন', currentMed: 'বর্তমান ওষুধ', prescriptions: 'প্রেসক্রিপশন', active: 'সক্রিয়', viewPrescriptions: 'প্রেসক্রিপশন দেখুন', recentActivity: 'সাম্প্রতিক কার্যক্রম', recentVisits: 'সাম্প্রতিক ভিজিট', viewAll: 'সব দেখুন', recordsTitle: 'আপনার রেকর্ড সুরক্ষিত', recordsBody: 'আপনার স্বাস্থ্য তথ্য ব্যক্তিগত এবং নিরাপদে সংরক্ষিত।', privacyBtn: 'গোপনীয়তা সেটিংস', careSteps: ['প্রাথমিক কনসালটেশন', 'ল্যাব পর্যালোচনা', 'চিকিৎসা পরিকল্পনা', 'ফলো-আপ', 'ওয়েলনেস পর্যালোচনা'], meds: [{name:'ভিটামিন D3', dose:'প্রতিদিন একবার'}, {name:'ওমেগা ৩', dose:'সকালের নাশতার সাথে'}], visits: [{date:'১৮ জুন ২০২৬', type:'সাধারণ কনসালটেশন', doctor:'ডাঃ ইব্রাহিম'}, {date:'০৪ মে ২০২৬', type:'ফলো-আপ ভিজিট', doctor:'ডাঃ ইব্রাহিম'}], detail: { Dashboard: [], Appointments: [], Prescriptions: [], Records: [], Settings: [] } }
 } as const
