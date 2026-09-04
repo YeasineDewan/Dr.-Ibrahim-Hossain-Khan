@@ -110,15 +110,15 @@ export function ServiceDetailPage({ slug, onNavigate }: { slug: keyof typeof ser
             <span className="pill">{c.planPill}</span>
             <h2>{c.planTitle1} <em>{c.planTitleEm}</em></h2>
             <p className="muted detail-intro">{c.planBody}</p>
-            <div className="service-point-list reveal-stagger is-visible">
-              {points.map((point, i) => <div key={i} className="lift"><CheckCircle2 size={18} className="pulse" style={{ color: '#14b8a6' }}/><span>{point}</span></div>)}
+            <div className="service-step-list">
+              {points.map((point, i) => <div key={i}><CheckCircle2 size={18} className="pulse" style={{ color: '#14b8a6' }}/><span>{point}</span></div>)}
             </div>
           </div>
-          <aside className="service-info-card card-3d lift tilt-3d">
+          <aside className="service-detail-info card-3d lift tilt-3d">
             <ShieldCheck size={22} className="float-soft" style={{ color: '#14b8a6' }}/>
             <h3>{c.infoHeading}</h3>
             <p>{c.infoBody}</p>
-            <div className="service-info-row"><Clock3 size={16}/><span>{c.infoTime}</span></div>
+            <div className="service-detail-info-row"><Clock3 size={16}/><span>{c.infoTime}</span></div>
             <button className="text-link link-underline" onClick={() => onNavigate('Chambers')}>{c.chooseChamber} <ArrowRight size={14}/></button>
           </aside>
         </div>

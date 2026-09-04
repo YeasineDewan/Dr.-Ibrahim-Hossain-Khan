@@ -18,12 +18,6 @@ export const viewport: Viewport = {
   userScalable: false,
 }
 
-const swRegister = `if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
-  });
-}`
-
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${bangla.variable}`} style={{ ['--font-current' as any]: 'system-ui, -apple-system, Segoe UI, Roboto, sans-serif' }}>
@@ -33,7 +27,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body className="antialiased">
         <LanguageProvider>{children}</LanguageProvider>
-        <script dangerouslySetInnerHTML={{ __html: swRegister }} />
       </body>
     </html>
   )
