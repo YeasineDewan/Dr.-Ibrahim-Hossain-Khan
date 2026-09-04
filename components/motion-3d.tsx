@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 
 const canAnimate = typeof window !== 'undefined' && !window.matchMedia('(pointer: coarse)').matches
 
-export function Tilt3D({ children, max = 8, scale = 1.02, className = '', style }: { children: ReactNode; max?: number; scale?: number; className?: string; style?: CSSProperties }) {
+export function Tilt3D({ children, max = 8, scale = 1.02, className = '', style, onClick }: { children: ReactNode; max?: number; scale?: number; className?: string; style?: CSSProperties; onClick?: () => void }) {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const el = ref.current
@@ -44,10 +44,10 @@ export function Tilt3D({ children, max = 8, scale = 1.02, className = '', style 
       el.removeEventListener('mouseleave', onLeave)
     }
   }, [max, scale])
-  return <div ref={ref} className={`tilt-3d ${className}`} style={style}>{children}</div>
+  return <div ref={ref} className={`tilt-3d ${className}`} style={style} onClick={onClick}>{children}</div>
 }
 
-export function Magnetic({ children, strength = 0.25, className = '' }: { children: ReactNode; strength?: number; className?: string }) {
+export function Magnetic({ children, strength = 0.25, className = '', style, onClick }: { children: ReactNode; strength?: number; className?: string; style?: CSSProperties; onClick?: () => void }) {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const el = ref.current
@@ -78,7 +78,7 @@ export function Magnetic({ children, strength = 0.25, className = '' }: { childr
       el.removeEventListener('mouseleave', onLeave)
     }
   }, [strength])
-  return <div ref={ref} className={`magnetic ${className}`} style={{ display: 'inline-block' }}>{children}</div>
+  return <div ref={ref} className={`magnetic ${className}`} style={{ display: 'inline-block', ...style }} onClick={onClick}>{children}</div>
 }
 
 export function Particles({ count = 24, colors = ['#14b8a6', '#6366f1', '#ec4899', '#f59e0b'] }: { count?: number; colors?: string[] }) {

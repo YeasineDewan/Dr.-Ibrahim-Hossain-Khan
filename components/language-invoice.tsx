@@ -14,10 +14,9 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
   const [closing, setClosing] = useState(false)
   useEffect(() => {
     try {
-      const stored = window.localStorage.getItem('dribrahim.lang.gate-seen')
+      const stored = window.sessionStorage.getItem('dribrahim.lang.gate-seen')
       if (!stored) {
-        // tiny delay so the language font + primary content can paint first
-        const t = setTimeout(() => setOpen(true), 380)
+        const t = window.setTimeout(() => setOpen(true), 380)
         return () => clearTimeout(t)
       }
     } catch {
@@ -30,7 +29,7 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
     setClosing(true)
     setTimeout(() => {
       onChange(lang)
-      try { window.localStorage.setItem('dribrahim.lang.gate-seen', '1') } catch {}
+      try { window.sessionStorage.setItem('dribrahim.lang.gate-seen', '1') } catch {}
       try { window.localStorage.setItem('dribrahim.lang', lang) } catch {}
       setOpen(false)
     }, 260)
@@ -38,7 +37,7 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
   const dismiss = () => {
     setClosing(true)
     setTimeout(() => {
-      try { window.localStorage.setItem('dribrahim.lang.gate-seen', '1') } catch {}
+      try { window.sessionStorage.setItem('dribrahim.lang.gate-seen', '1') } catch {}
       setOpen(false)
     }, 200)
   }

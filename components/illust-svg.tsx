@@ -221,9 +221,9 @@ export function StethoArt({ style }: { style?: CSSProperties }) {
 }
 
 /* ============ PILL / MEDICINE — pharmacy ============ */
-export function PillArt({ style }: { style?: CSSProperties }) {
+export function PillArt({ style, className }: { style?: CSSProperties; className?: string }) {
   return (
-    <svg {...baseProps} style={style} className="illust-svg pill-svg">
+    <svg {...baseProps} style={style} className={`illust-svg pill-svg ${className || ''}`}>
       {grad('pl', '#a855f7', '#ec4899')}
       <g className="pill-3d" transform="translate(100 100) rotate(-30)" filter="url(#pl-shadow)">
         <defs>

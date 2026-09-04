@@ -12,7 +12,7 @@ export const adminCopy = {
     // Sidebar groups
     groups: [
       { label: 'Overview', items: ['Dashboard', 'Analytics', 'Activity log'] },
-      { label: 'Care management', items: ['Appointments', 'Calendar', 'Patients', 'Follow-ups', 'Chambers'] },
+      { label: 'Care management', items: ['Appointments', 'Calendar', 'Patients', 'Prescriptions', 'Follow-ups', 'Chambers'] },
       { label: 'Content studio', items: ['Services & CMS', 'Gallery', 'Videos', 'Reviews'] },
       { label: 'Reports & system', items: ['Reports', 'Notifications', 'Users & roles', 'Settings'] },
     ],
@@ -593,7 +593,7 @@ export const adminCopy = {
     calDayAppts: 'টি অ্যাপয়েন্টমেন্ট',
 
     // Follow-ups
-    fuKicker: 'কেয়ার ম্যানেজমেন্ট',
+    fuKicker: 'কেয়ার ম্���ানেজমেন্ট',
     fuTitle: 'ফলো-আপ',
     fuLead: 'টি বিলম্বিত · টি আসন্ন',
     fuNew: 'ফলো-আপ যোগ করুন',
@@ -824,7 +824,7 @@ export const adminCopy = {
     setConnected: 'সংযুক্ত',
     setReconnect: 'পুনঃসংযোগ',
     setSecurity: 'সুরক্ষা ও অনুমতি',
-    set2fa: 'দুই ধাপের যাচাইকরণ',
+    set2fa: 'দুই ধাপের যাচাই��রণ',
     setSessions: 'সক্রিয় সেশন',
     setAuditLog: 'অডিট লগ',
     setPassword: 'পাসওয়ার্ড পলিসি',
@@ -1161,7 +1161,7 @@ export const patientCopy = {
     goodMorning: 'শুভ সকাল, আমারা',
     goodAfternoon: 'শুভ দুপুর, আমারা',
     goodEvening: 'শুভ সন্ধ্যা, আমারা',
-    today: 'আজ',
+    today: 'আ��',
     todayBody: 'আপনার যত্নের যাত্রা সঠিক পথে আছে। আজ আপনার স্বাস্থ্যের একটি সারসংক্ষেপ এখানে।',
     bookBtn: 'ভিজিট বুক করুন',
     joinVideo: 'ভিডিও কলে যোগ দিন',
@@ -1180,7 +1180,7 @@ export const patientCopy = {
     allergies: 'অ্যালার্জি',
     welcomeNote: 'আবার স্বাগতম',
     pageOf: 'পৃষ্ঠা',
-    searchPlaceholder: 'অ্যাপয়েন্টমেন্ট, রেকর্ড, ডাক্তার খুঁজুন…',
+    searchPlaceholder: 'অ্য���পয়েন্টমেন্ট, রেকর্ড, ডাক্তার খুঁজুন…',
     notifTitle: 'নোটিফিকেশন',
     markAllRead: 'সব পড়া হয়েছে',
     viewProfile: 'প্রোফাইল দেখুন',

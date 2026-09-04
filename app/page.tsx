@@ -96,8 +96,8 @@ function useT() {
   return { lang, t: (k: Parameters<typeof tT>[0]) => tT(k, lang) }
 }
 
-function Button({ children, variant = 'primary', onClick, className = '' }: { children: React.ReactNode; variant?: string; onClick?: () => void; className?: string }) {
-  return <button onClick={onClick} className={`btn btn-${variant} ${className}`}>{children}</button>
+function Button({ children, variant = 'primary', onClick, className = '', style }: { children: React.ReactNode; variant?: string; onClick?: () => void; className?: string; style?: React.CSSProperties }) {
+  return <button onClick={onClick} className={`btn btn-${variant} ${className}`} style={style}>{children}</button>
 }
 function Pill({ children, tone = 'blue' }: { children: React.ReactNode; tone?: string }) { return <span className={`pill pill-${tone}`}>{children}</span> }
 

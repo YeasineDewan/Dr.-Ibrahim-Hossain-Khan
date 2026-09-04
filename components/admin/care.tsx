@@ -1,7 +1,7 @@
 'use client'
 import { useState, useMemo } from 'react'
 import {
-  Plus, Search, Filter, MoreHorizontal, ChevronDown, ChevronRight, X, CalendarDays, Clock, MapPin, Video, Phone, User, Stethoscope, FileText, Trash2, Edit3, Eye, CheckCircle2, AlertCircle, Download, Copy
+  Plus, Search, Filter, MoreHorizontal, ChevronDown, ChevronRight, X, CalendarDays, Clock, MapPin, Video, Phone, User, Users, Stethoscope, FileText, Trash2, Edit3, Eye, CheckCircle2, AlertCircle, Download, Copy
 } from 'lucide-react'
 import { Avatar, Drawer, Field, Input, Modal, Pill, Select, Textarea, EmptyState } from '../admin-ui'
 import type { AdminData, Appointment, Patient } from '../../lib/admin-data'

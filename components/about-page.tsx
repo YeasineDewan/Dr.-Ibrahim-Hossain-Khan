@@ -6,7 +6,7 @@ import { aboutCopy, doctorBio, sexualMedicineCopy, useLanguage, t as tT } from '
 import { ScrollReveal } from './scroll-reveal'
 
 export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }) {
-  const { lang, t } = useLanguage()
+  const { lang } = useLanguage()
   const a = aboutCopy[lang]
   const b = doctorBio[lang]
   const s = sexualMedicineCopy[lang]
@@ -137,7 +137,7 @@ export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }
   )
 }
 
-function DoctorBioSection({ bio, onNavigate }: { bio: typeof doctorBio.en; onNavigate: (p: string) => void }) {
+function DoctorBioSection({ bio, onNavigate }: { bio: (typeof doctorBio)[keyof typeof doctorBio]; onNavigate: (p: string) => void }) {
   const { lang } = useLanguage()
   const bookLabel = lang === 'bn' ? 'এখনই অ্যাপয়েন্টমেন্ট বুক করুন' : 'Book an appointment now'
   return (
@@ -212,7 +212,7 @@ function DoctorBioSection({ bio, onNavigate }: { bio: typeof doctorBio.en; onNav
   )
 }
 
-function SexualMedicineSection({ copy, onNavigate }: { copy: typeof sexualMedicineCopy.en; onNavigate: (p: string) => void }) {
+function SexualMedicineSection({ copy, onNavigate }: { copy: (typeof sexualMedicineCopy)[keyof typeof sexualMedicineCopy]; onNavigate: (p: string) => void }) {
   const { lang } = useLanguage()
   return (
     <section className="section sexual-medicine">
