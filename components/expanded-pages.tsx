@@ -48,11 +48,11 @@ export function ServicesPage({ onNavigate }: { onNavigate: (p: string) => void }
           </ScrollReveal>
           <div className="service-promise grid-cards">
             {s.promiseList.map((p, i) => (
-              <div key={i} className="premium-card lift shine-card" style={{ padding: 18 }}>
-                <span className="num-badge">0{i+1}</span>
-                <div style={{ marginLeft: 12 }}>
-                  <strong style={{ display: 'block', fontSize: 14, color: '#0f172a' }}>{p.strong}</strong>
-                  <span className="muted" style={{ fontSize: 13 }}>{p.body}</span>
+              <div key={i} className="service-promise-card">
+                <span className="promise-num">0{i+1}</span>
+                <div className="promise-content">
+                  <strong>{p.strong}</strong>
+                  <span>{p.body}</span>
                 </div>
               </div>
             ))}
@@ -62,15 +62,15 @@ export function ServicesPage({ onNavigate }: { onNavigate: (p: string) => void }
           {s.treatments.map((x, i) => {
             const Illust = illusts[i % illusts.length]
             return (
-              <Tilt3D key={x.title} max={5} className="treatment-card premium-card shine-card" style={{ cursor: 'pointer', padding: 0, overflow: 'hidden' }}>
-                <div style={{ background: `linear-gradient(135deg, ${illustColors[i % illustColors.length]})`, aspectRatio: '1.8/1', display: 'grid', placeItems: 'center', position: 'relative' }}>
-                  <Illust style={{ width: '60%', height: '85%' }}/>
-                  <span className="num-badge" style={{ position: 'absolute', top: 12, left: 12, width: 28, height: 28, fontSize: 12 }}>0{i+1}</span>
+              <Tilt3D key={x.title} max={5} className="treatment-card-inner">
+                <div className="treatment-card-visual" style={{ background: `linear-gradient(135deg, ${illustColors[i % illustColors.length]})` }}>
+                  <Illust className="treatment-illust"/>
+                  <span className="treatment-visual-badge">0{i+1}</span>
                 </div>
-                <div style={{ padding: 22 }}>
+                <div className="treatment-card-content">
                   <h3>{x.title}</h3>
                   <p>{x.body}</p>
-                  <div>
+                  <div className="treatment-card-meta">
                     <span><Clock3 size={14}/> {x.time}</span>
                     <strong>{x.price}</strong>
                   </div>
@@ -81,10 +81,10 @@ export function ServicesPage({ onNavigate }: { onNavigate: (p: string) => void }
           })}
         </div>
         <ScrollReveal>
-          <div className="service-bottom premium-card shine-card" style={{ marginTop: 40 }}>
+          <div className="service-cta-card service-bottom">
             <div>
-              <span className="section-eyebrow">{s.bottomEyebrow}</span>
-              <h2 style={{ marginTop: 14 }}>{s.bottomTitle1} <em>{s.bottomTitleEm}</em></h2>
+              <span className="section-eyebrow" style={{ background: 'rgba(255,255,255,0.1)', color: '#5eead4', borderColor: 'rgba(255,255,255,0.15)' }}>{s.bottomEyebrow}</span>
+              <h2>{s.bottomTitle1} <em>{s.bottomTitleEm}</em></h2>
               <p className="muted">{s.bottomBody}</p>
             </div>
             <Magnetic>
@@ -113,15 +113,15 @@ export function ContactPage({ onNavigate }: { onNavigate: (p: string) => void })
               <h1 className="gradient-text" style={{ marginTop: 14 }}>{c.title1} <em>{c.titleEm}</em></h1>
               <p className="lead">{c.lead}</p>
               <div className="contact-details grid-cards">
-                <div className="premium-card lift shine-card" style={{ padding: 20 }}>
+                <div className="contact-detail-card">
                   <span className="icon-halo" style={{ width: 44, height: 44, borderRadius: 12, background: 'linear-gradient(135deg, rgba(20,184,166,0.15), rgba(99,102,241,0.1))', color: '#0d6e63', display: 'grid', placeItems: 'center' }}><Phone size={20}/></span>
                   <div style={{ marginTop: 12 }}><strong>{c.callHeading}</strong><p style={{ fontSize: 13, color: '#647985', margin: '4px 0 0' }}>+880 1719 395 553</p><small style={{ color: '#94a3b8', fontSize: 11 }}>{c.callHours}</small></div>
                 </div>
-                <div className="premium-card lift shine-card" style={{ padding: 20 }}>
+                <div className="contact-detail-card">
                   <span className="icon-halo" style={{ width: 44, height: 44, borderRadius: 12, background: 'linear-gradient(135deg, rgba(236,72,153,0.15), rgba(245,158,11,0.1))', color: '#be185d', display: 'grid', placeItems: 'center' }}><Mail size={20}/></span>
                   <div style={{ marginTop: 12 }}><strong>{c.emailHeading}</strong><p style={{ fontSize: 13, color: '#647985', margin: '4px 0 0' }}>hello@dribrahim.clinic</p><small style={{ color: '#94a3b8', fontSize: 11 }}>{c.emailHours}</small></div>
                 </div>
-                <div className="premium-card lift shine-card" style={{ padding: 20 }}>
+                <div className="contact-detail-card">
                   <span className="icon-halo" style={{ width: 44, height: 44, borderRadius: 12, background: 'linear-gradient(135deg, rgba(99,102,241,0.15), rgba(20,184,166,0.1))', color: '#4f46e5', display: 'grid', placeItems: 'center' }}><MapPin size={20}/></span>
                   <div style={{ marginTop: 12 }}><strong>{c.visitHeading}</strong><p style={{ fontSize: 13, color: '#647985', margin: '4px 0 0' }}>{c.visitSub}</p><small style={{ color: '#94a3b8', fontSize: 11 }}>{c.visitAddress}</small></div>
                 </div>

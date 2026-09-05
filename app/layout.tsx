@@ -18,22 +18,15 @@ export const viewport: Viewport = {
   userScalable: false,
 }
 
-const swRegister = `if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
-  });
-}`
-
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${bangla.variable}`} style={{ ['--font-current' as any]: 'system-ui, -apple-system, Segoe UI, Roboto, sans-serif' }}>
+        <html lang="en" suppressHydrationWarning className={`${bangla.variable}`} style={{ ['--font-current' as any]: 'system-ui, -apple-system, Segoe UI, Roboto, sans-serif' }}>
       <head>
         <link rel="preconnect" href="/" />
         <link rel="dns-prefetch" href="/" />
       </head>
-      <body className="antialiased">
+      <body suppressHydrationWarning className="antialiased">
         <LanguageProvider>{children}</LanguageProvider>
-        <script dangerouslySetInnerHTML={{ __html: swRegister }} />
       </body>
     </html>
   )

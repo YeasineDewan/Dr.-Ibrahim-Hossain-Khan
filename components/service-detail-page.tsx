@@ -110,19 +110,20 @@ export function ServiceDetailPage({ slug, onNavigate }: { slug: keyof typeof ser
             <span className="pill">{c.planPill}</span>
             <h2>{c.planTitle1} <em>{c.planTitleEm}</em></h2>
             <p className="muted detail-intro">{c.planBody}</p>
-            <div className="service-point-list reveal-stagger is-visible">
-              {points.map((point, i) => <div key={i} className="lift"><CheckCircle2 size={18} className="pulse" style={{ color: '#14b8a6' }}/><span>{point}</span></div>)}
+            <div className="service-step-list">
+              {points.map((point, i) => <div key={i}><CheckCircle2 size={18} className="pulse" style={{ color: '#14b8a6' }}/><span>{point}</span></div>)}
             </div>
           </div>
-          <aside className="service-info-card card-3d lift tilt-3d">
+          <aside className="service-detail-info card-3d lift tilt-3d">
             <ShieldCheck size={22} className="float-soft" style={{ color: '#14b8a6' }}/>
             <h3>{c.infoHeading}</h3>
             <p>{c.infoBody}</p>
-            <div className="service-info-row"><Clock3 size={16}/><span>{c.infoTime}</span></div>
+            <div className="service-detail-info-row"><Clock3 size={16}/><span>{c.infoTime}</span></div>
             <button className="text-link link-underline" onClick={() => onNavigate('Chambers')}>{c.chooseChamber} <ArrowRight size={14}/></button>
           </aside>
         </div>
       </section>
+      <section className="section service-detail-extra"><div className="container"><div className="service-feature-grid"><article><span className="pill pill-teal">{lang === 'bn' ? 'আপনার ভিজিট' : 'Your visit'}</span><h2>{lang === 'bn' ? 'প্রতিটি ধাপে স্পষ্টতা' : 'Clarity at every step'}</h2><p>{lang === 'bn' ? 'পরামর্শের আগে প্রস্তুতি, চিকিৎসার সময় আরাম এবং পরে নির্ভরযোগ্য ফলো-আপ—সব একসাথে।' : 'Prepare before your consultation, feel supported during treatment, and leave with a clear follow-up plan.'}</p></article><div className="service-feature-list">{[lang === 'bn' ? 'ব্যক্তিগত মূল্যায়ন' : 'Personal assessment', lang === 'bn' ? 'স্বচ্ছ চিকিৎসা অপশন' : 'Clear treatment options', lang === 'bn' ? 'ফলো-আপ সহায়তা' : 'Follow-up support'].map(item => <div key={item}><CheckCircle2 size={18}/><span>{item}</span></div>)}</div></div></div></section>
       <section className="cta-section">
         <div className="container cta-inner">
           <div><span className="pill pill-teal">{c.ctaPill}</span><h2>{c.ctaTitle1}<br/><em>{c.ctaTitleEm}</em></h2></div>

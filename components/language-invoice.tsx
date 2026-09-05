@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Download, Globe2, Sparkles, Check, ArrowRight, Languages } from 'lucide-react'
+import { Download, Globe2, Sparkles, Check, ArrowRight, Languages, X } from 'lucide-react'
 import { common, useLanguage } from '../lib/translations'
 
 export function copy() {
@@ -12,25 +12,30 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
   const [open, setOpen] = useState(false)
   const [hovered, setHovered] = useState<'en' | 'bn' | null>(null)
   const [closing, setClosing] = useState(false)
+
   useEffect(() => {
     try {
-      const stored = window.localStorage.getItem('dribrahim.lang.gate-seen')
-      if (!stored) {
-        // tiny delay so the language font + primary content can paint first
-        const t = setTimeout(() => setOpen(true), 380)
-        return () => clearTimeout(t)
+      const raw = window.localStorage.getItem('dribrahim.lang.gate-seen')
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        const expiry = parsed.expiresAt || 0
+        if (Date.now() < expiry) return
       }
+      const t = window.setTimeout(() => setOpen(true), 380)
+      return () => clearTimeout(t)
     } catch {
-      setOpen(true)
+      const t = window.setTimeout(() => setOpen(true), 380)
+      return () => clearTimeout(t)
     }
   }, [])
+
   if (!open) return null
   const t = common.en
   const choose = (lang: 'en' | 'bn') => {
     setClosing(true)
     setTimeout(() => {
       onChange(lang)
-      try { window.localStorage.setItem('dribrahim.lang.gate-seen', '1') } catch {}
+      try { window.localStorage.setItem('dribrahim.lang.gate-seen', JSON.stringify({ expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000 })) } catch {}
       try { window.localStorage.setItem('dribrahim.lang', lang) } catch {}
       setOpen(false)
     }, 260)
@@ -38,19 +43,19 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
   const dismiss = () => {
     setClosing(true)
     setTimeout(() => {
-      try { window.localStorage.setItem('dribrahim.lang.gate-seen', '1') } catch {}
+      try { window.localStorage.setItem('dribrahim.lang.gate-seen', JSON.stringify({ expiresAt: Date.now() + 24 * 60 * 60 * 1000 })) } catch {}
       setOpen(false)
     }, 200)
   }
   return (
-    <div className={`lang-gate-backdrop ${closing ? 'is-closing' : ''}`} role="dialog" aria-modal="true" aria-label="Choose your language">
+    <div className={`lang-gate-backdrop ${closing ? 'is-closing' : ''}`} role="dialog" aria-modal="true" aria-label={t.chooseLanguage}>
       <div className="lang-gate-bg" aria-hidden="true">
         <div className="lang-gate-orb lang-gate-orb-1"/>
         <div className="lang-gate-orb lang-gate-orb-2"/>
         <div className="lang-gate-orb lang-gate-orb-3"/>
         <div className="lang-gate-grid"/>
       </div>
-      <button className="lang-gate-skip" onClick={dismiss}>Skip for now</button>
+      <button className="lang-gate-skip" onClick={dismiss}>{common.en.skipForNow}</button>
       <div className={`lang-gate-card ${closing ? 'is-closing' : ''}`}>
         <div className="lang-gate-eyebrow">
           <Sparkles size={11}/> <span>DR. IBRAHIM CLINIC</span> <Sparkles size={11}/>
@@ -58,8 +63,8 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
         <div className="lang-gate-flag" aria-hidden="true">
           <Languages size={32}/>
         </div>
-        <h2 className="lang-gate-title">Choose your language</h2>
-        <p className="lang-gate-sub">Pick the language you'd like to use across the clinic. You can switch any time from the top-right.</p>
+        <h2 className="lang-gate-title">{t.chooseLanguage}</h2>
+        <p className="lang-gate-sub">{t.chooseLanguageSub}</p>
         <div className="lang-gate-options">
           <button
             className={`lang-gate-opt ${hovered === 'en' ? 'is-hover' : ''}`}
@@ -71,8 +76,8 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
               <span className="lang-gate-opt-flag-en"/>
             </span>
             <span className="lang-gate-opt-text">
-              <strong>English</strong>
-              <small>Continue in English</small>
+              <strong>{t.english}</strong>
+              <small>{t.englishSub}</small>
             </span>
             <span className="lang-gate-opt-arrow"><ArrowRight size={16}/></span>
             <span className="lang-gate-opt-glow" aria-hidden="true"/>
@@ -87,16 +92,16 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
               <span className="lang-gate-opt-flag-bn"/>
             </span>
             <span className="lang-gate-opt-text">
-              <strong>বাংলা</strong>
-              <small>বাংলায় চালিয়ে যান</small>
+              <strong>{t.bangla}</strong>
+              <small>{t.banglaSub}</small>
             </span>
             <span className="lang-gate-opt-arrow"><ArrowRight size={16}/></span>
             <span className="lang-gate-opt-glow" aria-hidden="true"/>
           </button>
         </div>
         <div className="lang-gate-foot">
-          <span className="lang-gate-foot-pip"><Check size={10}/> No account needed</span>
-          <span className="lang-gate-foot-pip"><Globe2 size={10}/> Switch any time</span>
+          <span className="lang-gate-foot-pip"><Check size={10}/> {common.en.noAccountNeeded || 'No account needed'}</span>
+          <span className="lang-gate-foot-pip"><Globe2 size={10}/> {common.en.switchAnyTime || 'Switch any time'}</span>
         </div>
       </div>
     </div>

@@ -15,10 +15,11 @@ import { AppointmentsView, CalendarView, FollowUpsView, ChambersView } from './a
 import { PatientsView } from './admin/patients'
 import { ServicesCMSView, GalleryView, VideosView, ReviewsView } from './admin/content'
 import { ReportsView, NotificationsView, UsersView, SettingsView } from './admin/system'
+import { PrescriptionsView } from './admin/prescriptions'
 
 const iconFor = (x: string) => ({
   Dashboard: LayoutDashboard, Analytics: BarChart3, 'Activity log': ListChecks,
-  Appointments: CalendarDays, Calendar: CalendarDays, Patients: Users, 'Follow-ups': ClipboardList, Chambers: MapPin,
+  Appointments: CalendarDays, Calendar: CalendarDays, Patients: Users, Prescriptions: FileText, 'Follow-ups': ClipboardList, Chambers: MapPin,
   'Services & CMS': Stethoscope, Gallery: ImageIcon, Videos: Video, Reviews: Star,
   Reports: BarChart3, Notifications: Bell, 'Users & roles': UserCog, Settings: Settings,
 }[x] || ClipboardList)
@@ -61,6 +62,7 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
       case 'Appointments': return <AppointmentsView data={data} copy={a} onLog={data.logActivity} toast={toast} />
       case 'Calendar': return <CalendarView data={data} copy={a} onNavigate={setActive} />
       case 'Patients': return <PatientsView data={data} copy={a} onLog={data.logActivity} toast={toast} />
+      case 'Prescriptions': return <PrescriptionsView data={data} copy={a} onLog={data.logActivity} toast={toast} />
       case 'Follow-ups': return <FollowUpsView data={data} copy={a} onLog={data.logActivity} toast={toast} />
       case 'Chambers': return <ChambersView data={data} copy={a} onLog={data.logActivity} toast={toast} />
       case 'Services & CMS': return <ServicesCMSView copy={a} />

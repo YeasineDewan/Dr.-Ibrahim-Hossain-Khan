@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { ArrowRight, Check, Clock, Heart, MapPin, Plus, Star, Video, X, CalendarDays, Sparkles } from 'lucide-react'
 import { chambersCopy, galleryCopy, appointmentCopy, checkoutCopy, successCopy, common, useLanguage, t as tT } from '../lib/translations'
+import { useAdminData } from '../lib/admin-data'
 import { ScrollReveal } from './scroll-reveal'
 import { Tilt3D, Magnetic, Particles } from './motion-3d'
 
@@ -18,19 +19,16 @@ const photo = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit
 export function GalleryPage() {
   const { lang } = useLanguage()
   const g = galleryCopy[lang]
+  const { videos } = useAdminData()
   const [slide, setSlide] = useState(0)
   const [lightbox, setLightbox] = useState<number | null>(null)
-  const videoSlides = [
-    { title: lang === 'bn' ? 'নরওয়ে: এক সময়-ভ্রমণ' : 'Norway: A time-lapse adventure', meta: lang === 'bn' ? 'ভ্রমণ • ০৪:১২' : 'Travel film • 04:12' },
-    { title: lang === 'bn' ? 'চিকিৎসার নেপথ্যে' : 'Behind the care', meta: lang === 'bn' ? 'ক্লিনিক • ০২:৪৮' : 'Clinic story • 02:48' },
-    { title: lang === 'bn' ? 'সুস্থতার গল্প' : 'Stories of recovery', meta: lang === 'bn' ? 'রোগীর গল্প • ০৩:২০' : 'Patient story • 03:20' },
-    { title: lang === 'bn' ? 'আমাদের চেম্বার' : 'Inside our chambers', meta: lang === 'bn' ? 'পরিদর্শন • ০১:৫৬' : 'Clinic tour • 01:56' },
-  ]
+  const videoSlides = videos.filter(video => video.status === 'Published').map(video => ({ title: lang === 'bn' && 'titleBn' in video && video.titleBn ? video.titleBn : video.title, meta: `${lang === 'bn' ? 'ক্লিনিক ভিডিও' : 'Clinic video'} • ${video.duration}`, image: video.thumbnail }))
   useEffect(() => {
+    if (videoSlides.length < 2) return
     const timer = window.setInterval(() => setSlide(current => (current + 1) % videoSlides.length), 6000)
     return () => window.clearInterval(timer)
   }, [videoSlides.length])
-  const videoImage = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-VvLb8utyvJRSqBnQiP8yeuq4NcQ5fr.png'
+  const videoImage = videoSlides[slide]?.image || 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-VvLb8utyvJRSqBnQiP8yeuq4NcQ5fr.png'
   return (
     <main className="page-section" style={{ position: 'relative', overflow: 'hidden' }}>
       <div className="aurora-bg" style={{ position: 'absolute', inset: 0, opacity: 0.5, pointerEvents: 'none' }}/>
@@ -48,8 +46,8 @@ export function GalleryPage() {
           ))}
         </div>
         <section className="gallery-video-showcase" aria-label={g.videoEyebrow}>
-          <div className="gallery-video-head"><div><span className="section-eyebrow">{g.videoEyebrow}</span><h2>{g.videoTitle1} <em>{g.videoTitleEm}</em></h2><p>{g.videoBody}</p></div><div className="gallery-video-controls"><button aria-label={lang === 'bn' ? 'আগের ভিডিও' : 'Previous video'} onClick={() => setSlide((slide - 1 + videoSlides.length) % videoSlides.length)}><ArrowRight size={18} style={{ transform: 'rotate(180deg)' }}/></button><span>{String(slide + 1).padStart(2, '0')} / {String(videoSlides.length).padStart(2, '0')}</span><button aria-label={lang === 'bn' ? 'পরের ভিডিও' : 'Next video'} onClick={() => setSlide((slide + 1) % videoSlides.length)}><ArrowRight size={18}/></button></div></div>
-          <div className="gallery-video-grid">{[0, 1].map((offset) => { const item = videoSlides[(slide + offset) % videoSlides.length]; return <article className="gallery-video-card" key={`${slide}-${offset}`}><div className="gallery-video-media"><img src={videoImage} alt={item.title} loading="lazy"/><span className="gallery-video-wash"/><button className="gallery-video-play" aria-label={`${lang === 'bn' ? 'প্লে' : 'Play'} ${item.title}`}><span>▶</span></button><span className="gallery-video-index">0{((slide + offset) % videoSlides.length) + 1}</span></div><div className="gallery-video-meta"><div><span>{item.meta}</span><h3>{item.title}</h3></div><ArrowRight size={18}/></div></article> })}</div>
+          <div className="gallery-video-head"><div><span className="section-eyebrow">{g.videoEyebrow}</span><h2>{g.videoTitle1} <em>{g.videoTitleEm}</em></h2><p>{g.videoBody}</p></div>{videoSlides.length > 0 && <div className="gallery-video-controls"><button aria-label={lang === 'bn' ? 'আগের ভিডিও' : 'Previous video'} onClick={() => setSlide((slide - 1 + videoSlides.length) % videoSlides.length)}><ArrowRight size={18} style={{ transform: 'rotate(180deg)' }}/></button><span>{String(slide + 1).padStart(2, '0')} / {String(videoSlides.length).padStart(2, '0')}</span><button aria-label={lang === 'bn' ? 'পরের ভিডিও' : 'Next video'} onClick={() => setSlide((slide + 1) % videoSlides.length)}><ArrowRight size={18}/></button></div>}</div>
+          {videoSlides.length === 0 ? <div className="gallery-video-empty"><Video size={24}/><strong>{lang === 'bn' ? 'ভিডিও শিগগিরই আসছে' : 'Videos coming soon'}</strong><p>{lang === 'bn' ? 'ডাক্তার অ্যাডমিন থেকে প্রকাশিত ভিডিও এখানে দেখা যাবে।' : 'Published videos from Doctor Admin will appear here.'}</p></div> : <div className="gallery-video-grid">{[0, 1].map((offset) => { const item = videoSlides[(slide + offset) % videoSlides.length]; return <article className="gallery-video-card" key={`${slide}-${offset}`}><div className="gallery-video-media"><img src={item.image || videoImage} alt={item.title} loading="lazy"/><span className="gallery-video-wash"/><button className="gallery-video-play" aria-label={`${lang === 'bn' ? 'প্লে' : 'Play'} ${item.title}`}><span>▶</span></button><span className="gallery-video-index">0{((slide + offset) % videoSlides.length) + 1}</span></div><div className="gallery-video-meta"><div><span>{item.meta}</span><h3>{item.title}</h3></div><ArrowRight size={18}/></div></article> })}</div>}
           <div className="gallery-video-dots">{videoSlides.map((_, index) => <button key={index} aria-label={`${lang === 'bn' ? 'ভিডিও' : 'Video'} ${index + 1}`} className={index === slide ? 'active' : ''} onClick={() => setSlide(index)}/>)}</div>
         </section>
       </div>
@@ -117,9 +115,13 @@ export function AppointmentFlow({ onNavigate }: { onNavigate: (p: string) => voi
   const [step, setStep] = useState(1)
   const [service, setService] = useState('')
   const [chamber, setChamber] = useState('')
+  const [date, setDate] = useState('2026-06-18')
+  const [time, setTime] = useState('09:00 AM')
+  const [details, setDetails] = useState<Record<string, string>>({})
   const chambers = chambersCopy[lang].chambers
-  const dates = lang === 'bn' ? ['মঙ্গল ১২', 'বুধ ১৩', 'বৃহ ১৪', 'শনি ১৬'] : ['Tue 12','Wed 13','Thu 14','Sat 16']
-  const times = lang === 'bn' ? ['সকাল ০৯:০০','সকাল ১০:৩০','দুপুর ০২:০০','বিকাল ০৪:৩০','সন্ধ্যা ০৬:০০'] : ['09:00 AM','10:30 AM','02:00 PM','04:30 PM','06:00 PM']
+  const dates = ['2026-06-18', '2026-06-19', '2026-06-20', '2026-06-22']
+  const times = ['09:00 AM','10:30 AM','02:00 PM','04:30 PM','06:00 PM']
+  const dateLabel = (value: string) => new Intl.DateTimeFormat(lang === 'bn' ? 'bn-BD' : 'en-US', { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(`${value}T00:00:00`))
   return (
     <main className="page-section" style={{ position: 'relative', overflow: 'hidden' }}>
       <div className="aurora-bg" style={{ position: 'absolute', inset: 0, opacity: 0.4, pointerEvents: 'none' }}/>
@@ -150,13 +152,13 @@ export function AppointmentFlow({ onNavigate }: { onNavigate: (p: string) => voi
             <>
               <h2>{a.timeTitle}</h2>
               <div className="date-grid">
-                {dates.map((x, i) => (
-                  <button className={`${i === 1 ? 'selected' : ''} press`} key={x}>
-                    {x}<small>{lang === 'bn' ? 'মে ২০২৬' : 'May 2026'}</small>
+                {dates.map(x => (
+                  <button type="button" className={`${date === x ? 'selected' : ''} press`} key={x} onClick={() => setDate(x)}>
+                    {dateLabel(x)}<small>{lang === 'bn' ? 'জুন ২০২৬' : 'June 2026'}</small>
                   </button>
                 ))}
               </div>
-              <div className="time-grid">{times.map(x => <button key={x} className="press">{x}</button>)}</div>
+              <div className="time-grid">{times.map(x => <button type="button" key={x} className={`${time === x ? 'selected' : ''} press`} onClick={() => setTime(x)}>{x}</button>)}</div>
               <h3 className="booking-subhead">{a.subhead}</h3>
               <div className="mini-options">
                 {chambers.map(c => (
@@ -169,7 +171,7 @@ export function AppointmentFlow({ onNavigate }: { onNavigate: (p: string) => voi
             <>
               <h2>{a.detailsTitle}</h2>
               <div className="form-grid">
-                {a.details.map((d, i) => d.textarea ? <textarea key={i} placeholder={d.ph} className="glow-focus"/> : <input key={i} placeholder={d.ph} className="glow-focus"/>)}
+                {a.details.map((d, i) => ('textarea' in d ? <textarea key={i} placeholder={d.ph} className="glow-focus" value={details[`field-${i}`] || ''} onChange={e => setDetails(prev => ({ ...prev, [`field-${i}`]: e.target.value }))}/> : <input key={i} placeholder={d.ph} className="glow-focus" value={details[`field-${i}`] || ''} onChange={e => setDetails(prev => ({ ...prev, [`field-${i}`]: e.target.value }))}/>))}<input type="tel" placeholder={lang === 'bn' ? 'জরুরি ��োগাযোগ নম্বর' : 'Emergency contact number'} className="glow-focus" value={details.emergency || ''} onChange={e => setDetails(prev => ({ ...prev, emergency: e.target.value }))}/><input type="file" accept="image/*,.pdf" className="glow-focus" onChange={e => setDetails(prev => ({ ...prev, report: e.target.files?.[0]?.name || '' }))}/>
               </div>
             </>
           )}
@@ -179,11 +181,11 @@ export function AppointmentFlow({ onNavigate }: { onNavigate: (p: string) => voi
               <h2>{a.reviewTitle}</h2>
               <div className="review-list">
                 {a.review.map((label, i) => (
-                  <p key={i}><span>{label}</span><strong>{i === 0 ? (service || a.services[0]) : i === 1 ? (dates[1] + ', ' + times[1]) : i === 2 ? (chamber || chambers[0].name) : (lang === 'bn' ? '২০ মিনিট' : '20 minutes')}</strong></p>
+                  <p key={i}><span>{label}</span><strong>{i === 0 ? (service || a.services[0]) : i === 1 ? (dateLabel(date) + ', ' + time) : i === 2 ? (chamber || chambers[0].name) : (lang === 'bn' ? '২০ মিনিট' : '20 minutes')}</strong></p>
                 ))}
               </div>
               <p className="muted">{a.reviewNote}</p>
-              <button className="btn btn-primary full btn-pro shadow-glow-teal btn-tilt" onClick={() => onNavigate('Appointment')}>{a.confirmBtn}</button>
+              <button className="btn btn-primary full btn-pro shadow-glow-teal btn-tilt" onClick={() => onNavigate('Patient')}>{a.confirmBtn}</button>
             </>
           )}
           <div className="booking-nav">
@@ -210,7 +212,7 @@ export function CheckoutPage({ onNavigate }: { onNavigate: (p: string) => void }
         <div className="checkout-form premium-card" style={{ background: '#fff' }}>
           <h2>{c.deliveryHeading}</h2>
           <div className="form-grid">
-            {c.deliveryFields.map((f, i) => f.textarea ? <textarea key={i} placeholder={f.ph} className="glow-focus"/> : <input key={i} placeholder={f.ph} className="glow-focus"/>)}
+            {c.deliveryFields.map((f, i) => ('textarea' in f ? <textarea key={i} placeholder={f.ph} className="glow-focus"/> : <input key={i} placeholder={f.ph} className="glow-focus"/>))}
           </div>
           <h2>{c.paymentHeading}</h2>
           <div className="payment-options">

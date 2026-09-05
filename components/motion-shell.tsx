@@ -40,7 +40,7 @@ export function MotionShell({ onBook }: { onBook?: () => void }) {
     document.body.appendChild(dot)
     document.body.appendChild(ring)
     let rx = 0, ry = 0, dx = 0, dy = 0
-    let frameRequested = false
+    let frameRequested: number | null = null
     const onMove = (e: MouseEvent) => {
       dx = e.clientX; dy = e.clientY
       dot.style.transform = `translate3d(${dx}px, ${dy}px, 0) translate(-50%, -50%)`
@@ -65,7 +65,7 @@ export function MotionShell({ onBook }: { onBook?: () => void }) {
     return () => {
       window.removeEventListener('mousemove', onMove)
       document.removeEventListener('mouseover', onOver)
-      cancelAnimationFrame(frameRequested)
+      if (frameRequested != null) cancelAnimationFrame(frameRequested)
       dot.remove(); ring.remove()
       document.body.classList.remove('cursor-hover')
     }

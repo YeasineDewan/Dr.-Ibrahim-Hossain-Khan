@@ -6,7 +6,7 @@ import {
   Clock3, Download, Plus, Menu, X, Stethoscope, Bell, Search, MoreHorizontal,
   MapPin, Filter, ArrowUpRight, TrendingUp, TrendingDown, Send, Sparkles,
   Calendar, Phone, Check, AlertCircle, CalendarCheck, FlaskConical, Bookmark,
-  Shield, Zap, Award, BarChart3, Heart, Sun, ArrowRight
+  Shield, Zap, Award, BarChart3, Heart, Sun, ArrowRight, Settings
 } from 'lucide-react'
 import { patientCopy, useLanguage } from '../lib/translations'
 import { useAdminData } from '../lib/admin-data'
@@ -30,7 +30,7 @@ const userName = 'Amara Mensah'
 
 export function PatientPortal({ onExit }: { onExit: () => void }) {
   const { lang } = useLanguage()
-  const p = patientCopy[lang]
+  const p = patientCopy[lang] as any
   const data = useAdminData()
   const englishLabels = ['Overview', 'Appointments', 'Health records', 'Prescriptions', 'Messages', 'Care plans', 'Billing', 'Profile & settings']
   const labels = ((p.ppDetail?.nav || []).map((item: any) => item.label)) as readonly string[]
@@ -40,10 +40,11 @@ export function PatientPortal({ onExit }: { onExit: () => void }) {
   const [menu, setMenu] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
-  const [greet, setGreet] = useState(p.goodMorning || 'Good morning')
+  const [greet, setGreet] = useState<string>(p.goodMorning || 'Good morning')
   useEffect(() => {
     const h = new Date().getHours()
-    setGreet(h < 12 ? (p.greetMorning || p.goodMorning) : h < 18 ? (p.greetAfternoon || p.goodMorning) : (p.greetEvening || p.goodMorning))
+    const base = h < 12 ? (p.greetMorning || p.goodMorning) : h < 18 ? (p.greetAfternoon || p.goodMorning) : (p.greetEvening || p.goodMorning)
+    setGreet(base as string)
   }, [lang, p.greetMorning, p.greetAfternoon, p.greetEvening, p.goodMorning])
   const me = data.patients[0]
   const firstName = me.name.split(' ')[0]
@@ -146,7 +147,7 @@ export function PatientPortal({ onExit }: { onExit: () => void }) {
                     </div>
                   </div>
                   <button className="popover-link"><UserRound size={15}/> {p.viewProfile}</button>
-                  <button className="popover-link"><SettingsIcon size={15}/> {p.profileTitle}</button>
+                   <button className="popover-link"><Settings size={15}/> {p.profileTitle}</button>
                   <button className="popover-link danger" onClick={onExit}><X size={15}/> {p.signOut}</button>
                 </div>
               )}
@@ -533,36 +534,77 @@ function PatientView({ name, copy, data }: { name: string; copy: any; data: any 
 
       {isRx && (
         <ul className="pp-rx-grid">
-          {me.medications.length === 0 ? (
-            <div className="pro-panel empty-state">
-              <PillArt style={{ width: 90, height: 90, opacity: 0.6 }}/>
-              <p className="muted-light">{copy.noMeds}</p>
-            </div>
-          ) : me.medications.map((m: any, i: number) => (
-            <li key={i} className="pro-panel card-3d lift" style={{ animationDelay: `${i * 0.05}s` }}>
-              <div className="pp-rx-head">
-                <span className="pp-rx-icon"><PillIcon size={20}/></span>
-                <div className="grow">
-                  <strong>{m.name}</strong>
-                  <small>{m.dose}</small>
+          {(() => {
+            const myPrescriptions = (data.prescriptions || []).filter((rx: any) => rx.patientId === me.id)
+            if (myPrescriptions.length === 0) {
+              return (
+                <div className="pro-panel empty-state">
+                  <PillArt style={{ width: 90, height: 90, opacity: 0.6 }}/>
+                  <p className="muted-light">{copy.noMeds}</p>
                 </div>
-                <PillUI tone="teal">{m.status}</PillUI>
-              </div>
-              <div className="pp-rx-meta">
-                <div><span>{copy.dosage}</span><strong>1 tab</strong></div>
-                <div><span>{copy.frequency}</span><strong>{bn ? 'দৈনিক' : 'Daily'}</strong></div>
-                <div><span>{copy.duration}</span><strong>30 {bn ? 'দিন' : 'days'}</strong></div>
-                <div><span>{copy.remaining}</span><strong>18 {bn ? 'টি বাকি' : 'left'}</strong></div>
-              </div>
-              <div className="pp-rx-progress">
-                <span className="pp-rx-progress-fill" style={{ width: '60%' }}/>
-              </div>
-              <div className="pp-rx-actions">
-                <button className="pro-outline btn-pro"><Download size={13}/> {copy.download}</button>
-                <button className="pro-primary btn-pro">{copy.refillRequest}</button>
-              </div>
-            </li>
-          ))}
+              )
+            }
+            return myPrescriptions.map((rx: any, i: number) => (
+              <li key={rx.id} className="pro-panel card-3d lift" style={{ animationDelay: `${i * 0.05}s` }}>
+                <div className="pp-rx-head">
+                  <span className="pp-rx-icon"><PillIcon size={20}/></span>
+                  <div className="grow">
+                    <strong>{rx.id}</strong>
+                    <small>{rx.date} · {rx.diagnosis}</small>
+                  </div>
+                  <PillUI tone={rx.status === 'Signed' ? 'teal' : rx.status === 'Sent' ? 'blue' : 'sand'}>{rx.status}</PillUI>
+                </div>
+                <div className="pp-rx-meta">
+                  <div><span>{copy.dosage}</span><strong>{rx.medicines.length} {copy.dosage.toLowerCase()}</strong></div>
+                  <div><span>{copy.doctor}</span><strong>{rx.doctor}</strong></div>
+                </div>
+                <div className="pp-rx-progress">
+                  <span className="pp-rx-progress-fill" style={{ width: '70%' }}/>
+                </div>
+                <div className="pp-rx-actions">
+                  <button className="pro-outline btn-pro" onClick={async () => {
+                    const { jsPDF } = await import('jspdf')
+                    const doc = new jsPDF()
+                    doc.setFontSize(18)
+                    doc.setTextColor(23, 75, 120)
+                    doc.text(copy.brandFull || 'Dr. Ibrahim Clinic', 20, 22)
+                    doc.setFontSize(10)
+                    doc.setTextColor(95, 117, 128)
+                    doc.text(`Prescription ID: ${rx.id}  |  Date: ${rx.date}  |  Status: ${rx.status}`, 20, 30)
+                    doc.line(20, 34, 190, 34)
+                    let y = 42
+                    doc.setFontSize(12)
+                    doc.setTextColor(23, 75, 120)
+                    doc.text('Patient Details', 20, y); y += 8
+                    doc.setFontSize(10)
+                    doc.setTextColor(51, 78, 92)
+                    doc.text(`Name: ${rx.patientName}  |  ID: ${rx.patientId}`, 20, y); y += 10
+                    doc.text('Diagnosis', 20, y); y += 6
+                    doc.text(rx.diagnosis, 20, y); y += 10
+                    doc.text('Medications', 20, y); y += 6
+                    rx.medicines.forEach((m: any, idx: number) => {
+                      if (y > 270) { doc.addPage(); y = 20 }
+                      doc.text(`${idx + 1}. ${m.name} — ${m.dose} — ${m.frequency} — ${m.duration}`, 24, y); y += 6
+                      if (m.instructions) { doc.text(`   Instructions: ${m.instructions}`, 24, y); y += 6 }
+                    })
+                    if (rx.notes) { y += 6; doc.text(`Notes: ${rx.notes}`, 20, y) }
+                    doc.save(`Prescription-${rx.id}.pdf`)
+                  }}><Download size={13}/> {copy.download}</button>
+                  <button className="pro-outline btn-pro" onClick={() => {
+                    const patient = data.patients.find((p: any) => p.id === rx.patientId)
+                    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Prescription ${rx.id}</title><style>body{font-family:Arial,sans-serif;color:#11263a;max-width:800px;margin:0 auto;padding:40px}h1{color:#174b78;border-bottom:2px solid #3b9b91;padding-bottom:10px}.meta{color:#617780;font-size:13px;margin-bottom:20px}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{text-align:left;padding:10px;border-bottom:1px solid #e0e8e8}th{background:#fbfcfc;color:#516974;font-size:11px;text-transform:uppercase;letter-spacing:.08em}.footer{margin-top:40px;color:#788992;font-size:11px}</style></head><body><h1>Prescription · ${rx.id}</h1><div class="meta">Date: ${rx.date} · Status: ${rx.status} · Doctor: ${rx.doctor}</div>${patient ? `<h2>Patient</h2><table><tr><th>Name</th><td>${patient.name}</td></tr><tr><th>ID</th><td>${patient.id}</td></tr><tr><th>Gender</th><td>${patient.gender}</td></tr><tr><th>DOB</th><td>${patient.dob}</td></tr><tr><th>Phone</th><td>${patient.phone}</td></tr></table>` : ''}<h2>Diagnosis</h2><p>${rx.diagnosis}</p><h2>Medications</h2><table><thead><tr><th>#</th><th>Medicine</th><th>Dose</th><th>Frequency</th><th>Duration</th><th>Instructions</th></tr></thead><tbody>${rx.medicines.map((m: any, idx: number) => `<tr><td>${idx + 1}</td><td><strong>${m.name}</strong></td><td>${m.dose}</td><td>${m.frequency}</td><td>${m.duration}</td><td>${m.instructions}</td></tr>`).join('')}</tbody></table>${rx.notes ? `<h2>Notes</h2><p>${rx.notes}</p>` : ''}<div class="footer">Generated securely for your records.</div></body></html>`
+                    const blob = new Blob(['\ufeff' + html], { type: 'application/msword' })
+                    const url = URL.createObjectURL(blob)
+                    const a = document.createElement('a')
+                    a.href = url
+                    a.download = `Prescription-${rx.id}.doc`
+                    a.click()
+                    URL.revokeObjectURL(url)
+                  }}><Download size={13}/> Word</button>
+                </div>
+              </li>
+            ))
+          })()}
         </ul>
       )}
 

@@ -1,5 +1,5 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 
 export type Appointment = {
   id: string
@@ -66,6 +66,18 @@ export type Chamber = {
   capacity: number
 }
 
+export type Coupon = {
+  id: string
+  code: string
+  type: 'Percent' | 'Flat'
+  value: number
+  minOrder: number
+  uses: number
+  maxUses: number
+  expiry: string
+  status: 'Active' | 'Scheduled' | 'Expired'
+}
+
 export type Notification = {
   id: string
   type: 'appointment' | 'patient' | 'system'
@@ -82,6 +94,32 @@ export type ActivityItem = {
   target: string
   time: string
   ip: string
+}
+
+export type Prescription = {
+  id: string
+  patientId: string
+  patientName: string
+  doctor: string
+  date: string
+  diagnosis: string
+  medicines: {
+    name: string
+    dose: string
+    frequency: string
+    duration: string
+    instructions: string
+  }[]
+  notes: string
+  status: 'Draft' | 'Signed' | 'Sent' | 'Viewed'
+  createdAt: string
+  visitId?: string
+  signatureDataUrl?: string
+  signedAt?: string
+  sentAt?: string
+  auditTrail?: { at: string; actor: string; action: string; changes: string }[]
+  refillCount?: number
+  refillsAllowed?: number
 }
 
 const uid = () => Math.random().toString(36).slice(2, 9)
@@ -139,6 +177,34 @@ const sampleChambers: Chamber[] = [
   { id: 'CH-1', name: 'Dhanmondi', place: 'American Wellness Center', address: 'House 45, Road 22, Dhanmondi, Dhaka 1209', hours: '9:00 AM – 2:00 PM', phone: '+880 1719 395 553', status: 'Active', capacity: 25 },
   { id: 'CH-2', name: 'Banglamotor', place: 'Medigo Health Care', address: 'Rupayan Trade Center, 14 Kazi Nazrul Islam Ave', hours: '4:00 PM – 9:00 PM', phone: '+880 1811 224 557', status: 'Active', capacity: 20 },
   { id: 'CH-3', name: 'Uttara', place: 'Ibn Sina Diagnostic Centre', address: 'Sector 7, Sonargaon Janapath, Uttara', hours: '10:00 AM – 1:00 PM', phone: '+880 1717 332 880', status: 'Active', capacity: 18 },
+]
+
+const samplePrescriptions: Prescription[] = [
+  {
+    id: 'RX-001', patientId: 'DR-20481', patientName: 'Amara Mensah', doctor: 'Dr. Ibrahim', date: '2026-06-12', diagnosis: 'Mild eczema flare',
+    medicines: [
+      { name: 'Moisturizer', dose: 'Apply twice daily', frequency: 'Twice daily', duration: '14 days', instructions: 'Apply after shower on damp skin' },
+      { name: 'Hydrocortisone 1%', dose: 'Thin layer', frequency: 'Once daily', duration: '7 days', instructions: 'Apply to affected areas only' },
+    ],
+    notes: 'Continue current skincare routine. Avoid hot water.',
+    status: 'Signed', createdAt: '2026-06-12T09:30:00Z',
+  },
+  {
+    id: 'RX-002', patientId: 'DR-20482', patientName: 'Daniel Owusu', doctor: 'Dr. Ibrahim', date: '2026-06-10', diagnosis: 'Psoriasis maintenance',
+    medicines: [
+      { name: 'Topical steroid', dose: 'Apply to plaques', frequency: 'Twice daily', duration: '30 days', instructions: 'Use on active plaques only' },
+    ],
+    notes: 'Reduce flare. Follow up in 4 weeks.',
+    status: 'Signed', createdAt: '2026-06-10T11:00:00Z',
+  },
+  {
+    id: 'RX-003', patientId: 'DR-20484', patientName: 'Michael Addo', doctor: 'Dr. Ibrahim', date: '2026-06-14', diagnosis: 'Hypertension follow-up',
+    medicines: [
+      { name: 'Amlodipine 5mg', dose: '5mg', frequency: 'Once daily', duration: '90 days', instructions: 'Take in the morning with water' },
+    ],
+    notes: 'BP stable. Continue current regimen.',
+    status: 'Sent', createdAt: '2026-06-14T14:30:00Z',
+  },
 ]
 
 const sampleCoupons: Coupon[] = [
@@ -217,6 +283,21 @@ export function useAdminData() {
   const [videos, setVideos] = useState(sampleVideos)
   const [categories, setCategories] = useState(sampleCategory)
   const [users, setUsers] = useState(sampleUsers)
+  const [prescriptions, setPrescriptions] = useState<Prescription[]>(samplePrescriptions)
+
+  useEffect(() => {
+    try {
+      const saved = window.sessionStorage.getItem('dribrahim.admin.content')
+      if (!saved) return
+      const content = JSON.parse(saved)
+      if (Array.isArray(content.videos)) setVideos(content.videos)
+      if (Array.isArray(content.appointments)) setAppointments(content.appointments)
+    } catch { /* Keep safe defaults when storage is unavailable or malformed. */ }
+  }, [])
+
+  useEffect(() => {
+    try { window.sessionStorage.setItem('dribrahim.admin.content', JSON.stringify({ videos, appointments })) } catch { /* Storage is optional. */ }
+  }, [videos, appointments])
 
   const upsert = useCallback(<T extends { id: string }>(setter: React.Dispatch<React.SetStateAction<T[]>>) => (item: T) => {
     setter(prev => {
@@ -248,6 +329,7 @@ export function useAdminData() {
     videos, setVideos, addVideo: upsert(setVideos), removeVideo: remove(setVideos),
     categories, setCategories, addCategory: upsert(setCategories), removeCategory: remove(setCategories),
     users, setUsers, addUser: upsert(setUsers), removeUser: remove(setUsers),
+    prescriptions, setPrescriptions, addPrescription: upsert(setPrescriptions), removePrescription: remove(setPrescriptions),
     uid,
   }
 }

@@ -38,7 +38,6 @@ export function DashboardView({ data, copy, onNavigate }: { data: AdminData; cop
       <div className="pro-kpi-grid adm-stagger">
         {copy.kpis.map((k: any, i: number) => {
           const tones = ['teal', 'blue', 'gold', 'coral']
-          const Illusts = [HeartbeatArt, FamilyArt, ShoppingBag ? null : InfinityArt, ClipboardList ? null : StethoArt]
           const Illust = [HeartbeatArt, FamilyArt, InfinityArt, StethoArt][i]
           const sparks = [[40, 55, 48, 70, 62, 80, 75, 90], [60, 70, 65, 80, 75, 88, 92, 95], [30, 45, 50, 60, 55, 70, 80, 85], [12, 9, 14, 8, 11, 7, 9, 5]]
           const illustBg = ['rgba(20,184,166,0.1)', 'rgba(99,102,241,0.1)', 'rgba(245,158,11,0.1)', 'rgba(236,72,153,0.1)']
