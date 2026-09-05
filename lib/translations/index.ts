@@ -1,15 +1,21 @@
-'use client'
+'use client';
 
-import { common } from './common'
-import { navCopy } from './nav'
-import { aboutCopy, doctorBio, sexualMedicineCopy } from './about'
-import { servicesCopy, serviceDetailsCopy, chambersCopy, galleryCopy, contactCopy } from './services'
-import { appointmentCopy, checkoutCopy, successCopy } from './shop'
-import { adminCopy, patientCopy } from './admin'
-import type { Lang } from './i18n'
+import { common } from './common';
+import { navCopy } from './nav';
+import { aboutCopy, doctorBio, sexualMedicineCopy } from './about';
+import {
+  servicesCopy,
+  serviceDetailsCopy,
+  chambersCopy,
+  galleryCopy,
+  contactCopy,
+} from './services';
+import { appointmentCopy, checkoutCopy, successCopy } from './shop';
+import { adminCopy, patientCopy } from './admin';
+import type { Lang } from './i18n';
 
-export { useLang, useLanguage, LanguageProvider } from './i18n'
-export type { Lang }
+export { useLang, useLanguage, LanguageProvider } from './i18n';
+export type { Lang };
 
 export {
   common,
@@ -27,7 +33,7 @@ export {
   successCopy,
   adminCopy,
   patientCopy,
-}
+};
 
 export const translations = {
   common,
@@ -45,15 +51,15 @@ export const translations = {
   success: successCopy,
   admin: adminCopy,
   patient: patientCopy,
-} as const
+} as const;
 
-export type TranslationKey = keyof typeof translations
+export type TranslationKey = keyof typeof translations;
 
 export function t<K extends TranslationKey>(key: K, lang: Lang) {
-  const obj = translations[key] as Record<Lang, any>
-  return (obj[lang] ?? obj.en) as (typeof translations)[K]['en']
+  const obj = translations[key] as Record<Lang, any>;
+  return (obj[lang] ?? obj.en) as (typeof translations)[K]['en'];
 }
 
 export function pickByLang<T extends Record<string, any>>(obj: T, lang: Lang) {
-  return (obj[lang] ?? obj.en) as T['en']
+  return (obj[lang] ?? obj.en) as T['en'];
 }
