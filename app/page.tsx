@@ -536,21 +536,17 @@ function Footer({
             <span>{n.responseTime}</span>
           </div>
 
-          <div className="footer-socials" aria-label={n.socialLabel}>
-            {[
-              { k: 'f', label: 'Facebook' },
-              { k: 'm', label: 'Messenger' },
-              { k: '◎', label: 'Instagram' },
-              { k: '♪', label: 'TikTok' },
-              { k: '▶', label: 'YouTube' },
-              { k: 'in', label: 'LinkedIn' },
-            ].map((s, i) => (
-              <button key={s.k + i} aria-label={s.label} className="press ripple">
-                {s.k}
-                <span className="social-glow" aria-hidden="true" />
-              </button>
-            ))}
-          </div>
+           <div className="footer-socials" aria-label={n.socialLabel}>
+             {[
+               { k: 'f', label: 'Facebook', href: n.socials.facebook },
+               { k: '◎', label: 'Instagram', href: n.socials.instagram },
+             ].map((s, i) => (
+               <a key={s.k + i} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label} className="press ripple social-btn">
+                 {s.k}
+                 <span className="social-glow" aria-hidden="true" />
+               </a>
+             ))}
+           </div>
         </div>
 
         {/* Explore */}
@@ -1433,7 +1429,7 @@ function SupportChat({ lang }: { lang: Lang }) {
               <MessageCircle size={15} /> {copy.whatsapp}
               <ExternalLink size={12} />
             </a>
-            <a href="https://www.facebook.com/" target="_blank" rel="noreferrer">
+            <a href="https://www.facebook.com/dribrahimhossainkhan/" target="_blank" rel="noreferrer">
               <MessageCircle size={15} /> {copy.facebook}
               <ExternalLink size={12} />
             </a>
@@ -1569,21 +1565,15 @@ export default function Page() {
       <div className="utility-bar">
         <div className="container utility-inner">
           <a href="tel:+8801719395553">
-            <Phone size={13} /> +880 1719 395 553
+            <Phone size={13} /> +880 1719-939553
           </a>
           <div className="utility-socials">
             <span>{n.utility.follow}</span>
-            <a href="#facebook" aria-label="Facebook">
+            <a href={n.socials.facebook} target="_blank" rel="noreferrer" aria-label="Facebook">
               f
             </a>
-            <a href="#instagram" aria-label="Instagram">
+            <a href={n.socials.instagram} target="_blank" rel="noreferrer" aria-label="Instagram">
               ◎
-            </a>
-            <a href="#youtube" aria-label="YouTube">
-              ▶
-            </a>
-            <a href="#linkedin" aria-label="LinkedIn">
-              in
             </a>
           </div>
         </div>
