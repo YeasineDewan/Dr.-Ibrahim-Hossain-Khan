@@ -1364,7 +1364,7 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
   );
 }
 
-function SupportChat({ lang }: { lang: Lang }) {
+const SupportChat = memo(function SupportChat({ lang }: { lang: Lang }) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [sent, setSent] = useState(false);
@@ -1388,6 +1388,13 @@ function SupportChat({ lang }: { lang: Lang }) {
           whatsapp: 'WhatsApp',
           facebook: 'Facebook',
         };
+  const handleClose = useCallback(() => setOpen(false), []);
+  const handleSend = useCallback(() => {
+    if (message.trim()) {
+      setSent(true);
+      setMessage('');
+    }
+  }, [message]);
   return (
     <div className="support-chat-wrap">
       {open && (
@@ -1396,7 +1403,7 @@ function SupportChat({ lang }: { lang: Lang }) {
             <div>
               <span className="support-online-dot" /> {copy.label}
             </div>
-            <button type="button" onClick={() => setOpen(false)} aria-label="Close chat">
+            <button type="button" onClick={handleClose} aria-label="Close chat">
               <X size={17} />
             </button>
           </div>
@@ -1421,7 +1428,7 @@ function SupportChat({ lang }: { lang: Lang }) {
                   type="button"
                   className="support-send"
                   disabled={!message.trim()}
-                  onClick={() => setSent(true)}>
+                  onClick={handleSend}>
                   {copy.send}
                   <Send size={15} />
                 </button>
@@ -1451,9 +1458,9 @@ function SupportChat({ lang }: { lang: Lang }) {
       </button>
     </div>
   );
-}
+});
 
-function SimplePage({ title, onNavigate }: { title: string; onNavigate: (p: string) => void }) {
+const SimplePage = memo(function SimplePage({ title, onNavigate }: { title: string; onNavigate: (p: string) => void }) {
   const { lang } = useLanguage();
   const c = common[lang];
   if (title === 'About') return <AboutPage onNavigate={onNavigate} />;
@@ -1528,7 +1535,7 @@ function SimplePage({ title, onNavigate }: { title: string; onNavigate: (p: stri
       </div>
     </section>
   );
-}
+});
 
 export default function Page() {
   const [page, setPage] = useState('Home');
