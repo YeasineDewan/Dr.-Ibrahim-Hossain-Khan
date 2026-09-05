@@ -169,7 +169,7 @@ export function AppointmentFlow({ onNavigate }: { onNavigate: (p: string) => voi
             <>
               <h2>{a.detailsTitle}</h2>
               <div className="form-grid">
-                {a.details.map((d, i) => d.textarea ? <textarea key={i} placeholder={d.ph} className="glow-focus"/> : <input key={i} placeholder={d.ph} className="glow-focus"/>)}
+                {a.details.map((d, i) => ('textarea' in d ? <textarea key={i} placeholder={d.ph} className="glow-focus"/> : <input key={i} placeholder={d.ph} className="glow-focus"/>))}
               </div>
             </>
           )}
@@ -210,7 +210,7 @@ export function CheckoutPage({ onNavigate }: { onNavigate: (p: string) => void }
         <div className="checkout-form premium-card" style={{ background: '#fff' }}>
           <h2>{c.deliveryHeading}</h2>
           <div className="form-grid">
-            {c.deliveryFields.map((f, i) => f.textarea ? <textarea key={i} placeholder={f.ph} className="glow-focus"/> : <input key={i} placeholder={f.ph} className="glow-focus"/>)}
+            {c.deliveryFields.map((f, i) => ('textarea' in f ? <textarea key={i} placeholder={f.ph} className="glow-focus"/> : <input key={i} placeholder={f.ph} className="glow-focus"/>))}
           </div>
           <h2>{c.paymentHeading}</h2>
           <div className="payment-options">

@@ -492,41 +492,35 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
           </div>
         </div>
 
-        {/* ===== HERO VISUAL: single clean 3D illustration ===== */}
-        <div className="hero-visual perspective" style={{ perspective: 1500 }}>
-          {/* Single small floating status pill (top-right corner) */}
-          <div className="hero-mini-pill glass-panel shine-card float-soft" style={{ position: 'absolute', top: 16, right: 16, zIndex: 5, display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 100, fontSize: 11, fontWeight: 700, color: '#0d9488' }}>
-            <span className="status-dot pulse"/>
-            <span>Live · {n.availableToday}</span>
-          </div>
-
-          {/* Single main 3D heartbeat illustration — image takes priority, falls back to SVG */}
-          <Tilt3D max={5} scale={1.01} className="float-3d hero-main-card">
-            <div className="hero-main-bg hero-photo-wrap" style={{ borderRadius: '24px', overflow: 'hidden', position: 'relative', background: 'linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 50%, #ede9fe 100%)', boxShadow: '0 40px 80px -16px rgba(15,42,68,0.3)', border: '1px solid rgba(255,255,255,0.8)', aspectRatio: '1/1' }}>
+        {/* ===== HERO VISUAL: large featured image ===== */}
+        <div className="hero-visual hero-visual-large perspective" style={{ perspective: 1500 }}>
+          <Tilt3D max={4} scale={1.01} className="float-3d hero-main-card">
+            <div className="hero-main-bg hero-photo-wrap" style={{ borderRadius: '32px', overflow: 'hidden', position: 'relative', background: 'linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 50%, #ede9fe 100%)', boxShadow: '0 50px 100px -20px rgba(15,42,68,0.35)', border: '1px solid rgba(255,255,255,0.8)', aspectRatio: '4/3' }}>
               <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-t0aIFTDc6pB1akFlYbJx4hrSfNncT0.png" alt="Dr. Ibrahim Hossain in a white coat" className="hero-photo" loading="eager" fetchPriority="high" />
-              {/* Subtle ECG wave overlay */}
-              <svg viewBox="0 0 400 100" preserveAspectRatio="none" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 80, opacity: 0.3 }}>
-                <path d="M0,50 L60,50 L80,50 L90,20 L100,80 L110,30 L130,50 L200,50 L220,50 L230,25 L240,75 L250,50 L320,50 L340,50 L350,30 L360,70 L370,50 L400,50" stroke="#14b8a6" strokeWidth="2" fill="none" className="ecg-stroke"/>
+              <svg viewBox="0 0 400 100" preserveAspectRatio="none" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 90, opacity: 0.35 }}>
+                <path d="M0,50 L60,50 L80,50 L90,20 L100,80 L110,30 L130,50 L200,50 L220,50 L230,25 L240,75 L250,50 L320,50 L340,50 L350,30 L360,70 L370,50 L400,50" stroke="#14b8a6" strokeWidth="2.5" fill="none" className="ecg-stroke"/>
               </svg>
-              {/* Glassmorphism sheen overlay */}
               <span className="hero-sheen" aria-hidden="true"/>
             </div>
           </Tilt3D>
 
-          {/* Small rating badge — bottom-left, compact */}
-          <div className="hero-mini-pill glass-panel shine-card float-soft" style={{ position: 'absolute', bottom: 16, left: 16, zIndex: 5, display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', borderRadius: 12 }}>
-            <StarsArt style={{ width: 60, height: 18 }}/>
-            <div style={{ fontSize: 11, lineHeight: 1.2 }}>
+          <div className="hero-mini-pill glass-panel shine-card float-soft" style={{ position: 'absolute', top: 20, right: 20, zIndex: 5, display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 100, fontSize: 12, fontWeight: 700, color: '#0d9488' }}>
+            <span className="status-dot pulse"/>
+            <span>Live · {n.availableToday}</span>
+          </div>
+
+          <div className="hero-mini-pill glass-panel shine-card float-soft" style={{ position: 'absolute', bottom: 20, left: 20, zIndex: 5, display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', borderRadius: 14 }}>
+            <StarsArt style={{ width: 70, height: 22 }}/>
+            <div style={{ fontSize: 12, lineHeight: 1.2 }}>
               <strong style={{ display: 'block', color: '#0f172a' }}>4.9/5</strong>
-              <small style={{ color: '#647985', fontSize: 9 }}>2k+ reviews</small>
+              <small style={{ color: '#647985', fontSize: 10 }}>2k+ reviews</small>
             </div>
           </div>
 
-          {/* Spinning seal — small, top-left */}
-          <div className="hero-seal-mini spin-3d" style={{ position: 'absolute', top: 16, left: 16, width: 64, height: 64, borderRadius: '50%', background: 'linear-gradient(135deg, #14b8a6, #6366f1)', color: '#fff', display: 'grid', placeItems: 'center', textAlign: 'center', boxShadow: '0 16px 30px -8px rgba(20,184,166,0.5)', zIndex: 4 }}>
+          <div className="hero-seal-mini spin-3d" style={{ position: 'absolute', top: 20, left: 20, width: 72, height: 72, borderRadius: '50%', background: 'linear-gradient(135deg, #14b8a6, #6366f1)', color: '#fff', display: 'grid', placeItems: 'center', textAlign: 'center', boxShadow: '0 20px 40px -10px rgba(20,184,166,0.55)', zIndex: 4 }}>
             <div>
-              <div style={{ fontSize: 16, fontWeight: 800, lineHeight: 1 }}>15+</div>
-              <div style={{ fontSize: 8, fontWeight: 500, opacity: 0.85, marginTop: 1 }}>years</div>
+              <div style={{ fontSize: 18, fontWeight: 800, lineHeight: 1 }}>15+</div>
+              <div style={{ fontSize: 9, fontWeight: 500, opacity: 0.9, marginTop: 2 }}>years</div>
             </div>
           </div>
         </div>

@@ -12,24 +12,30 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
   const [open, setOpen] = useState(false)
   const [hovered, setHovered] = useState<'en' | 'bn' | null>(null)
   const [closing, setClosing] = useState(false)
+
   useEffect(() => {
     try {
-      const stored = window.sessionStorage.getItem('dribrahim.lang.gate-seen')
-      if (!stored) {
-        const t = window.setTimeout(() => setOpen(true), 380)
-        return () => clearTimeout(t)
+      const raw = window.localStorage.getItem('dribrahim.lang.gate-seen')
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        const expiry = parsed.expiresAt || 0
+        if (Date.now() < expiry) return
       }
+      const t = window.setTimeout(() => setOpen(true), 380)
+      return () => clearTimeout(t)
     } catch {
-      setOpen(true)
+      const t = window.setTimeout(() => setOpen(true), 380)
+      return () => clearTimeout(t)
     }
   }, [])
+
   if (!open) return null
   const t = common.en
   const choose = (lang: 'en' | 'bn') => {
     setClosing(true)
     setTimeout(() => {
       onChange(lang)
-      try { window.sessionStorage.setItem('dribrahim.lang.gate-seen', '1') } catch {}
+      try { window.localStorage.setItem('dribrahim.lang.gate-seen', JSON.stringify({ expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000 })) } catch {}
       try { window.localStorage.setItem('dribrahim.lang', lang) } catch {}
       setOpen(false)
     }, 260)
@@ -37,7 +43,7 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
   const dismiss = () => {
     setClosing(true)
     setTimeout(() => {
-      try { window.sessionStorage.setItem('dribrahim.lang.gate-seen', '1') } catch {}
+      try { window.localStorage.setItem('dribrahim.lang.gate-seen', JSON.stringify({ expiresAt: Date.now() + 24 * 60 * 60 * 1000 })) } catch {}
       setOpen(false)
     }, 200)
   }
