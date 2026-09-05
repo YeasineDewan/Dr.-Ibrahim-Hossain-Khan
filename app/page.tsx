@@ -185,10 +185,10 @@ function prefetchRoute(name: string) {
 
 function useT() {
   const { lang } = useLanguage();
-  return { lang, t: (k: Parameters<typeof tT>[0]) => tT(k, lang) };
+  return useMemo(() => ({ lang, t: (k: Parameters<typeof tT>[0]) => tT(k, lang) }), [lang]);
 }
 
-function Button({
+const Button = memo(function Button({
   children,
   variant = 'primary',
   onClick,
@@ -206,10 +206,10 @@ function Button({
       {children}
     </button>
   );
-}
-function Pill({ children, tone = 'blue' }: { children: React.ReactNode; tone?: string }) {
+});
+const Pill = memo(function Pill({ children, tone = 'blue' }: { children: React.ReactNode; tone?: string }) {
   return <span className={`pill pill-${tone}`}>{children}</span>;
-}
+});
 
 const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
   const { lang, t } = useT();
