@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo, memo } from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 import {
   ArrowRight,
   Check,
@@ -153,6 +153,7 @@ export function ServicesPage({ onNavigate }: { onNavigate: (p: string) => void }
   const s = servicesCopy[lang];
   const sections = useMemo(() => [s.sections.skinHair, s.sections.infertility] as const, [s.sections.skinHair, s.sections.infertility]);
   const promiseList = useMemo(() => s.promiseList, [s.promiseList]);
+  const handleNavigate = useCallback((p: string) => onNavigate(p), [onNavigate]);
   return (
     <main
       className="page-section services-page"
@@ -196,7 +197,7 @@ export function ServicesPage({ onNavigate }: { onNavigate: (p: string) => void }
                   x={x}
                   i={i}
                   sIdx={sIdx}
-                  onNavigate={onNavigate}
+                  onNavigate={handleNavigate}
                   viewService={s.viewService}
                 />
               ))}
