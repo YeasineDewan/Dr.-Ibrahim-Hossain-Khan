@@ -281,7 +281,7 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
             aria-label={common[lang].brandName}>
             <span className="brand-mark">
               <span className="brand-pulse" aria-hidden="true" />
-              <Activity size={20} className="brand-icon" />
+              <img src="/logo.png" alt="Dr. Ibrahim Clinic" className="brand-icon-img" />
             </span>
             <span className="brand-text">
               <strong>{common[lang].brandName}</strong>
@@ -498,7 +498,7 @@ function Footer({
         <div className="footer-brand-block">
           <button className="brand footer-brand" onClick={() => onNavigate('Home')}>
             <span className="brand-mark">
-              <Activity size={19} />
+              <img src="/logo.png" alt="Dr. Ibrahim Clinic" className="brand-icon-img" />
             </span>
             <span>
               {c.brandName}

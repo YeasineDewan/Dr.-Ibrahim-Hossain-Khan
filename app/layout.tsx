@@ -31,6 +31,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <link rel="preconnect" href="/" />
         <link rel="dns-prefetch" href="/" />
+        <link rel="icon" href="/ico.png" type="image/png" />
       </head>
       <body suppressHydrationWarning className="antialiased">
         <LanguageProvider>{children}</LanguageProvider>

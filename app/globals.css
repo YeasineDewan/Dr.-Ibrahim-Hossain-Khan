@@ -547,13 +547,13 @@ img {
   margin-top: 2px;
 }
 .brand-mark {
-  width: 34px;
-  height: 34px;
+  width: 52px;
+  height: 52px;
   display: grid;
   place-items: center;
   color: #fff;
   background: #174b78;
-  border-radius: 10px 10px 10px 3px;
+  border-radius: 50%;
 }
 .main-nav {
   display: flex;
@@ -1300,7 +1300,9 @@ footer {
   color: #fff;
 }
 .footer-brand .brand-mark {
-  background: #3b9b91;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 4px 12px -4px rgba(0,0,0,0.15);
 }
 .footer-copy {
   max-width: 220px;
@@ -10089,21 +10091,26 @@ h2 em {
   position: relative;
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 13px;
-  background: linear-gradient(135deg, #14b8a6 0%, #6366f1 100%);
-  color: #fff;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fff;
+  color: #174b78;
   flex-shrink: 0;
   overflow: visible;
-  box-shadow: 0 8px 22px -8px rgba(20, 184, 166, 0.5);
+  border: 1px solid rgba(23, 75, 120, 0.12);
+  box-shadow: 0 4px 12px -4px rgba(23, 75, 120, 0.12);
   transition:
     transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.4s ease;
 }
-.brand-mark .brand-icon {
+.brand-mark .brand-icon-img {
   position: relative;
   z-index: 2;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
 }
 .brand-pulse {
   position: absolute;
@@ -10125,7 +10132,7 @@ h2 em {
 }
 .brand:hover .brand-mark {
   transform: rotate(-6deg) scale(1.08);
-  box-shadow: 0 12px 28px -8px rgba(99, 102, 241, 0.55);
+  box-shadow: 0 14px 34px -10px rgba(20, 184, 166, 0.35);
 }
 
 .brand-text {
@@ -10911,8 +10918,12 @@ h2 em {
   letter-spacing: 0.18em;
 }
 .footer-brand-block .brand-mark {
-  background: linear-gradient(135deg, #14b8a6, #6366f1);
-  color: #fff;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 4px 12px -4px rgba(0,0,0,0.15);
 }
 .footer-copy {
   font-size: 13px;
