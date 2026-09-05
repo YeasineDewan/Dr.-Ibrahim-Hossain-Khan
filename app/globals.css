@@ -10651,6 +10651,8 @@ h2 em {
     radial-gradient(900px 500px at 100% 100%, rgba(99, 102, 241, 0.1), transparent 70%),
     linear-gradient(180deg, #0f172a 0%, #0b1322 100%);
   overflow: hidden;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 520px;
 }
 .footer-wave {
   position: absolute;

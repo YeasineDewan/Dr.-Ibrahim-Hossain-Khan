@@ -357,7 +357,7 @@ export function GalleryView({
         <div className="adm-gallery-grid adm-stagger">
           {data.gallery.map((g: any) => (
             <article key={g.id} className="adm-gallery-item" onClick={() => setPreview(g.url)}>
-              <img src={g.url} alt={g.title} />
+              <img src={g.url} alt={g.title} width="360" height="360" loading="lazy" decoding="async" />
               <div className="adm-gallery-overlay">
                 <strong>{g.title}</strong>
                 <small>
@@ -438,12 +438,12 @@ export function GalleryView({
               onChange={e => setEditing({ ...(editing || {}), url: e.target.value })}
             />
           </Field>
-          {editing?.url && <img src={editing.url} className="adm-detail-image" alt="" />}
+           {editing?.url && <img src={editing.url} className="adm-detail-image" alt="" width="400" height="240" decoding="async" />}
         </Modal>
       )}
       {preview && (
         <div className="adm-lightbox" onClick={() => setPreview(null)}>
-          <img src={preview} alt="" />
+          <img src={preview} alt="" width="1200" height="800" decoding="async" />
         </div>
       )}
     </>
@@ -611,7 +611,14 @@ export function ReviewsView({
 }) {
   const [tab, setTab] = useState<'All' | 'Pending' | 'Approved' | 'Rejected'>('All');
   const [replying, setReplying] = useState<Review | null>(null);
-  const list = data.reviews.filter((r: any) => (tab === 'All' ? true : r.status === tab));
+  const list = useMemo(() => data.reviews.filter((r: any) => (tab === 'All' ? true : r.status === tab)), [data.reviews, tab]);
+  const pendingCount = useMemo(() => data.reviews.filter((r: any) => r.status === 'Pending').length, [data.reviews]);
+  const tabCounts = useMemo(() => ({
+    All: data.reviews.length,
+    Pending: data.reviews.filter((r: any) => r.status === 'Pending').length,
+    Approved: data.reviews.filter((r: any) => r.status === 'Approved').length,
+    Rejected: data.reviews.filter((r: any) => r.status === 'Rejected').length,
+  }), [data.reviews]);
   const setStatus = (r: Review, status: Review['status']) => {
     data.addReview({ ...r, status });
     onLog('Dr. Ibrahim', 'updated', `Review ${r.id} → ${status}`);
@@ -624,8 +631,7 @@ export function ReviewsView({
           <span className="pro-kicker">CONTENT STUDIO</span>
           <h1>Reviews</h1>
           <p className="muted-light">
-            {data.reviews.length} total ·{' '}
-            {data.reviews.filter((r: any) => r.status === 'Pending').length} pending
+            {data.reviews.length} total · {pendingCount} pending
           </p>
         </div>
       </section>
@@ -634,9 +640,7 @@ export function ReviewsView({
           <button key={t} className={tab === t ? 'on' : ''} onClick={() => setTab(t)}>
             {t}
             <span>
-              {t === 'All'
-                ? data.reviews.length
-                : data.reviews.filter((r: any) => r.status === t).length}
+              {tabCounts[t]}
             </span>
           </button>
         ))}

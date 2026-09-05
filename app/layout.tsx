@@ -4,7 +4,7 @@ import './motion.css';
 import { Noto_Sans_Bengali } from 'next/font/google';
 import { LanguageProvider } from '../lib/translations';
 
-const bangla = Noto_Sans_Bengali({ subsets: ['bengali'], variable: '--font-bangla' });
+const bangla = Noto_Sans_Bengali({ subsets: ['bengali'], variable: '--font-bangla', preload: true });
 
 export const metadata: Metadata = {
   title: 'Dr. Ibrahim Clinic | Human healthcare in Accra',
@@ -31,7 +31,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <link rel="preconnect" href="/" />
         <link rel="dns-prefetch" href="/" />
-        <link rel="icon" href="/ico.png" type="image/png" />
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23174b78'/><path d='M50 25v30m0 0v30m-20-20h30' stroke='white' stroke-width='8' stroke-linecap='round'/></svg>" />
+        <link rel="apple-touch-icon" href="/ico.png" />
+        <link rel="preload" href="/logo.png" as="image" type="image/png" fetchPriority="high" />
       </head>
       <body suppressHydrationWarning className="antialiased">
         <LanguageProvider>{children}</LanguageProvider>
