@@ -9814,7 +9814,7 @@ h2 em {
 .hero-main-card {
   position: relative;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 .hero-main-bg {
@@ -9823,7 +9823,7 @@ h2 em {
 }
 .hero-visual {
   position: relative;
-  min-height: 580px;
+  min-height: 680px;
 }
 @media (max-width: 780px) {
   .hero-visual {

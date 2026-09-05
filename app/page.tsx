@@ -433,15 +433,15 @@ function Footer({
         <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
           <defs>
             <linearGradient id="fwave" x1="0" x2="1" y1="0" y2="0">
-              <stop offset="0" stopColor="#14b8a6" />
-              <stop offset=".5" stopColor="#6366f1" />
-              <stop offset="1" stopColor="#ec4899" />
+              <stop offset="0" stopColor="#0f172a" />
+              <stop offset=".5" stopColor="#0b1322" />
+              <stop offset="1" stopColor="#0f172a" />
             </linearGradient>
           </defs>
           <path
             d="M0 60 C 200 20, 360 80, 600 50 S 1100 10, 1440 60 L 1440 80 0 80 Z"
             fill="url(#fwave)"
-            opacity=".9"
+            opacity=".95"
           />
         </svg>
       </div>
@@ -753,7 +753,7 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
                     background: 'linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 50%, #ede9fe 100%)',
                     boxShadow: '0 50px 100px -20px rgba(15,42,68,0.35)',
                     border: '1px solid rgba(255,255,255,0.8)',
-                    aspectRatio: '4/5',
+                    aspectRatio: '3/4',
                   }}>
                   <img
                     src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-t0aIFTDc6pB1akFlYbJx4hrSfNncT0.png"
@@ -761,6 +761,9 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
                     className="hero-photo"
                     loading="eager"
                     fetchPriority="high"
+                    width="500"
+                    height="625"
+                    decoding="async"
                   />
                   <svg
                     viewBox="0 0 400 100"
