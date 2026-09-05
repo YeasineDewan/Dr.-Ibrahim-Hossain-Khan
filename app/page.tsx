@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState, lazy, Suspense } from 'react';
+import { useEffect, useMemo, useState, lazy, Suspense, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import {
   Activity,
@@ -222,6 +222,13 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
   const [searchVal, setSearchVal] = useState('');
   const [activeIdx, setActiveIdx] = useState(0);
   const [scrollPct, setScrollPct] = useState(0);
+  const handleNavClick = useCallback((item: string) => {
+    onNavigate(item);
+    setOpen(false);
+  }, [onNavigate]);
+  const handleSearchOpen = useCallback(() => setSearchOpen(true), []);
+  const handleSearchClose = useCallback(() => setSearchOpen(false), []);
+  const handleMenuToggle = useCallback(() => setOpen(v => !v), []);
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
@@ -304,10 +311,7 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
             {navItems.map((item, i) => (
               <button
                 key={item}
-                onClick={() => {
-                  onNavigate(item);
-                  setOpen(false);
-                }}
+                onClick={() => handleNavClick(item)}
                 onMouseEnter={() => {
                   setHovered(item);
                   prefetchRoute(item);
@@ -330,7 +334,7 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
             <button
               className="icon-btn press"
               aria-label={n.searchAria}
-              onClick={() => setSearchOpen(true)}>
+              onClick={handleSearchOpen}>
               <Search size={18} />
               <span className="icon-glow" aria-hidden="true" />
             </button>
@@ -351,7 +355,7 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
             </Magnetic>
             <button
               className="menu-btn press"
-              onClick={() => setOpen(!open)}
+              onClick={handleMenuToggle}
               aria-label={common[lang].openMenu}
               aria-expanded={open}>
               <span className="menu-bars">
