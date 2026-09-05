@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import {
   Activity, ArrowRight, CalendarDays, CalendarCheck, Check, ChevronDown, Clock3, HeartPulse, Menu, Search, ShieldCheck,
   Stethoscope, Users, X, Phone, MapPin, Star, LayoutDashboard, ClipboardList,
-  UserRound, Settings, BarChart3, Bell, Plus, SlidersHorizontal, MoreHorizontal, Sparkles, Mail
+  UserRound, Settings, BarChart3, Bell, Plus, SlidersHorizontal, MoreHorizontal, Sparkles, Mail, MessageCircle, Send, ExternalLink
 } from 'lucide-react'
 import { AboutPage } from '../components/about-page'
 import { ServiceDetailPage, serviceDetails } from '../components/service-detail-page'
@@ -740,6 +740,21 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
   </></ScrollReveal>
 }
 
+function SupportChat({ lang }: { lang: Lang }) {
+  const [open, setOpen] = useState(false)
+  const [message, setMessage] = useState('')
+  const [sent, setSent] = useState(false)
+  const copy = lang === 'bn' ? { label: 'সহায়তা চ্যাট', title: 'আপনার যত্ন টিমের সাথে কথা বলুন', body: 'কীভাবে সাহায্য করতে পারি? আমরা ক্লিনিক সময়ে উত্তর দিই।', placeholder: 'আপনার বার্তা লিখুন…', send: 'বার্তা পাঠান', whatsapp: 'WhatsApp', facebook: 'Facebook' } : { label: 'Support chat', title: 'Talk to your care team', body: 'How can we help? We reply during clinic hours.', placeholder: 'Write your message…', send: 'Send message', whatsapp: 'WhatsApp', facebook: 'Facebook' }
+  return <div className="support-chat-wrap">
+    {open && <section className="support-chat-panel" aria-label={copy.label}>
+      <div className="support-chat-head"><div><span className="support-online-dot"/> {copy.label}</div><button type="button" onClick={() => setOpen(false)} aria-label="Close chat"><X size={17}/></button></div>
+      <div className="support-chat-body"><strong>{copy.title}</strong><p>{sent ? (lang === 'bn' ? 'ধন্যবাদ। আপনার বার্তা পাঠানো হয়েছে।' : 'Thanks. Your message has been sent to the care team.') : copy.body}</p>{!sent && <><textarea value={message} onChange={e => setMessage(e.target.value)} placeholder={copy.placeholder} aria-label={copy.placeholder}/><button type="button" className="support-send" disabled={!message.trim()} onClick={() => setSent(true)}>{copy.send}<Send size={15}/></button></>}</div>
+      <div className="support-chat-links"><a href="https://wa.me/8801719395553" target="_blank" rel="noreferrer"><MessageCircle size={15}/> {copy.whatsapp}<ExternalLink size={12}/></a><a href="https://www.facebook.com/" target="_blank" rel="noreferrer"><MessageCircle size={15}/> {copy.facebook}<ExternalLink size={12}/></a></div>
+    </section>}
+    <button type="button" className="support-chat-fab" onClick={() => setOpen(value => !value)} aria-expanded={open} aria-label={copy.label}><MessageCircle size={22}/><span>{copy.label}</span></button>
+  </div>
+}
+
 function SimplePage({ title, onNavigate }: { title: string; onNavigate: (p: string) => void }) {
   const { lang } = useLanguage()
   const c = common[lang]
@@ -809,6 +824,7 @@ export default function Page() {
       {page !== 'Admin' && page !== 'Patient' && <PublicHeader onNavigate={setPage} />}
       {render}
       {page !== 'Admin' && page !== 'Patient' && <Footer onNavigate={setPage} onLangChange={setLang} />}
+      {page !== 'Admin' && <SupportChat lang={lang} />}
       {(page === 'Appointment' || page === 'Checkout' || page === 'Success') && (
         <div className="floating-invoice">
           <InvoiceButton type={page === 'Appointment' ? 'appointment' : 'order'} lang={lang} />

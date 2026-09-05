@@ -117,10 +117,9 @@ export type Prescription = {
   signatureDataUrl?: string
   signedAt?: string
   sentAt?: string
-  viewedAt?: string
+  auditTrail?: { at: string; actor: string; action: string; changes: string }[]
   refillCount?: number
   refillsAllowed?: number
-  auditTrail?: { at: string; actor: string; action: string; changes?: string }[]
 }
 
 const uid = () => Math.random().toString(36).slice(2, 9)

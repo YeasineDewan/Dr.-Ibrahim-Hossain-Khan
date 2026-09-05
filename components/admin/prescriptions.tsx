@@ -1,19 +1,12 @@
 'use client'
 
-import { useMemo, useState, useRef, useEffect } from 'react'
+import { useMemo, useState, useRef, useEffect, useCallback } from 'react'
 import { Check, FileText, Plus, Printer, Search, Trash2, Download, X, Edit3, ChevronDown, ChevronUp, Activity, PenLine } from 'lucide-react'
 import { Modal, Field, Input, Select, Textarea, Avatar } from '../admin-ui'
 import type { AdminData, Patient, Prescription } from '../../lib/admin-data'
 
 type Medicine = { name: string; dose: string; frequency: string; duration: string; instructions: string }
-
-const nextPrescriptionNumber = () => {
-  const year = new Date().getFullYear()
-  const key = `dribrahim.rx.sequence.${year}`
-  const next = Number(window.sessionStorage.getItem(key) || '0') + 1
-  window.sessionStorage.setItem(key, String(next))
-  return `RX-${year}-${String(next).padStart(4, '0')}`
-}
+type FieldError = { patient?: boolean; diagnosis?: boolean; medicineName?: boolean }
 
 const emptyPrescription = (patientId = '', patientName = ''): Prescription => ({
   id: '',
@@ -31,6 +24,16 @@ const emptyPrescription = (patientId = '', patientName = ''): Prescription => ({
   auditTrail: [],
 })
 
+const nextRxId = (existing: Prescription[] = []) => {
+  const year = new Date().getFullYear()
+  const prefix = `RX-${year}-`
+  const nums = existing
+    .map(p => p.id.startsWith(prefix) ? parseInt(p.id.slice(prefix.length), 10) : NaN)
+    .filter(n => !Number.isNaN(n))
+  const next = nums.length > 0 ? Math.max(...nums) + 1 : 1
+  return `${prefix}${String(next).padStart(4, '0')}`
+}
+
 export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminData; copy: any; onLog: (u: string, a: string, t: string) => void; toast: any }) {
   const [query, setQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('All')
@@ -43,16 +46,12 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
   const [confirmDelete, setConfirmDelete] = useState<Prescription | null>(null)
   const [showPatientSelect, setShowPatientSelect] = useState(false)
   const [patientQuery, setPatientQuery] = useState('')
-  const [debouncedPatientQuery, setDebouncedPatientQuery] = useState('')
-  const [signature, setSignature] = useState('')
-  const signatureRef = useRef<HTMLCanvasElement>(null)
+  const [errors, setErrors] = useState<FieldError>({})
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
   const [interactionWarnings, setInteractionWarnings] = useState<string[]>([])
   const formRef = useRef<HTMLDivElement>(null)
+  const firstErrorId = 'rx-first-error'
 
-  useEffect(() => {
-    const timer = window.setTimeout(() => setDebouncedPatientQuery(patientQuery), 250)
-    return () => window.clearTimeout(timer)
-  }, [patientQuery])
 
   const prescriptions = useMemo(() => {
     let list = data.prescriptions || []
@@ -65,12 +64,24 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
   }, [data.prescriptions, query, statusFilter])
 
   const patients = useMemo(() => {
-    if (!debouncedPatientQuery) return data.patients
-    const q = debouncedPatientQuery.toLowerCase()
+    if (!patientQuery) return data.patients
+    const q = patientQuery.toLowerCase()
     return data.patients.filter(p => p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q))
-  }, [data.patients, debouncedPatientQuery])
+  }, [data.patients, patientQuery])
 
   const selectedPatient = data.patients.find(p => p.id === selectedId) || null
+
+  const validate = useCallback((currentForm: Prescription, currentMeds: Medicine[], hasPatient: boolean): FieldError => {
+    const e: FieldError = {}
+    if (!hasPatient) e.patient = true
+    if (!currentForm.diagnosis.trim()) e.diagnosis = true
+    if (currentMeds.some(m => !m.name.trim())) e.medicineName = true
+    return e
+  }, [])
+
+  const touchedField = (field: string) => {
+    setTouched(t => ({ ...t, [field]: true }))
+  }
 
   const openCreate = () => {
     setEditingId(null)
@@ -80,6 +91,9 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
     setShowForm(true)
     setShowPatientSelect(true)
     setPatientQuery('')
+    setErrors({})
+    setTouched({})
+    setInteractionWarnings([])
   }
 
   const openEdit = (rx: Prescription) => {
@@ -89,31 +103,73 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
     setMedicines(rx.medicines.length ? rx.medicines : [{ name: '', dose: '', frequency: 'Once daily', duration: '7 days', instructions: '' }])
     setShowForm(true)
     setShowPatientSelect(false)
+    setErrors({})
+    setTouched({})
+    setInteractionWarnings([])
   }
 
-  const save = () => {
-    if (!selectedPatient) { toast.show?.('Please select a patient'); return }
-    if (!form.diagnosis.trim()) { toast.show?.('Please enter a diagnosis'); return }
-    if (medicines.some(m => !m.name.trim() || !m.dose.trim() || !m.duration.trim())) { toast.show?.('Complete medicine, dose, and duration for every row'); return }
-    const allergies = selectedPatient.allergies.map(item => item.toLowerCase())
+  const save = async () => {
+    touchedField('form')
+    const validationErrors = validate(form, medicines, !!selectedPatient)
+    setErrors(validationErrors)
+    if (Object.keys(validationErrors).length > 0) {
+      toast.show?.(copy.formIncomplete || 'Please complete the required fields')
+      setTimeout(() => document.getElementById(firstErrorId)?.focus(), 50)
+      return
+    }
+
+    const allergies = selectedPatient!.allergies.map(item => item.toLowerCase())
     const warnings = medicines.filter(m => allergies.some(allergy => m.name.toLowerCase().includes(allergy))).map(m => `${m.name} may conflict with a recorded allergy.`)
     setInteractionWarnings(warnings)
     if (warnings.length > 0) { toast.show?.(warnings[0]); return }
 
     const now = new Date().toISOString()
+    const generatedId = editingId || nextRxId(data.prescriptions)
     const payload: Prescription = {
       ...form,
-      id: editingId || nextPrescriptionNumber(),
-      patientId: selectedPatient.id,
-      patientName: selectedPatient.name,
+      id: generatedId,
+      patientId: selectedPatient!.id,
+      patientName: selectedPatient!.name,
       medicines,
       status: form.status || 'Draft',
       createdAt: editingId ? form.createdAt : now,
       signedAt: form.status === 'Signed' ? (form.signedAt || now) : form.signedAt,
       sentAt: form.status === 'Sent' ? (form.sentAt || now) : form.sentAt,
-      signatureDataUrl: signature || form.signatureDataUrl,
       auditTrail: [...(form.auditTrail || []), { at: now, actor: 'Dr. Ibrahim', action: editingId ? 'updated' : 'created', changes: `${medicines.length} medication(s), diagnosis updated` }],
     }
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!showForm && !viewingRx) {
+        if (e.key === 'n' && !e.metaKey && !e.ctrlKey && document.activeElement === document.body) {
+          e.preventDefault()
+          openCreate()
+        }
+        if (e.key === 'p' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault()
+          window.print()
+        }
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [showForm, viewingRx, openCreate])
+
+  useEffect(() => {
+    if (!showForm) return
+    const el = formRef.current
+    if (!el) return
+    const focusable = el.querySelectorAll('input, select, textarea, button:not([disabled])')
+    const first = focusable[0] as HTMLElement | undefined
+    const last = focusable[focusable.length - 1] as HTMLElement | undefined
+    const trap = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return
+      if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last?.focus() } }
+      else { if (document.activeElement === last) { e.preventDefault(); first?.focus() } }
+    }
+    el.addEventListener('keydown', trap)
+    first?.focus()
+    return () => el.removeEventListener('keydown', trap)
+  }, [showForm])
 
     if (editingId) {
       data.addPrescription(payload)
@@ -121,7 +177,7 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
       toast.show?.(copy.saved || 'Prescription updated')
     } else {
       data.addPrescription(payload)
-      onLog('Dr. Ibrahim', 'created', `Prescription ${payload.id} for ${selectedPatient.name}`)
+      onLog('Dr. Ibrahim', 'created', `Prescription ${payload.id} for ${selectedPatient!.name}`)
       toast.show?.(copy.toastCreate?.replace('{kind}', 'Prescription') || 'Prescription created')
     }
     setShowForm(false)
@@ -129,6 +185,9 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
     setSelectedId('')
     setForm(emptyPrescription())
     setMedicines([{ name: '', dose: '', frequency: 'Once daily', duration: '7 days', instructions: '' }])
+    setErrors({})
+    setTouched({})
+    setInteractionWarnings([])
   }
 
   const deleteRx = (rx: Prescription) => {
@@ -152,9 +211,13 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
     setForm(f => ({ ...f, patientId: patient.id, patientName: patient.name }))
     setShowPatientSelect(false)
     setPatientQuery('')
+    touchedField('patient')
   }
 
-  const updateField = (field: string, value: string | number) => setForm(f => ({ ...f, [field]: field === 'refillsAllowed' ? Number(value) : value }))
+  const updateField = (field: string, value: string | number) => {
+    setForm(f => ({ ...f, [field]: field === 'refillsAllowed' ? Number(value) : value }))
+    touchedField(field)
+  }
 
   // PDF Export
   const exportPdf = async (rx: Prescription) => {
@@ -164,7 +227,7 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
 
     doc.setFontSize(18)
     doc.setTextColor(23, 75, 120)
-    doc.text(copy.brandFull || 'Dr. Ibrahim Clinic', 20, 22)
+    doc.text(copy.brandFull || 'Dr. Ibrahim Hossain Khan Clinic', 20, 22)
     doc.setFontSize(10)
     doc.setTextColor(95, 117, 128)
     doc.text([`Prescription ID: ${rx.id}`, `Date: ${rx.date}`, `Status: ${rx.status}`].join('  |  '), 20, 30)
@@ -243,6 +306,52 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
     return <span className={`adm-pill adm-pill-${map[status] || 'neutral'}`}>{status}</span>
   }
 
+  const statusSteps = ['Draft', 'Signed', 'Sent']
+  const currentStatusIndex = statusSteps.indexOf(form.status)
+
+  const cycleStatus = (direction: 1 | -1) => {
+    const next = currentStatusIndex + direction
+    if (next >= 0 && next < statusSteps.length) {
+      updateField('status', statusSteps[next])
+    }
+  }
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!showForm && !viewingRx) {
+        if (e.key === 'n' && !e.metaKey && !e.ctrlKey && document.activeElement === document.body) {
+          e.preventDefault()
+          openCreate()
+        }
+        if (e.key === 'p' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault()
+          window.print()
+        }
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [showForm, viewingRx, openCreate])
+
+  useEffect(() => {
+    if (!showForm) return
+    const el = formRef.current
+    if (!el) return
+    const focusable = el.querySelectorAll('input, select, textarea, button:not([disabled])')
+    const first = focusable[0] as HTMLElement | undefined
+    const last = focusable[focusable.length - 1] as HTMLElement | undefined
+    const trap = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return
+      if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last?.focus() } }
+      else { if (document.activeElement === last) { e.preventDefault(); first?.focus() } }
+    }
+    el.addEventListener('keydown', trap)
+    first?.focus()
+    return () => el.removeEventListener('keydown', trap)
+  }, [showForm])
+
+  const isFormInvalid = Object.keys(errors).length > 0
+
   return (
     <div className="rx-workspace">
       <div className="rx-heading">
@@ -310,7 +419,7 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
 
       {showForm && (
         <div className="adm-modal-backdrop" onClick={() => setShowForm(false)}>
-          <div className="adm-modal adm-modal-lg rx-centered-modal" onClick={e => e.stopPropagation()} ref={formRef}>
+          <div className="adm-modal adm-modal-lg rx-centered-modal" onClick={e => e.stopPropagation()} ref={formRef} role="dialog" aria-modal="true" aria-label={editingId ? copy.rxEdit : copy.rxNew}>
             <div className="rx-document">
               <div className="rx-doc-header">
                 <div className="rx-doc-brand">
@@ -323,7 +432,7 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
                   </div>
                 </div>
                 <div className="rx-doc-meta">
-                  <span>Rx No: <strong>{editingId || 'NEW'}</strong></span>
+                  <span>Rx No: <strong>{editingId || nextRxId(data.prescriptions)}</strong></span>
                   <span>Date: <strong>{form.date}</strong></span>
                 </div>
               </div>
@@ -336,7 +445,7 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
 
                 <div className="rx-grid">
                   <div className="rx-block">
-                    <label>{copy.rxPatientDetails}</label>
+                    <label>{copy.rxPatientDetails} {errors.patient && <em className="rx-error">Required</em>}</label>
                     <div className="rx-patient-card">
                       {selectedPatient ? (
                         <>
@@ -362,25 +471,24 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
                           )}
                         </>
                       ) : (
-                        <p className="muted-light">No patient selected</p>
+                        <p className={`muted-light ${errors.patient ? 'rx-error-text' : ''}`}>No patient selected</p>
                       )}
                     </div>
                   </div>
 
                   <div className="rx-block">
-                    <label>{copy.rxDiagnosisLabel}</label>
-                    <div className="rx-diagnosis-box">
-                      <Input value={form.diagnosis} onChange={e => updateField('diagnosis', e.target.value)} placeholder="e.g. Skin flare review" />
+                    <label>{copy.rxDiagnosisLabel} {errors.diagnosis && <em className="rx-error">Required</em>}</label>
+                    <div className={`rx-diagnosis-box ${errors.diagnosis ? 'rx-field-error' : ''}`}>
+                      <Input id={errors.diagnosis ? firstErrorId : undefined} value={form.diagnosis} onChange={e => updateField('diagnosis', e.target.value)} onBlur={() => touchedField('diagnosis')} placeholder="e.g. Skin flare review" />
                     </div>
                     <label style={{ marginTop: 14 }}>{copy.rxDoctor}</label>
                     <Input value={form.doctor} onChange={e => updateField('doctor', e.target.value)} />
                     <label style={{ marginTop: 14 }}>{copy.rxStatus}</label>
                     <Select value={form.status} onChange={e => updateField('status', e.target.value)}>
-                      <option>Draft</option><option>Signed</option><option>Sent</option><option>Viewed</option>
+                      <option>Draft</option>
+                      <option>Signed</option>
+                      <option>Sent</option>
                     </Select>
-                    <label style={{ marginTop: 14 }}>Refills allowed</label>
-                    <Input type="number" min="0" max="12" value={String(form.refillsAllowed ?? 0)} onChange={e => updateField('refillsAllowed', e.target.value)} />
-                    {interactionWarnings.length > 0 && <div className="rx-warning" role="alert">{interactionWarnings.join(' ')}</div>}
                   </div>
                 </div>
 
@@ -394,7 +502,7 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
                       <thead>
                         <tr>
                           <th style={{ width: 40 }}>#</th>
-                          <th>{copy.rxMedicine}</th>
+                          <th>{copy.rxMedicine} {errors.medicineName && <em className="rx-error">Required</em>}</th>
                           <th>{copy.rxDose}</th>
                           <th>{copy.rxFrequency}</th>
                           <th>{copy.rxDuration}</th>
@@ -404,9 +512,9 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
                       </thead>
                       <tbody>
                         {medicines.map((med, index) => (
-                          <tr key={index}>
+                          <tr key={index} className={med.name.trim() === '' && touched.medicineName ? 'rx-row-error' : ''}>
                             <td><span className="rx-med-num">{String(index + 1).padStart(2, '0')}</span></td>
-                            <td><Input value={med.name} onChange={e => updateMedicine(index, 'name', e.target.value)} placeholder="e.g. Amoxicillin" /></td>
+                            <td><Input value={med.name} onChange={e => updateMedicine(index, 'name', e.target.value)} onBlur={() => touchedField('medicineName')} placeholder="e.g. Amoxicillin" /></td>
                             <td><Input value={med.dose} onChange={e => updateMedicine(index, 'dose', e.target.value)} placeholder="500 mg" /></td>
                             <td>
                               <Select value={med.frequency} onChange={e => updateMedicine(index, 'frequency', e.target.value)}>
@@ -434,12 +542,16 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
                   <label>{copy.rxNotes}</label>
                   <Textarea rows={3} value={form.notes} onChange={e => updateField('notes', e.target.value)} placeholder="Additional instructions for the patient…"/>
                 </div>
+
+                <div className="rx-status-timeline">
+                  {statusSteps.map((step, i) => (
+                    <button key={step} type="button" className={`${i <= currentStatusIndex ? 'is-complete' : ''}`} onClick={() => updateField('status', step)}>
+                      {step}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="rx-signature-panel">
-                <div><strong><PenLine size={14}/> Digital signature</strong><small>Capture the doctor signature before signing.</small></div>
-                <canvas ref={signatureRef} className="rx-signature-canvas" width={420} height={90} onPointerMove={event => { if (event.buttons !== 1) return; const canvas = signatureRef.current; const ctx = canvas?.getContext('2d'); if (!canvas || !ctx) return; const rect = canvas.getBoundingClientRect(); ctx.strokeStyle = '#174b78'; ctx.lineWidth = 2; ctx.lineTo((event.clientX - rect.left) * (canvas.width / rect.width), (event.clientY - rect.top) * (canvas.height / rect.height)); ctx.stroke(); setSignature(canvas.toDataURL()) }} onPointerDown={event => { const canvas = signatureRef.current; const ctx = canvas?.getContext('2d'); if (!canvas || !ctx) return; const rect = canvas.getBoundingClientRect(); ctx.beginPath(); ctx.moveTo((event.clientX - rect.left) * (canvas.width / rect.width), (event.clientY - rect.top) * (canvas.height / rect.height)); }} aria-label="Doctor signature canvas" />
-                <button type="button" className="pro-text-link" onClick={() => { const canvas = signatureRef.current; canvas?.getContext('2d')?.clearRect(0, 0, canvas.width, canvas.height); setSignature('') }}>Clear</button>
-              </div>
+
               <div className="rx-doc-footer">
                 <div className="rx-footer-left">
                   <div className="rx-sig-box">
@@ -460,12 +572,14 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
               </div>
             </div>
             <div className="adm-modal-foot">
-              <button className="pro-outline" onClick={() => setShowForm(false)}>{copy.rxCancel}</button>
-              <button className="pro-primary" onClick={save}><Check size={14}/> {copy.rxSave}</button>
-            </div>
-          </div>
-        </div>
-      )}
+              <button className="pro-outline" onClick={() => { setShowForm(false); setErrors({}); setTouched({}) }}>{copy.rxCancel}</button>
+              <button className="pro-outline" onClick={() => { const rx = editingId ? form : { ...form, id: nextRxId(data.prescriptions), medicines, status: form.status || 'Draft', createdAt: new Date().toISOString() } as Prescription; exportWord(rx) }}><Download size={14}/> {copy.rxExportWord}</button>
+              <button className="pro-outline" onClick={async () => { const rx = editingId ? form : { ...form, id: nextRxId(data.prescriptions), medicines, status: form.status || 'Draft', createdAt: new Date().toISOString() } as Prescription; await exportPdf(rx) }}><Download size={14}/> {copy.rxExportPdf}</button>
+              <button className="pro-primary" onClick={save} disabled={isFormInvalid}><Check size={14}/> {copy.rxSave}</button>
+             </div>
+           </div>
+         </div>
+       )}
 
       {viewingRx && (
         <div className="adm-modal-backdrop" onClick={() => setViewingRx(null)}>
@@ -526,8 +640,7 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
                         <label style={{ marginTop: 14 }}>{copy.rxDoctor}</label>
                         <div className="rx-diagnosis-box"><strong>{viewingRx.doctor}</strong></div>
                         <label style={{ marginTop: 14 }}>{copy.rxStatus}</label>
-                        <div><span className={`adm-pill adm-pill-${viewingRx.status === 'Signed' ? 'teal' : viewingRx.status === 'Sent' || viewingRx.status === 'Viewed' ? 'blue' : 'sand'}`}>{viewingRx.status}</span></div>
-                        <div className="rx-status-timeline" aria-label="Prescription status timeline">{(['Draft', 'Signed', 'Sent', 'Viewed'] as const).map(status => <span key={status} className={(['Draft', 'Signed', 'Sent', 'Viewed'].indexOf(status) <= ['Draft', 'Signed', 'Sent', 'Viewed'].indexOf(viewingRx.status) ? 'is-complete' : '')}>{status}</span>)}</div>
+                        <div><span className={`adm-pill adm-pill-${viewingRx.status === 'Signed' ? 'teal' : viewingRx.status === 'Sent' ? 'blue' : 'sand'}`}>{viewingRx.status}</span></div>
                       </div>
                     </div>
                   )
