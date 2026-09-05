@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState, lazy, Suspense, useCallback } from 'react';
+import { useEffect, useMemo, useState, lazy, Suspense, useCallback, memo } from 'react';
 import dynamic from 'next/dynamic';
 import {
   Activity,
@@ -211,7 +211,7 @@ function Pill({ children, tone = 'blue' }: { children: React.ReactNode; tone?: s
   return <span className={`pill pill-${tone}`}>{children}</span>;
 }
 
-function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
+const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
   const { lang, t } = useT();
   const navItems = navCopy[lang].navItems as readonly string[];
   const n = navCopy[lang];
@@ -421,14 +421,14 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
               </button>
             ))}
           </div>
-          <p className="search-hint">{n.searchHint}</p>
+           <p className="search-hint">{n.searchHint}</p>
         </div>
       </div>
     </>
   );
-}
+});
 
-function Footer({
+const Footer = memo(function Footer({
   onNavigate,
   onLangChange,
 }: {
@@ -444,16 +444,16 @@ function Footer({
   useEffect(() => {
     setYear(new Date().getFullYear());
   }, []);
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     if (email.trim()) {
       setSubscribed(true);
       setEmail('');
     }
-  };
-  const onBackToTop = () => {
+  }, [email]);
+  const onBackToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
   return (
     <footer className="site-footer">
       {/* === Decorative top wave === */}
@@ -671,7 +671,7 @@ function Footer({
       </div>
     </footer>
   );
-}
+});
 
 function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
   const { lang } = useLanguage();
