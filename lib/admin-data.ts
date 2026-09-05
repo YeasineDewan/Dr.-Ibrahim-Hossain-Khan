@@ -1,5 +1,5 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 
 export type Appointment = {
   id: string
@@ -277,6 +277,20 @@ export function useAdminData() {
   const [categories, setCategories] = useState(sampleCategory)
   const [users, setUsers] = useState(sampleUsers)
   const [prescriptions, setPrescriptions] = useState<Prescription[]>(samplePrescriptions)
+
+  useEffect(() => {
+    try {
+      const saved = window.sessionStorage.getItem('dribrahim.admin.content')
+      if (!saved) return
+      const content = JSON.parse(saved)
+      if (Array.isArray(content.videos)) setVideos(content.videos)
+      if (Array.isArray(content.appointments)) setAppointments(content.appointments)
+    } catch { /* Keep safe defaults when storage is unavailable or malformed. */ }
+  }, [])
+
+  useEffect(() => {
+    try { window.sessionStorage.setItem('dribrahim.admin.content', JSON.stringify({ videos, appointments })) } catch { /* Storage is optional. */ }
+  }, [videos, appointments])
 
   const upsert = useCallback(<T extends { id: string }>(setter: React.Dispatch<React.SetStateAction<T[]>>) => (item: T) => {
     setter(prev => {
