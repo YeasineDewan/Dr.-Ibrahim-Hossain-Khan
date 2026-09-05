@@ -3,13 +3,13 @@ import { t } from './index';
 describe('Translation function', () => {
   it('returns English by default', () => {
     const result = t('common', 'en');
-    expect(result.brandName).toBe('Dr. Ibrahim');
+    expect(result.brandName).toBe('DR.IBRAHIM HOSSAIN');
     expect(result.brandFull).toBeTruthy();
   });
 
   it('returns Bengali when lang is bn', () => {
     const result = t('common', 'bn');
-    expect(result.brandName).toBe('ডাঃ ইব্রাহিম');
+    expect(result.brandName).toBe('ডাঃ ইব্রাহিম হোসেন');
   });
 
   it('falls back to English for unknown keys', () => {
