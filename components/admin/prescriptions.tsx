@@ -1,11 +1,19 @@
 'use client'
 
-import { useMemo, useState, useRef } from 'react'
-import { Check, FileText, Plus, Printer, Search, Trash2, Download, X, Edit3, ChevronDown, ChevronUp, Activity } from 'lucide-react'
+import { useMemo, useState, useRef, useEffect } from 'react'
+import { Check, FileText, Plus, Printer, Search, Trash2, Download, X, Edit3, ChevronDown, ChevronUp, Activity, PenLine } from 'lucide-react'
 import { Modal, Field, Input, Select, Textarea, Avatar } from '../admin-ui'
 import type { AdminData, Patient, Prescription } from '../../lib/admin-data'
 
 type Medicine = { name: string; dose: string; frequency: string; duration: string; instructions: string }
+
+const nextPrescriptionNumber = () => {
+  const year = new Date().getFullYear()
+  const key = `dribrahim.rx.sequence.${year}`
+  const next = Number(window.sessionStorage.getItem(key) || '0') + 1
+  window.sessionStorage.setItem(key, String(next))
+  return `RX-${year}-${String(next).padStart(4, '0')}`
+}
 
 const emptyPrescription = (patientId = '', patientName = ''): Prescription => ({
   id: '',
@@ -18,6 +26,9 @@ const emptyPrescription = (patientId = '', patientName = ''): Prescription => ({
   notes: '',
   status: 'Draft',
   createdAt: new Date().toISOString(),
+  refillCount: 0,
+  refillsAllowed: 0,
+  auditTrail: [],
 })
 
 export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminData; copy: any; onLog: (u: string, a: string, t: string) => void; toast: any }) {
@@ -32,7 +43,16 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
   const [confirmDelete, setConfirmDelete] = useState<Prescription | null>(null)
   const [showPatientSelect, setShowPatientSelect] = useState(false)
   const [patientQuery, setPatientQuery] = useState('')
+  const [debouncedPatientQuery, setDebouncedPatientQuery] = useState('')
+  const [signature, setSignature] = useState('')
+  const signatureRef = useRef<HTMLCanvasElement>(null)
+  const [interactionWarnings, setInteractionWarnings] = useState<string[]>([])
   const formRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebouncedPatientQuery(patientQuery), 250)
+    return () => window.clearTimeout(timer)
+  }, [patientQuery])
 
   const prescriptions = useMemo(() => {
     let list = data.prescriptions || []
@@ -45,10 +65,10 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
   }, [data.prescriptions, query, statusFilter])
 
   const patients = useMemo(() => {
-    if (!patientQuery) return data.patients
-    const q = patientQuery.toLowerCase()
+    if (!debouncedPatientQuery) return data.patients
+    const q = debouncedPatientQuery.toLowerCase()
     return data.patients.filter(p => p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q))
-  }, [data.patients, patientQuery])
+  }, [data.patients, debouncedPatientQuery])
 
   const selectedPatient = data.patients.find(p => p.id === selectedId) || null
 
@@ -74,17 +94,25 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
   const save = () => {
     if (!selectedPatient) { toast.show?.('Please select a patient'); return }
     if (!form.diagnosis.trim()) { toast.show?.('Please enter a diagnosis'); return }
-    if (medicines.some(m => !m.name.trim())) { toast.show?.('Please enter all medicine names'); return }
+    if (medicines.some(m => !m.name.trim() || !m.dose.trim() || !m.duration.trim())) { toast.show?.('Complete medicine, dose, and duration for every row'); return }
+    const allergies = selectedPatient.allergies.map(item => item.toLowerCase())
+    const warnings = medicines.filter(m => allergies.some(allergy => m.name.toLowerCase().includes(allergy))).map(m => `${m.name} may conflict with a recorded allergy.`)
+    setInteractionWarnings(warnings)
+    if (warnings.length > 0) { toast.show?.(warnings[0]); return }
 
     const now = new Date().toISOString()
     const payload: Prescription = {
       ...form,
-      id: editingId || `RX-${Date.now().toString(36).toUpperCase()}`,
+      id: editingId || nextPrescriptionNumber(),
       patientId: selectedPatient.id,
       patientName: selectedPatient.name,
       medicines,
       status: form.status || 'Draft',
       createdAt: editingId ? form.createdAt : now,
+      signedAt: form.status === 'Signed' ? (form.signedAt || now) : form.signedAt,
+      sentAt: form.status === 'Sent' ? (form.sentAt || now) : form.sentAt,
+      signatureDataUrl: signature || form.signatureDataUrl,
+      auditTrail: [...(form.auditTrail || []), { at: now, actor: 'Dr. Ibrahim', action: editingId ? 'updated' : 'created', changes: `${medicines.length} medication(s), diagnosis updated` }],
     }
 
     if (editingId) {
@@ -126,7 +154,7 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
     setPatientQuery('')
   }
 
-  const updateField = (field: string, value: string) => setForm(f => ({ ...f, [field]: value }))
+  const updateField = (field: string, value: string | number) => setForm(f => ({ ...f, [field]: field === 'refillsAllowed' ? Number(value) : value }))
 
   // PDF Export
   const exportPdf = async (rx: Prescription) => {
@@ -348,10 +376,11 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
                     <Input value={form.doctor} onChange={e => updateField('doctor', e.target.value)} />
                     <label style={{ marginTop: 14 }}>{copy.rxStatus}</label>
                     <Select value={form.status} onChange={e => updateField('status', e.target.value)}>
-                      <option>Draft</option>
-                      <option>Signed</option>
-                      <option>Sent</option>
+                      <option>Draft</option><option>Signed</option><option>Sent</option><option>Viewed</option>
                     </Select>
+                    <label style={{ marginTop: 14 }}>Refills allowed</label>
+                    <Input type="number" min="0" max="12" value={String(form.refillsAllowed ?? 0)} onChange={e => updateField('refillsAllowed', e.target.value)} />
+                    {interactionWarnings.length > 0 && <div className="rx-warning" role="alert">{interactionWarnings.join(' ')}</div>}
                   </div>
                 </div>
 
@@ -406,7 +435,11 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
                   <Textarea rows={3} value={form.notes} onChange={e => updateField('notes', e.target.value)} placeholder="Additional instructions for the patient…"/>
                 </div>
               </div>
-
+              <div className="rx-signature-panel">
+                <div><strong><PenLine size={14}/> Digital signature</strong><small>Capture the doctor signature before signing.</small></div>
+                <canvas ref={signatureRef} className="rx-signature-canvas" width={420} height={90} onPointerMove={event => { if (event.buttons !== 1) return; const canvas = signatureRef.current; const ctx = canvas?.getContext('2d'); if (!canvas || !ctx) return; const rect = canvas.getBoundingClientRect(); ctx.strokeStyle = '#174b78'; ctx.lineWidth = 2; ctx.lineTo((event.clientX - rect.left) * (canvas.width / rect.width), (event.clientY - rect.top) * (canvas.height / rect.height)); ctx.stroke(); setSignature(canvas.toDataURL()) }} onPointerDown={event => { const canvas = signatureRef.current; const ctx = canvas?.getContext('2d'); if (!canvas || !ctx) return; const rect = canvas.getBoundingClientRect(); ctx.beginPath(); ctx.moveTo((event.clientX - rect.left) * (canvas.width / rect.width), (event.clientY - rect.top) * (canvas.height / rect.height)); }} aria-label="Doctor signature canvas" />
+                <button type="button" className="pro-text-link" onClick={() => { const canvas = signatureRef.current; canvas?.getContext('2d')?.clearRect(0, 0, canvas.width, canvas.height); setSignature('') }}>Clear</button>
+              </div>
               <div className="rx-doc-footer">
                 <div className="rx-footer-left">
                   <div className="rx-sig-box">
@@ -493,7 +526,8 @@ export function PrescriptionsView({ data, copy, onLog, toast }: { data: AdminDat
                         <label style={{ marginTop: 14 }}>{copy.rxDoctor}</label>
                         <div className="rx-diagnosis-box"><strong>{viewingRx.doctor}</strong></div>
                         <label style={{ marginTop: 14 }}>{copy.rxStatus}</label>
-                        <div><span className={`adm-pill adm-pill-${viewingRx.status === 'Signed' ? 'teal' : viewingRx.status === 'Sent' ? 'blue' : 'sand'}`}>{viewingRx.status}</span></div>
+                        <div><span className={`adm-pill adm-pill-${viewingRx.status === 'Signed' ? 'teal' : viewingRx.status === 'Sent' || viewingRx.status === 'Viewed' ? 'blue' : 'sand'}`}>{viewingRx.status}</span></div>
+                        <div className="rx-status-timeline" aria-label="Prescription status timeline">{(['Draft', 'Signed', 'Sent', 'Viewed'] as const).map(status => <span key={status} className={(['Draft', 'Signed', 'Sent', 'Viewed'].indexOf(status) <= ['Draft', 'Signed', 'Sent', 'Viewed'].indexOf(viewingRx.status) ? 'is-complete' : '')}>{status}</span>)}</div>
                       </div>
                     </div>
                   )

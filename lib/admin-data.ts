@@ -111,8 +111,16 @@ export type Prescription = {
     instructions: string
   }[]
   notes: string
-  status: 'Draft' | 'Signed' | 'Sent'
+  status: 'Draft' | 'Signed' | 'Sent' | 'Viewed'
   createdAt: string
+  visitId?: string
+  signatureDataUrl?: string
+  signedAt?: string
+  sentAt?: string
+  viewedAt?: string
+  refillCount?: number
+  refillsAllowed?: number
+  auditTrail?: { at: string; actor: string; action: string; changes?: string }[]
 }
 
 const uid = () => Math.random().toString(36).slice(2, 9)
