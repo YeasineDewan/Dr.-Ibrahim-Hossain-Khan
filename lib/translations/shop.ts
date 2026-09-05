@@ -16,13 +16,20 @@ export const appointmentCopy = {
       { label: 'Phone number', ph: '+880' },
       { label: 'Email address', ph: 'you@example.com' },
       { label: 'Date of birth', ph: 'DD/MM/YYYY' },
-      { label: 'What would you like the doctor to know?', ph: 'A short note (optional)', textarea: true },
+      {
+        label: 'What would you like the doctor to know?',
+        ph: 'A short note (optional)',
+        textarea: true,
+      },
     ],
     reviewTitle: 'Review your request',
     review: ['Service', 'Appointment', 'Chamber', 'Date & time'],
     reviewNote: 'We’ll confirm by phone within 1 working day.',
     confirmBtn: 'Confirm appointment',
-    success: { title: 'Appointment request received.', body: 'Our team will confirm by phone within 1 working day.' },
+    success: {
+      title: 'Appointment request received.',
+      body: 'Our team will confirm by phone within 1 working day.',
+    },
     services: ['PRP Therapy', 'Psoriasis Treatment', 'Vitiligo Treatment', 'IBS & Gut Health'],
     apptSummary: 'Appointment summary',
     orderSummary: 'Order summary',
@@ -49,12 +56,15 @@ export const appointmentCopy = {
     review: ['সেবা', 'অ্যাপয়েন্টমেন্ট', 'চেম্বার', 'তারিখ ও সময়'],
     reviewNote: 'আমরা ১ কর্মদিবসের মধ্যে ফোনে নিশ্চিত করব।',
     confirmBtn: 'অ্যাপয়েন্টমেন্ট নিশ্চিত করুন',
-    success: { title: 'অ্যাপয়েন্টমেন্ট অনুরোধ গৃহীত হয়েছে।', body: 'আমাদের দল ১ কর্মদিবসের মধ্যে ফোনে নিশ্চিত করবে।' },
+    success: {
+      title: 'অ্যাপয়েন্টমেন্ট অনুরোধ গৃহীত হয়েছে।',
+      body: 'আমাদের দল ১ কর্মদিবসের মধ্যে ফোনে নিশ্চিত করবে।',
+    },
     services: ['PRP থেরাপি', 'সোরিয়াসিস চিকিৎসা', 'শ্বেতী চিকিৎসা', 'আইবিএস ও অন্ত্রের স্বাস্থ্য'],
     apptSummary: 'অ্যাপয়েন্টমেন্ট সারাংশ',
     orderSummary: 'অর্ডার সারাংশ',
   },
-} as const
+} as const;
 
 export const shopCopy = {
   en: {
@@ -81,10 +91,30 @@ export const shopCopy = {
     total: 'Total',
     checkout: 'Checkout',
     productsList: [
-      { name: 'Daily Balance Probiotic', cat: 'Digestive wellness', price: '$28', photo: 'photo-1559757175-0eb30cd8c063' },
-      { name: 'Calm Skin Barrier Cream', cat: 'Sensitive skin care', price: '$24', photo: 'photo-1579684385127-1ef15d508118' },
-      { name: 'Essential Vitamin D3', cat: 'Daily wellness', price: '$18', photo: 'photo-1584982751601-97dcc096659c' },
-      { name: 'Gut Reset Tea Blend', cat: 'Digestive wellness', price: '$16', photo: 'photo-1544787219-7f47ccb76574' },
+      {
+        name: 'Daily Balance Probiotic',
+        cat: 'Digestive wellness',
+        price: '$28',
+        photo: 'photo-1559757175-0eb30cd8c063',
+      },
+      {
+        name: 'Calm Skin Barrier Cream',
+        cat: 'Sensitive skin care',
+        price: '$24',
+        photo: 'photo-1579684385127-1ef15d508118',
+      },
+      {
+        name: 'Essential Vitamin D3',
+        cat: 'Daily wellness',
+        price: '$18',
+        photo: 'photo-1584982751601-97dcc096659c',
+      },
+      {
+        name: 'Gut Reset Tea Blend',
+        cat: 'Digestive wellness',
+        price: '$16',
+        photo: 'photo-1544787219-7f47ccb76574',
+      },
     ],
   },
   bn: {
@@ -111,13 +141,33 @@ export const shopCopy = {
     total: 'মোট',
     checkout: 'চেকআউট',
     productsList: [
-      { name: 'ডেইলি ব্যালেন্স প্রোবায়োটিক', cat: 'হজম সংক্রান্ত ওয়েলনেস', price: '৳ ২,৮০০', photo: 'photo-1559757175-0eb30cd8c063' },
-      { name: 'ক্যালম স্কিন ব্যারিয়ার ক্রিম', cat: 'সংবেদনশীল ত্বকের যত্ন', price: '৳ ২,৪০০', photo: 'photo-1579684385127-1ef15d508118' },
-      { name: 'এসেনশিয়াল ভিটামিন ডি৩', cat: 'দৈনিক ওয়েলনেস', price: '৳ ১,৮০০', photo: 'photo-1584982751601-97dcc096659c' },
-      { name: 'গাট রিসেট টি ব্লেন্ড', cat: 'হজম সংক্রান্ত ওয়েলনেস', price: '৳ ১,৬০০', photo: 'photo-1544787219-7f47ccb76574' },
+      {
+        name: 'ডেইলি ব্যালেন্স প্রোবায়োটিক',
+        cat: 'হজম সংক্রান্ত ওয়েলনেস',
+        price: '৳ ২,৮০০',
+        photo: 'photo-1559757175-0eb30cd8c063',
+      },
+      {
+        name: 'ক্যালম স্কিন ব্যারিয়ার ক্রিম',
+        cat: 'সংবেদনশীল ত্বকের যত্ন',
+        price: '৳ ২,৪০০',
+        photo: 'photo-1579684385127-1ef15d508118',
+      },
+      {
+        name: 'এসেনশিয়াল ভিটামিন ডি৩',
+        cat: 'দৈনিক ওয়েলনেস',
+        price: '৳ ১,৮০০',
+        photo: 'photo-1584982751601-97dcc096659c',
+      },
+      {
+        name: 'গাট রিসেট টি ব্লেন্ড',
+        cat: 'হজম সংক্রান্ত ওয়েলনেস',
+        price: '৳ ১,৬০০',
+        photo: 'photo-1544787219-7f47ccb76574',
+      },
     ],
   },
-} as const
+} as const;
 
 export const checkoutCopy = {
   en: {
@@ -154,7 +204,7 @@ export const checkoutCopy = {
     summary: ['ডেইলি ব্যালেন্স প্রোবায়োটিক', 'ডেলিভারি ফি', 'মোট'],
     placeBtn: 'অর্ডার দিন',
   },
-} as const
+} as const;
 
 export const successCopy = {
   en: {
@@ -171,7 +221,7 @@ export const successCopy = {
     body: 'আপনার অর্ডার #DRI-2048 নিশ্চিত হয়েছে। ডেলিভারির আগে আমরা আপনার সাথে যোগাযোগ করব।',
     btn: 'কেনাকাটা চালিয়ে যান',
   },
-} as const
+} as const;
 
 export const reviewsCopy = {
   en: {
@@ -181,9 +231,24 @@ export const reviewsCopy = {
     rating: '4.9',
     based: 'Based on 128 verified reviews',
     list: [
-      { quote: '“I finally felt listened to. The plan was simple, personal and actually fit my routine.”', name: 'Amara Mensah', role: 'Verified patient' },
-      { quote: '“The clinic team made every step feel calm. My skin has improved and my confidence is back.”', name: 'Nadia Owusu', role: 'Verified patient' },
-      { quote: '“Clear explanations, no pressure, and thoughtful follow-up. I recommend Dr. Ibrahim wholeheartedly.”', name: 'Kwame Asante', role: 'Verified patient' },
+      {
+        quote:
+          '“I finally felt listened to. The plan was simple, personal and actually fit my routine.”',
+        name: 'Amara Mensah',
+        role: 'Verified patient',
+      },
+      {
+        quote:
+          '“The clinic team made every step feel calm. My skin has improved and my confidence is back.”',
+        name: 'Nadia Owusu',
+        role: 'Verified patient',
+      },
+      {
+        quote:
+          '“Clear explanations, no pressure, and thoughtful follow-up. I recommend Dr. Ibrahim wholeheartedly.”',
+        name: 'Kwame Asante',
+        role: 'Verified patient',
+      },
     ],
     rateLine: 'Rate your experience',
   },
@@ -194,10 +259,25 @@ export const reviewsCopy = {
     rating: '৪.৯',
     based: '১২৮টি যাচাইকৃত রিভিউের ভিত্তিতে',
     list: [
-      { quote: '“অবশেষে আমি শোনা অনুভব করলাম। পরিকল্পনাটি ছিল সহজ, ব্যক্তিগত এবং আমার রুটিনের সাথে মানানসই।”', name: 'আমারা মেনসাহ', role: 'যাচাইকৃত রোগী' },
-      { quote: '“ক্লিনিকের টিম প্রতিটি ধাপকে শান্ত করে তুলেছে। আমার ত্বকের উন্নতি হয়েছে এবং আত্মবিশ্বাস ফিরে এসেছে।”', name: 'নাদিয়া ওউসু', role: 'যাচাইকৃত রোগী' },
-      { quote: '“স্পষ্ট ব্যাখ্যা, কোনো চাপ নেই, এবং চিন্তাশীল ফলো-আপ। আমি ডাঃ ইব্রাহিমকে আন্তরিকভাবে সুপারিশ করি।”', name: 'কোয়ামে আসান্তে', role: 'যাচাইকৃত রোগী' },
+      {
+        quote:
+          '“অবশেষে আমি শোনা অনুভব করলাম। পরিকল্পনাটি ছিল সহজ, ব্যক্তিগত এবং আমার রুটিনের সাথে মানানসই।”',
+        name: 'আমারা মেনসাহ',
+        role: 'যাচাইকৃত রোগী',
+      },
+      {
+        quote:
+          '“ক্লিনিকের টিম প্রতিটি ধাপকে শান্ত করে তুলেছে। আমার ত্বকের উন্নতি হয়েছে এবং আত্মবিশ্বাস ফিরে এসেছে।”',
+        name: 'নাদিয়া ওউসু',
+        role: 'যাচাইকৃত রোগী',
+      },
+      {
+        quote:
+          '“স্পষ্ট ব্যাখ্যা, কোনো চাপ নেই, এবং চিন্তাশীল ফলো-আপ। আমি ডাঃ ইব্রাহিমকে আন্তরিকভাবে সুপারিশ করি।”',
+        name: 'কোয়ামে আসান্তে',
+        role: 'যাচাইকৃত রোগী',
+      },
     ],
     rateLine: 'আপনার অভিজ্ঞতা রেট করুন',
   },
-} as const
+} as const;

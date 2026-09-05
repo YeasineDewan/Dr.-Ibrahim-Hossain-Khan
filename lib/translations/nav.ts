@@ -36,7 +36,8 @@ export const navCopy = {
     copyright: '© 2026 Dr. Ibrahim Clinic',
     copyrightTagline: 'Patient-first care, always.',
     newsletterTitle: 'Care that keeps in touch.',
-    newsletterBody: 'Wellness tips, clinic updates and gentle reminders — once a month, never spam.',
+    newsletterBody:
+      'Wellness tips, clinic updates and gentle reminders — once a month, never spam.',
     newsletterPlaceholder: 'Your email address',
     newsletterCta: 'Subscribe',
     newsletterSuccess: 'You’re in. Welcome aboard.',
@@ -53,7 +54,8 @@ export const navCopy = {
     homePill: 'Trusted care in Accra',
     homeTitle1: 'Healthcare that feels',
     homeTitleEm: 'human.',
-    homeLead: 'Expert medical care with the time, clarity and warmth you deserve. From preventive medicine to personalised wellness.',
+    homeLead:
+      'Expert medical care with the time, clarity and warmth you deserve. From preventive medicine to personalised wellness.',
     heroBookBtn: 'Book an appointment',
     heroExploreBtn: 'Explore our services',
     homeRating: '4.9/5',
@@ -75,15 +77,25 @@ export const navCopy = {
     viewAllServices: 'View all services',
     // Service cards
     services: [
-      { title: 'Preventive Care', copy: 'Thoughtful checkups and clear guidance for every stage of life.' },
-      { title: 'Skin & Aesthetics', copy: 'Evidence-led treatments that help you feel at home in your skin.' },
-      { title: 'Family Medicine', copy: 'Continuity of care built around you, your family and your future.' },
+      {
+        title: 'Preventive Care',
+        copy: 'Thoughtful checkups and clear guidance for every stage of life.',
+      },
+      {
+        title: 'Skin & Aesthetics',
+        copy: 'Evidence-led treatments that help you feel at home in your skin.',
+      },
+      {
+        title: 'Family Medicine',
+        copy: 'Continuity of care built around you, your family and your future.',
+      },
     ],
     learnMoreLink: 'Learn more',
     ourApproach: 'Our approach',
     approachTitle1: 'Medicine with room to',
     approachTitleEm: 'listen.',
-    approachLead: 'We believe the best care is collaborative. That means listening carefully, explaining clearly and creating a plan that works in real life.',
+    approachLead:
+      'We believe the best care is collaborative. That means listening carefully, explaining clearly and creating a plan that works in real life.',
     checkList: [
       'Unhurried, thoughtful consultations',
       'Clear plans you can understand',
@@ -101,11 +113,21 @@ export const navCopy = {
     connectedPill: 'A connected care experience',
     moreSupportTitle1: 'More support between',
     moreSupportTitleEm: 'visits.',
-    homeDetailsBody: 'Your care should feel joined up, not fragmented. Every touchpoint is designed to make the next step clearer.',
+    homeDetailsBody:
+      'Your care should feel joined up, not fragmented. Every touchpoint is designed to make the next step clearer.',
     detailFeatures: [
-      { title: 'Trusted clinical standards', copy: 'Thoughtful consultation notes, secure records and a care team that keeps your context in view.' },
-      { title: 'Flexible appointment options', copy: 'Choose a chamber, time and service that fits your day, with helpful reminders before you arrive.' },
-      { title: 'Care for the whole family', copy: 'Preventive guidance, ongoing reviews and practical plans for the people who matter most.' },
+      {
+        title: 'Trusted clinical standards',
+        copy: 'Thoughtful consultation notes, secure records and a care team that keeps your context in view.',
+      },
+      {
+        title: 'Flexible appointment options',
+        copy: 'Choose a chamber, time and service that fits your day, with helpful reminders before you arrive.',
+      },
+      {
+        title: 'Care for the whole family',
+        copy: 'Preventive guidance, ongoing reviews and practical plans for the people who matter most.',
+      },
     ],
     ctaPill: 'Your next step',
     ctaTitle1: 'Ready to feel',
@@ -166,7 +188,8 @@ export const navCopy = {
     homePill: 'আক্রায় বিশ্বস্ত চিকিৎসা',
     homeTitle1: 'এমন স্বাস্থ্যসেবা যা অনুভূত হয়',
     homeTitleEm: 'মানবিক।',
-    homeLead: 'বিশেষজ্ঞ চিকিৎসা সেবা, যথাযথ সময়, স্পষ্টতা এবং উষ্ণতার সাথে। প্রতিরোধমূলক চিকিৎসা থেকে ব্যক্তিগত ওয়েলনেস পর্যন্ত।',
+    homeLead:
+      'বিশেষজ্ঞ চিকিৎসা সেবা, যথাযথ সময়, স্পষ্টতা এবং উষ্ণতার সাথে। প্রতিরোধমূলক চিকিৎসা থেকে ব্যক্তিগত ওয়েলনেস পর্যন্ত।',
     heroBookBtn: 'অ্যাপয়েন্টমেন্ট বুক করুন',
     heroExploreBtn: 'আমাদের সেবাসমূহ দেখুন',
     homeRating: '৪.৯/৫',
@@ -186,15 +209,25 @@ export const navCopy = {
     careDesignedEm: 'যত্ন।',
     viewAllServices: 'সকল সেবা দেখুন',
     services: [
-      { title: 'প্রতিরোধমূলক যত্ন', copy: 'জীবনের প্রতিটি পর্যায়ে যত্নশীল চেকআপ ও স্পষ্ট নির্দেশনা।' },
-      { title: 'ত্বক ও নান্দনিকতা', copy: 'প্রমাণ-ভিত্তিক চিকিৎসা যা আপনাকে নিজের ত্বকে স্বাচ্ছন্দ্য দেয়।' },
-      { title: 'পারিবারিক চিকিৎসা', copy: 'আপনাকে, আপনার পরিবার এবং ভবিষ্যতকে ঘিরে গড়ে ওঠা ধারাবাহিক যত্ন।' },
+      {
+        title: 'প্রতিরোধমূলক যত্ন',
+        copy: 'জীবনের প্রতিটি পর্যায়ে যত্নশীল চেকআপ ও স্পষ্ট নির্দেশনা।',
+      },
+      {
+        title: 'ত্বক ও নান্দনিকতা',
+        copy: 'প্রমাণ-ভিত্তিক চিকিৎসা যা আপনাকে নিজের ত্বকে স্বাচ্ছন্দ্য দেয়।',
+      },
+      {
+        title: 'পারিবারিক চিকিৎসা',
+        copy: 'আপনাকে, আপনার পরিবার এবং ভবিষ্যতকে ঘিরে গড়ে ওঠা ধারাবাহিক যত্ন।',
+      },
     ],
     learnMoreLink: 'আরও জানুন',
     ourApproach: 'আমাদের দৃষ্টিভঙ্গি',
     approachTitle1: 'শোনার',
     approachTitleEm: 'সুযোগ রয়েছে এমন চিকিৎসা।',
-    approachLead: 'আমরা বিশ্বাস করি সেরা যত্ন হলো সহযোগিতামূলক। এর মানে হলো যত্নশীলভাবে শোনা, স্পষ্টভাবে ব্যাখ্যা করা এবং বাস্তব জীবনে কাজ করে এমন পরিকল্পনা তৈরি করা।',
+    approachLead:
+      'আমরা বিশ্বাস করি সেরা যত্ন হলো সহযোগিতামূলক। এর মানে হলো যত্নশীলভাবে শোনা, স্পষ্টভাবে ব্যাখ্যা করা এবং বাস্তব জীবনে কাজ করে এমন পরিকল্পনা তৈরি করা।',
     checkList: [
       'অত্যন্ত যত্নশীল ও বিবেচিত কনসালটেশন',
       'আপনি বুঝতে পারেন এমন স্পষ্ট পরিকল্পনা',
@@ -210,11 +243,21 @@ export const navCopy = {
     connectedPill: 'একটি সংযুক্ত যত্ন অভিজ্ঞতা',
     moreSupportTitle1: 'ভিজিটের মাঝে',
     moreSupportTitleEm: 'আরও সহায়তা।',
-    homeDetailsBody: 'আপনার যত্ন সংযুক্ত থাকা উচিত, বিচ্ছিন্ন নয়। প্রতিটি স্পর্শবিন্দু পরবর্তী ধাপকে আরও স্পষ্ট করার জন্য ডিজাইন করা হয়েছে।',
+    homeDetailsBody:
+      'আপনার যত্ন সংযুক্ত থাকা উচিত, বিচ্ছিন্ন নয়। প্রতিটি স্পর্শবিন্দু পরবর্তী ধাপকে আরও স্পষ্ট করার জন্য ডিজাইন করা হয়েছে।',
     detailFeatures: [
-      { title: 'বিশ্বস্ত ক্লিনিক্যাল মান', copy: 'যত্নশীল কনসালটেশন নোট, সুরক্ষিত রেকর্ড এবং আপনার প্রেক্ষাপট সামনে রাখা কেয়ার টিম।' },
-      { title: 'নমনীয় অ্যাপয়েন্টমেন্ট অপশন', copy: 'আপনার দিনের সাথে মানানসই চেম্বার, সময় ও সেবা বেছে নিন এবং আসার আগে প্রয়োজনীয় রিমাইন্ডার পান।' },
-      { title: 'পুরো পরিবারের জন্য যত্ন', copy: 'আপনার প্রিয়জনদের জন্য প্রতিরোধমূলক নির্দেশনা, চলমান পর্যালোচনা এবং বাস্তবসম্মত পরিকল্পনা।' },
+      {
+        title: 'বিশ্বস্ত ক্লিনিক্যাল মান',
+        copy: 'যত্নশীল কনসালটেশন নোট, সুরক্ষিত রেকর্ড এবং আপনার প্রেক্ষাপট সামনে রাখা কেয়ার টিম।',
+      },
+      {
+        title: 'নমনীয় অ্যাপয়েন্টমেন্ট অপশন',
+        copy: 'আপনার দিনের সাথে মানানসই চেম্বার, সময় ও সেবা বেছে নিন এবং আসার আগে প্রয়োজনীয় রিমাইন্ডার পান।',
+      },
+      {
+        title: 'পুরো পরিবারের জন্য যত্ন',
+        copy: 'আপনার প্রিয়জনদের জন্য প্রতিরোধমূলক নির্দেশনা, চলমান পর্যালোচনা এবং বাস্তবসম্মত পরিকল্পনা।',
+      },
     ],
     ctaPill: 'আপনার পরবর্তী ধাপ',
     ctaTitle1: 'ভালোভাবে যত্ন পেতে',
@@ -224,4 +267,4 @@ export const navCopy = {
     adminPreview: 'অ্যাডমিন প্রিভিউ',
     patientPreview: 'রোগী পোর্টাল',
   },
-} as const
+} as const;

@@ -1,103 +1,301 @@
-'use client'
-import { useEffect, useState } from 'react'
-import { ArrowRight, Check, Clock, Heart, MapPin, Plus, Star, Video, X, CalendarDays, Sparkles } from 'lucide-react'
-import { chambersCopy, galleryCopy, appointmentCopy, checkoutCopy, successCopy, common, useLanguage, t as tT } from '../lib/translations'
-import { useAdminData } from '../lib/admin-data'
-import { ScrollReveal } from './scroll-reveal'
-import { Tilt3D, Magnetic, Particles } from './motion-3d'
+'use client';
+import { useEffect, useState } from 'react';
+import {
+  ArrowRight,
+  Check,
+  Clock,
+  Heart,
+  MapPin,
+  Plus,
+  Star,
+  Video,
+  X,
+  CalendarDays,
+  Sparkles,
+} from 'lucide-react';
+import {
+  chambersCopy,
+  galleryCopy,
+  appointmentCopy,
+  checkoutCopy,
+  successCopy,
+  common,
+  useLanguage,
+  t as tT,
+} from '../lib/translations';
+import { useAdminData } from '../lib/admin-data';
+import { TODAY } from '../lib/utils';
+import { ScrollReveal } from './scroll-reveal';
+import { Tilt3D, Magnetic, Particles } from './motion-3d';
 
 const imgs = [
-  'photo-1559757175-0eb30cd8c063','photo-1576091160399-112ba8d25d1d','photo-1579684385127-1ef15d508118',
-  'photo-1551076805-e1869033e561','photo-1584982751601-97dcc096659c','photo-1576091160550-2173dba999ef',
-  'photo-1538108149393-fbbd81895907','photo-1584515933487-779824d29309','photo-1638202993928-7d8e8c3d5c8b4a',
-  'photo-1576091160399-112ba8d25d1d','photo-1559757175-0eb30cd8c063','photo-1579684385127-1ef15d508118',
-  'photo-1584982751601-97dcc096659c','photo-1538108149393-fbbd81895907','photo-1584515933487-779824d29309',
-  'photo-1638202993928-7d8e8c3d5c8b4a'
-]
-const photo = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&q=80`
+  'photo-1559757175-0eb30cd8c063',
+  'photo-1576091160399-112ba8d25d1d',
+  'photo-1579684385127-1ef15d508118',
+  'photo-1551076805-e1869033e561',
+  'photo-1584982751601-97dcc096659c',
+  'photo-1576091160550-2173dba999ef',
+  'photo-1538108149393-fbbd81895907',
+  'photo-1584515933487-779824d29309',
+  'photo-1638202993928-7d8e8c3d5c8b4a',
+  'photo-1576091160399-112ba8d25d1d',
+  'photo-1559757175-0eb30cd8c063',
+  'photo-1579684385127-1ef15d508118',
+  'photo-1584982751601-97dcc096659c',
+  'photo-1538108149393-fbbd81895907',
+  'photo-1584515933487-779824d29309',
+  'photo-1638202993928-7d8e8c3d5c8b4a',
+];
+const photo = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&q=80`;
 
 export function GalleryPage() {
-  const { lang } = useLanguage()
-  const g = galleryCopy[lang]
-  const { videos } = useAdminData()
-  const [slide, setSlide] = useState(0)
-  const [lightbox, setLightbox] = useState<number | null>(null)
-  const videoSlides = videos.filter(video => video.status === 'Published').map(video => ({ title: lang === 'bn' && 'titleBn' in video && video.titleBn ? video.titleBn : video.title, meta: `${lang === 'bn' ? 'ক্লিনিক ভিডিও' : 'Clinic video'} • ${video.duration}`, image: video.thumbnail }))
+  const { lang } = useLanguage();
+  const g = galleryCopy[lang];
+  const { videos } = useAdminData();
+  const [slide, setSlide] = useState(0);
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const videoSlides = videos
+    .filter(video => video.status === 'Published')
+    .map(video => ({
+      title: lang === 'bn' && video.titleBn ? video.titleBn : video.title,
+      meta: `${lang === 'bn' ? 'ক্লিনিক ভিডিও' : 'Clinic video'} • ${video.duration}`,
+      image: video.thumbnail,
+    }));
   useEffect(() => {
-    if (videoSlides.length < 2) return
-    const timer = window.setInterval(() => setSlide(current => (current + 1) % videoSlides.length), 6000)
-    return () => window.clearInterval(timer)
-  }, [videoSlides.length])
-  const videoImage = videoSlides[slide]?.image || 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-VvLb8utyvJRSqBnQiP8yeuq4NcQ5fr.png'
+    if (videoSlides.length < 2) return;
+    const timer = window.setInterval(
+      () => setSlide(current => (current + 1) % videoSlides.length),
+      6000
+    );
+    return () => window.clearInterval(timer);
+  }, [videoSlides.length]);
+  const videoImage =
+    videoSlides[slide]?.image ||
+    'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-VvLb8utyvJRSqBnQiP8yeuq4NcQ5fr.png';
   return (
     <main className="page-section" style={{ position: 'relative', overflow: 'hidden' }}>
-      <div className="aurora-bg" style={{ position: 'absolute', inset: 0, opacity: 0.5, pointerEvents: 'none' }}/>
+      <div
+        className="aurora-bg"
+        style={{ position: 'absolute', inset: 0, opacity: 0.5, pointerEvents: 'none' }}
+      />
       <div className="container" style={{ position: 'relative' }}>
         <ScrollReveal>
           <span className="section-eyebrow">{g.eyebrow}</span>
-          <h1 className="gradient-text" style={{ marginTop: 14 }}>{g.title1} <em>{g.titleEm}</em></h1>
+          <h1 className="gradient-text" style={{ marginTop: 14 }}>
+            {g.title1} <em>{g.titleEm}</em>
+          </h1>
           <p className="lead max-copy">{g.lead}</p>
         </ScrollReveal>
         <div className="gallery-grid grid-cards">
           {imgs.slice(0, 9).map((x, i) => (
-            <div key={i} className="img-zoom" style={{ borderRadius: 18, overflow: 'hidden', cursor: 'pointer', boxShadow: '0 12px 32px -12px rgba(15,42,68,0.18)' }} onClick={() => setLightbox(i)}>
-              <img src={photo(x)} alt={`Clinic gallery ${i+1}`} className="ken-burns" style={{ width: '100%', height: 220, objectFit: 'cover', display: 'block' }}/>
+            <div
+              key={i}
+              className="img-zoom"
+              style={{
+                borderRadius: 18,
+                overflow: 'hidden',
+                cursor: 'pointer',
+                boxShadow: '0 12px 32px -12px rgba(15,42,68,0.18)',
+              }}
+              onClick={() => setLightbox(i)}>
+              <img
+                src={photo(x)}
+                alt={`Clinic gallery ${i + 1}`}
+                className="ken-burns"
+                style={{ width: '100%', height: 220, objectFit: 'cover', display: 'block' }}
+              />
             </div>
           ))}
         </div>
         <section className="gallery-video-showcase" aria-label={g.videoEyebrow}>
-          <div className="gallery-video-head"><div><span className="section-eyebrow">{g.videoEyebrow}</span><h2>{g.videoTitle1} <em>{g.videoTitleEm}</em></h2><p>{g.videoBody}</p></div>{videoSlides.length > 0 && <div className="gallery-video-controls"><button aria-label={lang === 'bn' ? 'আগের ভিডিও' : 'Previous video'} onClick={() => setSlide((slide - 1 + videoSlides.length) % videoSlides.length)}><ArrowRight size={18} style={{ transform: 'rotate(180deg)' }}/></button><span>{String(slide + 1).padStart(2, '0')} / {String(videoSlides.length).padStart(2, '0')}</span><button aria-label={lang === 'bn' ? 'পরের ভিডিও' : 'Next video'} onClick={() => setSlide((slide + 1) % videoSlides.length)}><ArrowRight size={18}/></button></div>}</div>
-          {videoSlides.length === 0 ? <div className="gallery-video-empty"><Video size={24}/><strong>{lang === 'bn' ? 'ভিডিও শিগগিরই আসছে' : 'Videos coming soon'}</strong><p>{lang === 'bn' ? 'ডাক্তার অ্যাডমিন থেকে প্রকাশিত ভিডিও এখানে দেখা যাবে।' : 'Published videos from Doctor Admin will appear here.'}</p></div> : <div className="gallery-video-grid">{[0, 1].map((offset) => { const item = videoSlides[(slide + offset) % videoSlides.length]; return <article className="gallery-video-card" key={`${slide}-${offset}`}><div className="gallery-video-media"><img src={item.image || videoImage} alt={item.title} loading="lazy"/><span className="gallery-video-wash"/><button className="gallery-video-play" aria-label={`${lang === 'bn' ? 'প্লে' : 'Play'} ${item.title}`}><span>▶</span></button><span className="gallery-video-index">0{((slide + offset) % videoSlides.length) + 1}</span></div><div className="gallery-video-meta"><div><span>{item.meta}</span><h3>{item.title}</h3></div><ArrowRight size={18}/></div></article> })}</div>}
-          <div className="gallery-video-dots">{videoSlides.map((_, index) => <button key={index} aria-label={`${lang === 'bn' ? 'ভিডিও' : 'Video'} ${index + 1}`} className={index === slide ? 'active' : ''} onClick={() => setSlide(index)}/>)}</div>
+          <div className="gallery-video-head">
+            <div>
+              <span className="section-eyebrow">{g.videoEyebrow}</span>
+              <h2>
+                {g.videoTitle1} <em>{g.videoTitleEm}</em>
+              </h2>
+              <p>{g.videoBody}</p>
+            </div>
+            {videoSlides.length > 0 && (
+              <div className="gallery-video-controls">
+                <button
+                  aria-label={lang === 'bn' ? 'আগের ভিডিও' : 'Previous video'}
+                  onClick={() => setSlide((slide - 1 + videoSlides.length) % videoSlides.length)}>
+                  <ArrowRight size={18} style={{ transform: 'rotate(180deg)' }} />
+                </button>
+                <span>
+                  {String(slide + 1).padStart(2, '0')} /{' '}
+                  {String(videoSlides.length).padStart(2, '0')}
+                </span>
+                <button
+                  aria-label={lang === 'bn' ? 'পরের ভিডিও' : 'Next video'}
+                  onClick={() => setSlide((slide + 1) % videoSlides.length)}>
+                  <ArrowRight size={18} />
+                </button>
+              </div>
+            )}
+          </div>
+          {videoSlides.length === 0 ? (
+            <div className="gallery-video-empty">
+              <Video size={24} />
+              <strong>{lang === 'bn' ? 'ভিডিও শিগগিরই আসছে' : 'Videos coming soon'}</strong>
+              <p>
+                {lang === 'bn'
+                  ? 'ডাক্তার অ্যাডমিন থেকে প্রকাশিত ভিডিও এখানে দেখা যাবে।'
+                  : 'Published videos from Doctor Admin will appear here.'}
+              </p>
+            </div>
+          ) : (
+            <div className="gallery-video-grid">
+              {[0, 1].map(offset => {
+                const item = videoSlides[(slide + offset) % videoSlides.length];
+                return (
+                  <article className="gallery-video-card" key={`${slide}-${offset}`}>
+                    <div className="gallery-video-media">
+                      <img src={item.image || videoImage} alt={item.title} loading="lazy" />
+                      <span className="gallery-video-wash" />
+                      <button
+                        className="gallery-video-play"
+                        aria-label={`${lang === 'bn' ? 'প্লে' : 'Play'} ${item.title}`}>
+                        <span>▶</span>
+                      </button>
+                      <span className="gallery-video-index">
+                        0{((slide + offset) % videoSlides.length) + 1}
+                      </span>
+                    </div>
+                    <div className="gallery-video-meta">
+                      <div>
+                        <span>{item.meta}</span>
+                        <h3>{item.title}</h3>
+                      </div>
+                      <ArrowRight size={18} />
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+          <div className="gallery-video-dots">
+            {videoSlides.map((_, index) => (
+              <button
+                key={index}
+                aria-label={`${lang === 'bn' ? 'ভিডিও' : 'Video'} ${index + 1}`}
+                className={index === slide ? 'active' : ''}
+                onClick={() => setSlide(index)}
+              />
+            ))}
+          </div>
         </section>
       </div>
       {lightbox !== null && (
-        <div className="admin-modal-backdrop" style={{ zIndex: 200 }} onClick={() => setLightbox(null)}>
-          <div className="admin-form-card" style={{ width: 'min(900px, 100%)', padding: 0, background: 'transparent', boxShadow: 'none' }} onClick={(e) => e.stopPropagation()}>
-            <img src={photo(imgs[lightbox])} alt="" style={{ width: '100%', borderRadius: 16 }}/>
-            <button className="modal-close" style={{ color: '#fff', top: 12, right: 12 }} onClick={() => setLightbox(null)}><X/></button>
+        <div
+          className="admin-modal-backdrop"
+          style={{ zIndex: 200 }}
+          onClick={() => setLightbox(null)}>
+          <div
+            className="admin-form-card"
+            style={{
+              width: 'min(900px, 100%)',
+              padding: 0,
+              background: 'transparent',
+              boxShadow: 'none',
+            }}
+            onClick={e => e.stopPropagation()}>
+            <img src={photo(imgs[lightbox])} alt="" style={{ width: '100%', borderRadius: 16 }} />
+            <button
+              className="modal-close"
+              style={{ color: '#fff', top: 12, right: 12 }}
+              onClick={() => setLightbox(null)}>
+              <X />
+            </button>
           </div>
         </div>
       )}
     </main>
-  )
+  );
 }
 
 export function ChambersPage({ onNavigate }: { onNavigate: (p: string) => void }) {
-  const { lang } = useLanguage()
-  const ch = chambersCopy[lang]
+  const { lang } = useLanguage();
+  const ch = chambersCopy[lang];
   return (
     <main className="page-section" style={{ position: 'relative', overflow: 'hidden' }}>
-      <div className="grid-dots" style={{ position: 'absolute', inset: 0, opacity: 0.3, pointerEvents: 'none' }}/>
+      <div
+        className="grid-dots"
+        style={{ position: 'absolute', inset: 0, opacity: 0.3, pointerEvents: 'none' }}
+      />
       <div className="container" style={{ position: 'relative' }}>
         <ScrollReveal>
           <span className="section-eyebrow">{ch.eyebrow}</span>
-          <h1 className="gradient-text" style={{ marginTop: 14 }}>{ch.title1} <em>{ch.titleEm}</em></h1>
+          <h1 className="gradient-text" style={{ marginTop: 14 }}>
+            {ch.title1} <em>{ch.titleEm}</em>
+          </h1>
           <p className="lead max-copy">{ch.lead}</p>
         </ScrollReveal>
         <div className="chamber-grid grid-cards">
           {ch.chambers.map((c, i) => (
-            <Tilt3D key={c.name} max={5} className={`chamber-card chamber-${i} premium-card shine-card`}>
+            <Tilt3D
+              key={c.name}
+              max={5}
+              className={`chamber-card chamber-${i} premium-card shine-card`}>
               <div className="chamber-top">
-                <span className="num-badge" style={{ background: 'linear-gradient(135deg, #14b8a6, #6366f1)' }}>0{i+1}</span>
-                <span className="icon-halo" style={{ width: 40, height: 40, borderRadius: 10, background: 'linear-gradient(135deg, rgba(20,184,166,0.15), rgba(99,102,241,0.1))', color: '#0d6e63', display: 'grid', placeItems: 'center' }}><MapPin size={18}/></span>
+                <span
+                  className="num-badge"
+                  style={{ background: 'linear-gradient(135deg, #14b8a6, #6366f1)' }}>
+                  0{i + 1}
+                </span>
+                <span
+                  className="icon-halo"
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 10,
+                    background:
+                      'linear-gradient(135deg, rgba(20,184,166,0.15), rgba(99,102,241,0.1))',
+                    color: '#0d6e63',
+                    display: 'grid',
+                    placeItems: 'center',
+                  }}>
+                  <MapPin size={18} />
+                </span>
               </div>
               <h2>{c.name}</h2>
               <strong>{c.place}</strong>
               <p>{c.address}</p>
               <div className="chamber-hours">
-                <Clock size={15} className="pulse" style={{ color: '#14b8a6' }}/>
-                <span>{ch.visitingHours}<strong>{c.hours}</strong></span>
+                <Clock size={15} className="pulse" style={{ color: '#14b8a6' }} />
+                <span>
+                  {ch.visitingHours}
+                  <strong>{c.hours}</strong>
+                </span>
               </div>
-              <div className="chamber-map" style={{ borderRadius: 12, background: 'linear-gradient(135deg, #14b8a6, #6366f1)', color: '#fff', padding: 24, textAlign: 'center' }}>
-                <div className="map-grid"/>
-                <MapPin size={28} className="float-soft"/>
+              <div
+                className="chamber-map"
+                style={{
+                  borderRadius: 12,
+                  background: 'linear-gradient(135deg, #14b8a6, #6366f1)',
+                  color: '#fff',
+                  padding: 24,
+                  textAlign: 'center',
+                }}>
+                <div className="map-grid" />
+                <MapPin size={28} className="float-soft" />
                 <span style={{ display: 'block', marginTop: 6 }}>{ch.mapLabel}</span>
               </div>
               <div className="chamber-actions">
-                <a className="btn btn-outline btn-pro" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}`} target="_blank" rel="noreferrer">{ch.directions}</a>
+                <a
+                  className="btn btn-outline btn-pro"
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}`}
+                  target="_blank"
+                  rel="noreferrer">
+                  {ch.directions}
+                </a>
                 <Magnetic>
-                  <button className="btn btn-primary btn-pro shadow-glow-teal btn-tilt" onClick={() => onNavigate('Appointment')}>{ch.bookHere}</button>
+                  <button
+                    className="btn btn-primary btn-pro shadow-glow-teal btn-tilt"
+                    onClick={() => onNavigate('Appointment')}>
+                    {ch.bookHere}
+                  </button>
                 </Magnetic>
               </div>
             </Tilt3D>
@@ -105,45 +303,72 @@ export function ChambersPage({ onNavigate }: { onNavigate: (p: string) => void }
         </div>
       </div>
     </main>
-  )
+  );
 }
 
 export function AppointmentFlow({ onNavigate }: { onNavigate: (p: string) => void }) {
-  const { lang } = useLanguage()
-  const a = appointmentCopy[lang]
-  const cm = common[lang]
-  const [step, setStep] = useState(1)
-  const [service, setService] = useState('')
-  const [chamber, setChamber] = useState('')
-  const [date, setDate] = useState('2026-06-18')
-  const [time, setTime] = useState('09:00 AM')
-  const [details, setDetails] = useState<Record<string, string>>({})
-  const chambers = chambersCopy[lang].chambers
-  const dates = ['2026-06-18', '2026-06-19', '2026-06-20', '2026-06-22']
-  const times = ['09:00 AM','10:30 AM','02:00 PM','04:30 PM','06:00 PM']
-  const dateLabel = (value: string) => new Intl.DateTimeFormat(lang === 'bn' ? 'bn-BD' : 'en-US', { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(`${value}T00:00:00`))
+  const { lang } = useLanguage();
+  const a = appointmentCopy[lang];
+  const cm = common[lang];
+  const [step, setStep] = useState(1);
+  const [service, setService] = useState('');
+  const [chamber, setChamber] = useState('');
+  const [date, setDate] = useState(TODAY);
+  const [time, setTime] = useState('09:00 AM');
+  const [details, setDetails] = useState<Record<string, string>>({});
+  const chambers = chambersCopy[lang].chambers;
+  const dates = [TODAY, ...Array.from({ length: 3 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() + (i + 1) * 2);
+    return d.toISOString().slice(0, 10);
+  })];
+  const times = ['09:00 AM', '10:30 AM', '02:00 PM', '04:30 PM', '06:00 PM'];
+  const dateLabel = (value: string) =>
+    new Intl.DateTimeFormat(lang === 'bn' ? 'bn-BD' : 'en-US', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+    }).format(new Date(`${value}T00:00:00`));
   return (
     <main className="page-section" style={{ position: 'relative', overflow: 'hidden' }}>
-      <div className="aurora-bg" style={{ position: 'absolute', inset: 0, opacity: 0.4, pointerEvents: 'none' }}/>
+      <div
+        className="aurora-bg"
+        style={{ position: 'absolute', inset: 0, opacity: 0.4, pointerEvents: 'none' }}
+      />
       <div className="container narrow" style={{ position: 'relative' }}>
         <ScrollReveal>
           <span className="section-eyebrow">{a.eyebrow}</span>
-          <h1 className="gradient-text" style={{ marginTop: 14 }}>{a.title1} <em>{a.titleEm}</em></h1>
+          <h1 className="gradient-text" style={{ marginTop: 14 }}>
+            {a.title1} <em>{a.titleEm}</em>
+          </h1>
         </ScrollReveal>
         <div className="booking-progress">
           {a.steps.map((x, i) => (
-            <div className={`${step === i+1 ? 'active' : ''} ${step > i+1 ? 'done' : ''}`} key={x}><span>{step > i+1 ? <Check size={14}/> : i+1}</span>{x}</div>
+            <div
+              className={`${step === i + 1 ? 'active' : ''} ${step > i + 1 ? 'done' : ''}`}
+              key={x}>
+              <span>{step > i + 1 ? <Check size={14} /> : i + 1}</span>
+              {x}
+            </div>
           ))}
         </div>
         <div className="booking-card premium-card" style={{ background: '#fff' }} key={step}>
-          <span className="section-eyebrow">{a.step} 0{step}</span>
+          <span className="section-eyebrow">
+            {a.step} 0{step}
+          </span>
           {step === 1 && (
             <>
               <h2>{a.helpTitle}</h2>
               <p className="muted">{a.helpBody}</p>
               <div className="option-grid">
                 {a.services.map(x => (
-                  <button className={`${service === x ? 'selected' : ''} press btn-pro`} onClick={() => setService(x)} key={x}>{x}<ArrowRight size={15} className="float-x"/></button>
+                  <button
+                    className={`${service === x ? 'selected' : ''} press btn-pro`}
+                    onClick={() => setService(x)}
+                    key={x}>
+                    {x}
+                    <ArrowRight size={15} className="float-x" />
+                  </button>
                 ))}
               </div>
             </>
@@ -153,16 +378,37 @@ export function AppointmentFlow({ onNavigate }: { onNavigate: (p: string) => voi
               <h2>{a.timeTitle}</h2>
               <div className="date-grid">
                 {dates.map(x => (
-                  <button type="button" className={`${date === x ? 'selected' : ''} press`} key={x} onClick={() => setDate(x)}>
-                    {dateLabel(x)}<small>{lang === 'bn' ? 'জুন ২০২৬' : 'June 2026'}</small>
+                  <button
+                    type="button"
+                    className={`${date === x ? 'selected' : ''} press`}
+                    key={x}
+                    onClick={() => setDate(x)}>
+                    {dateLabel(x)}
+                    <small>{lang === 'bn' ? 'জুন ২০২৬' : 'June 2026'}</small>
                   </button>
                 ))}
               </div>
-              <div className="time-grid">{times.map(x => <button type="button" key={x} className={`${time === x ? 'selected' : ''} press`} onClick={() => setTime(x)}>{x}</button>)}</div>
+              <div className="time-grid">
+                {times.map(x => (
+                  <button
+                    type="button"
+                    key={x}
+                    className={`${time === x ? 'selected' : ''} press`}
+                    onClick={() => setTime(x)}>
+                    {x}
+                  </button>
+                ))}
+              </div>
               <h3 className="booking-subhead">{a.subhead}</h3>
               <div className="mini-options">
                 {chambers.map(c => (
-                  <button className={`${chamber === c.name ? 'selected' : ''} press`} onClick={() => setChamber(c.name)} key={c.name}>{c.name}<small>{c.hours}</small></button>
+                  <button
+                    className={`${chamber === c.name ? 'selected' : ''} press`}
+                    onClick={() => setChamber(c.name)}
+                    key={c.name}>
+                    {c.name}
+                    <small>{c.hours}</small>
+                  </button>
                 ))}
               </div>
             </>
@@ -171,86 +417,208 @@ export function AppointmentFlow({ onNavigate }: { onNavigate: (p: string) => voi
             <>
               <h2>{a.detailsTitle}</h2>
               <div className="form-grid">
-                {a.details.map((d, i) => ('textarea' in d ? <textarea key={i} placeholder={d.ph} className="glow-focus" value={details[`field-${i}`] || ''} onChange={e => setDetails(prev => ({ ...prev, [`field-${i}`]: e.target.value }))}/> : <input key={i} placeholder={d.ph} className="glow-focus" value={details[`field-${i}`] || ''} onChange={e => setDetails(prev => ({ ...prev, [`field-${i}`]: e.target.value }))}/>))}<input type="tel" placeholder={lang === 'bn' ? 'জরুরি ��োগাযোগ নম্বর' : 'Emergency contact number'} className="glow-focus" value={details.emergency || ''} onChange={e => setDetails(prev => ({ ...prev, emergency: e.target.value }))}/><input type="file" accept="image/*,.pdf" className="glow-focus" onChange={e => setDetails(prev => ({ ...prev, report: e.target.files?.[0]?.name || '' }))}/>
+                {a.details.map((d, i) =>
+                  'textarea' in d ? (
+                    <textarea
+                      key={i}
+                      placeholder={d.ph}
+                      className="glow-focus"
+                      value={details[`field-${i}`] || ''}
+                      onChange={e =>
+                        setDetails(prev => ({ ...prev, [`field-${i}`]: e.target.value }))
+                      }
+                    />
+                  ) : (
+                    <input
+                      key={i}
+                      placeholder={d.ph}
+                      className="glow-focus"
+                      value={details[`field-${i}`] || ''}
+                      onChange={e =>
+                        setDetails(prev => ({ ...prev, [`field-${i}`]: e.target.value }))
+                      }
+                    />
+                  )
+                )}
+                <input
+                  type="tel"
+                  placeholder={lang === 'bn' ? 'জরুরি ��োগাযোগ নম্বর' : 'Emergency contact number'}
+                  className="glow-focus"
+                  value={details.emergency || ''}
+                  onChange={e => setDetails(prev => ({ ...prev, emergency: e.target.value }))}
+                />
+                <input
+                  type="file"
+                  accept="image/*,.pdf"
+                  className="glow-focus"
+                  onChange={e =>
+                    setDetails(prev => ({ ...prev, report: e.target.files?.[0]?.name || '' }))
+                  }
+                />
               </div>
             </>
           )}
           {step === 4 && (
             <>
-              <div className="success-icon" style={{ background: 'linear-gradient(135deg, #14b8a6, #6366f1)', color: '#fff' }}><Check/></div>
+              <div
+                className="success-icon"
+                style={{ background: 'linear-gradient(135deg, #14b8a6, #6366f1)', color: '#fff' }}>
+                <Check />
+              </div>
               <h2>{a.reviewTitle}</h2>
               <div className="review-list">
                 {a.review.map((label, i) => (
-                  <p key={i}><span>{label}</span><strong>{i === 0 ? (service || a.services[0]) : i === 1 ? (dateLabel(date) + ', ' + time) : i === 2 ? (chamber || chambers[0].name) : (lang === 'bn' ? '২০ মিনিট' : '20 minutes')}</strong></p>
+                  <p key={i}>
+                    <span>{label}</span>
+                    <strong>
+                      {i === 0
+                        ? service || a.services[0]
+                        : i === 1
+                          ? dateLabel(date) + ', ' + time
+                          : i === 2
+                            ? chamber || chambers[0].name
+                            : lang === 'bn'
+                              ? '২০ মিনিট'
+                              : '20 minutes'}
+                    </strong>
+                  </p>
                 ))}
               </div>
               <p className="muted">{a.reviewNote}</p>
-              <button className="btn btn-primary full btn-pro shadow-glow-teal btn-tilt" onClick={() => onNavigate('Patient')}>{a.confirmBtn}</button>
+              <button
+                className="btn btn-primary full btn-pro shadow-glow-teal btn-tilt"
+                onClick={() => onNavigate('Patient')}>
+                {a.confirmBtn}
+              </button>
             </>
           )}
           <div className="booking-nav">
-            {step > 1 && <button className="btn btn-outline btn-pro" onClick={() => setStep(step - 1)}>{cm.back}</button>}
-            {step < 4 && <Magnetic><button className="btn btn-primary btn-pro shadow-glow-teal btn-tilt" onClick={() => setStep(step + 1)}>{cm.next} <ArrowRight size={16} className="float-x"/></button></Magnetic>}
+            {step > 1 && (
+              <button className="btn btn-outline btn-pro" onClick={() => setStep(step - 1)}>
+                {cm.back}
+              </button>
+            )}
+            {step < 4 && (
+              <Magnetic>
+                <button
+                  className="btn btn-primary btn-pro shadow-glow-teal btn-tilt"
+                  onClick={() => setStep(step + 1)}>
+                  {cm.next} <ArrowRight size={16} className="float-x" />
+                </button>
+              </Magnetic>
+            )}
           </div>
         </div>
       </div>
     </main>
-  )
+  );
 }
 
 export function CheckoutPage({ onNavigate }: { onNavigate: (p: string) => void }) {
-  const { lang } = useLanguage()
-  const c = checkoutCopy[lang]
+  const { lang } = useLanguage();
+  const c = checkoutCopy[lang];
   return (
     <main className="page-section" style={{ position: 'relative', overflow: 'hidden' }}>
-      <div className="aurora-bg" style={{ position: 'absolute', inset: 0, opacity: 0.4, pointerEvents: 'none' }}/>
+      <div
+        className="aurora-bg"
+        style={{ position: 'absolute', inset: 0, opacity: 0.4, pointerEvents: 'none' }}
+      />
       <div className="container narrow" style={{ position: 'relative' }}>
         <ScrollReveal>
           <span className="section-eyebrow">{c.eyebrow}</span>
-          <h1 className="gradient-text" style={{ marginTop: 14 }}>{c.title1} <em>{c.titleEm}</em></h1>
+          <h1 className="gradient-text" style={{ marginTop: 14 }}>
+            {c.title1} <em>{c.titleEm}</em>
+          </h1>
         </ScrollReveal>
         <div className="checkout-form premium-card" style={{ background: '#fff' }}>
           <h2>{c.deliveryHeading}</h2>
           <div className="form-grid">
-            {c.deliveryFields.map((f, i) => ('textarea' in f ? <textarea key={i} placeholder={f.ph} className="glow-focus"/> : <input key={i} placeholder={f.ph} className="glow-focus"/>))}
+            {c.deliveryFields.map((f, i) =>
+              'textarea' in f ? (
+                <textarea key={i} placeholder={f.ph} className="glow-focus" />
+              ) : (
+                <input key={i} placeholder={f.ph} className="glow-focus" />
+              )
+            )}
           </div>
           <h2>{c.paymentHeading}</h2>
           <div className="payment-options">
-            {c.paymentOptions.map((o, i) => <button key={o} className={`${i === 0 ? 'selected' : ''} press btn-pro`}>{o}</button>)}
+            {c.paymentOptions.map((o, i) => (
+              <button key={o} className={`${i === 0 ? 'selected' : ''} press btn-pro`}>
+                {o}
+              </button>
+            ))}
           </div>
           <div className="checkout-summary">
-            <p>{c.summary[0]} <strong className="stat-num">{lang === 'bn' ? '৳ ২,৮০০' : '$28'}</strong></p>
-            <p>{c.summary[1]} <strong className="stat-num">{lang === 'bn' ? '৳ ৩০০' : '$3'}</strong></p>
-            <hr/>
-            <p>{c.summary[2]} <strong className="stat-num" style={{ fontSize: 18 }}>{lang === 'bn' ? '৳ ৩,১০০' : '$31'}</strong></p>
+            <p>
+              {c.summary[0]}{' '}
+              <strong className="stat-num">{lang === 'bn' ? '৳ ২,৮০০' : '$28'}</strong>
+            </p>
+            <p>
+              {c.summary[1]} <strong className="stat-num">{lang === 'bn' ? '৳ ৩০০' : '$3'}</strong>
+            </p>
+            <hr />
+            <p>
+              {c.summary[2]}{' '}
+              <strong className="stat-num" style={{ fontSize: 18 }}>
+                {lang === 'bn' ? '৳ ৩,১০০' : '$31'}
+              </strong>
+            </p>
           </div>
           <Magnetic>
-            <button className="btn btn-primary full btn-pro shadow-glow-teal btn-tilt" onClick={() => onNavigate('Success')}>{c.placeBtn} <ArrowRight size={16} className="float-x"/></button>
+            <button
+              className="btn btn-primary full btn-pro shadow-glow-teal btn-tilt"
+              onClick={() => onNavigate('Success')}>
+              {c.placeBtn} <ArrowRight size={16} className="float-x" />
+            </button>
           </Magnetic>
         </div>
       </div>
     </main>
-  )
+  );
 }
 
 export function SuccessPage({ onNavigate }: { onNavigate: (p: string) => void }) {
-  const { lang } = useLanguage()
-  const s = successCopy[lang]
+  const { lang } = useLanguage();
+  const s = successCopy[lang];
   return (
     <main className="page-section" style={{ position: 'relative', overflow: 'hidden' }}>
-      <div className="aurora-bg" style={{ position: 'absolute', inset: 0, opacity: 0.6, pointerEvents: 'none' }}/>
-      <Particles count={18}/>
-      <div className="container narrow success-page" style={{ position: 'relative', textAlign: 'center' }}>
-        <div className="appear-zoom" style={{ width: 96, height: 96, margin: '0 auto 24px', borderRadius: '50%', background: 'linear-gradient(135deg, #14b8a6, #6366f1)', color: '#fff', display: 'grid', placeItems: 'center', boxShadow: '0 24px 60px -12px rgba(20,184,166,0.5)' }}>
-          <Check size={48} strokeWidth={3}/>
+      <div
+        className="aurora-bg"
+        style={{ position: 'absolute', inset: 0, opacity: 0.6, pointerEvents: 'none' }}
+      />
+      <Particles count={18} />
+      <div
+        className="container narrow success-page"
+        style={{ position: 'relative', textAlign: 'center' }}>
+        <div
+          className="appear-zoom"
+          style={{
+            width: 96,
+            height: 96,
+            margin: '0 auto 24px',
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #14b8a6, #6366f1)',
+            color: '#fff',
+            display: 'grid',
+            placeItems: 'center',
+            boxShadow: '0 24px 60px -12px rgba(20,184,166,0.5)',
+          }}>
+          <Check size={48} strokeWidth={3} />
         </div>
         <span className="section-eyebrow">{s.eyebrow}</span>
-        <h1 className="gradient-text" style={{ marginTop: 14 }}>{s.title1} <em>{s.titleEm}</em></h1>
+        <h1 className="gradient-text" style={{ marginTop: 14 }}>
+          {s.title1} <em>{s.titleEm}</em>
+        </h1>
         <p className="lead">{s.body}</p>
         <Magnetic>
-          <button className="btn btn-primary btn-pro shadow-glow-teal btn-tilt" onClick={() => onNavigate('Home')}>{s.btn} <ArrowRight size={16} className="float-x"/></button>
+          <button
+            className="btn btn-primary btn-pro shadow-glow-teal btn-tilt"
+            onClick={() => onNavigate('Home')}>
+            {s.btn} <ArrowRight size={16} className="float-x" />
+          </button>
         </Magnetic>
       </div>
     </main>
-  )
+  );
 }
