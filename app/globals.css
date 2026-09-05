@@ -5336,24 +5336,40 @@ html[data-lang='bn'] .stats strong {
   }
   .main-nav {
     display: none;
-    position: absolute;
-    top: 116px;
-    left: 16px;
-    right: 16px;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 10px 30px #0001;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: none;
+    border-radius: 0;
+    padding: 100px 24px 40px;
+    box-shadow: none;
     flex-direction: column;
     align-items: stretch;
+    gap: 6px;
+    z-index: 99;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .main-nav.is-open {
     display: flex;
   }
   .nav-link {
-    padding: 10px 12px;
+    padding: 14px 16px;
     text-align: left;
+    font-size: 15px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    transition: background 0.2s ease;
+  }
+  .nav-link:hover {
+    background: var(--secondary);
   }
   .header-cta,
   .header-actions > .icon-btn {
@@ -13967,4 +13983,101 @@ h2 em {
   .admin-workspace .spin-3d {
     animation: none;
   }
+}
+
+/* === Responsive mobile optimizations === */
+@media (max-width: 480px) {
+  .hero {
+    padding: 40px 0 50px;
+    min-height: auto;
+  }
+  .hero-grid {
+    gap: 32px;
+  }
+  .hero-copy > p {
+    font-size: 16px;
+  }
+  .hero-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .hero-visual > img {
+    height: 300px;
+  }
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .service-grid,
+  .product-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .brand-text {
+    display: none;
+  }
+  .brand-mark {
+    width: 44px;
+    height: 44px;
+  }
+  .brand-mark .brand-icon-img {
+    width: 26px;
+    height: 26px;
+  }
+  .footer-socials a {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Mobile nav backdrop */
+.nav-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 42, 68, 0.35);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 98;
+}
+
+/* Ensure touch targets are at least 44x44px */
+.nav-link,
+.icon-btn,
+.menu-btn,
+.footer-socials a,
+.search-chip {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent horizontal scroll on mobile */
+body {
+  overflow-x: hidden;
+}
+
+/* Responsive images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Responsive typography */
+h1 {
+  font-size: clamp(28px, 5vw, 48px);
+}
+h2 {
+  font-size: clamp(24px, 4vw, 36px);
+}
+h3 {
+  font-size: clamp(20px, 3.5vw, 28px);
 }

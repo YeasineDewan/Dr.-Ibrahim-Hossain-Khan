@@ -245,6 +245,16 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [searchOpen]);
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
   return (
     <>
       <a href="#main" className="skip-link">
@@ -358,6 +368,20 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
           <span className="scroll-progress-fill" style={{ width: `${scrollPct}%` }} />
           <span className="scroll-progress-glow" style={{ left: `${scrollPct}%` }} />
         </div>
+        {open && (
+          <div
+            className="nav-backdrop"
+            onClick={() => setOpen(false)}
+            aria-hidden="true"
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(15, 42, 68, 0.35)',
+              backdropFilter: 'blur(2px)',
+              zIndex: 98,
+            }}
+          />
+        )}
       </header>
 
       {/* ============ SEARCH OVERLAY ============ */}
