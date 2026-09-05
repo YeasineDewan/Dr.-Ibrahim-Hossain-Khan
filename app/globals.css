@@ -4771,6 +4771,14 @@ html[data-lang='bn'] .stats strong {
     grid-template-columns: 1fr;
   }
 }
+@media (max-width: 480px) {
+  .service-category-section {
+    margin-bottom: 48px !important;
+  }
+  .service-category-section .treatment-card-visual {
+    min-height: 160px;
+  }
+}
 .treatment-card-inner {
   background: #fff;
   border: 1px solid var(--border);
