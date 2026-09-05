@@ -90,7 +90,7 @@ const testimonials = (lang: 'en' | 'bn') =>
 export function ServicesPage({ onNavigate }: { onNavigate: (p: string) => void }) {
   const { lang } = useLanguage();
   const s = servicesCopy[lang];
-  const slugs = ['prp', 'psoriasis', 'vitiligo', 'ibs', 'integrative', 'preventive'];
+  const sections = [s.sections.skinHair, s.sections.infertility] as const;
   return (
     <main
       className="page-section services-page"
@@ -107,19 +107,10 @@ export function ServicesPage({ onNavigate }: { onNavigate: (p: string) => void }
           </h1>
           <p className="lead max-copy">{s.lead}</p>
         </ScrollReveal>
-        <div className="service-intro">
-          <ScrollReveal>
-            <div>
-              <span className="section-eyebrow">{s.promisePill}</span>
-              <h2 style={{ marginTop: 14 }}>
-                {s.promiseTitle1}
-                <br />
-                <em>{s.promiseTitleEm}</em>
-              </h2>
-            </div>
-          </ScrollReveal>
-          <div className="service-promise grid-cards">
-            {s.promiseList.map((p, i) => (
+
+        <ScrollReveal>
+          <div className="service-promise grid-cards" style={{ margin: '40px 0 32px' }}>
+            {s.promiseList.map((p: { strong: string; body: string }, i: number) => (
               <div key={i} className="service-promise-card">
                 <span className="promise-num">0{i + 1}</span>
                 <div className="promise-content">
@@ -129,39 +120,54 @@ export function ServicesPage({ onNavigate }: { onNavigate: (p: string) => void }
               </div>
             ))}
           </div>
-        </div>
-        <div className="treatment-grid grid-cards">
-          {s.treatments.map((x, i) => {
-            const Illust = illusts[i % illusts.length];
-            return (
-              <Tilt3D key={x.title} max={5} className="treatment-card-inner">
-                <div
-                  className="treatment-card-visual"
-                  style={{
-                    background: `linear-gradient(135deg, ${illustColors[i % illustColors.length]})`,
-                  }}>
-                  <Illust className="treatment-illust" />
-                  <span className="treatment-visual-badge">0{i + 1}</span>
-                </div>
-                <div className="treatment-card-content">
-                  <h3>{x.title}</h3>
-                  <p>{x.body}</p>
-                  <div className="treatment-card-meta">
-                    <span>
-                      <Clock3 size={14} /> {x.time}
-                    </span>
-                    <strong>{x.price}</strong>
-                  </div>
-                  <button
-                    onClick={() => onNavigate(`Service:${slugs[i]}`)}
-                    className="text-link link-underline pill-arrow">
-                    {s.viewService} <ArrowRight size={15} className="float-x" />
-                  </button>
-                </div>
-              </Tilt3D>
-            );
-          })}
-        </div>
+        </ScrollReveal>
+
+        {sections.map((section, sIdx) => (
+          <section key={section.title1} className="service-category-section" style={{ marginBottom: 64 }}>
+            <ScrollReveal>
+              <div style={{ marginBottom: 24 }}>
+                <span className="section-eyebrow">{section.eyebrow}</span>
+                <h2 className="gradient-text" style={{ marginTop: 10 }}>
+                  {section.title1} <em>{section.titleEm}</em>
+                </h2>
+                <p className="lead max-copy" style={{ marginTop: 8 }}>{section.lead}</p>
+              </div>
+            </ScrollReveal>
+            <div className="grid-cards service-section-grid">
+              {section.treatments.map((x: { title: string; body: string; time: string; price: string }, i: number) => {
+                const Illust = illusts[(sIdx * 4 + i) % illusts.length];
+                return (
+                  <Tilt3D key={x.title} max={5} className="treatment-card-inner">
+                    <div
+                      className="treatment-card-visual"
+                      style={{
+                        background: `linear-gradient(135deg, ${illustColors[(sIdx * 4 + i) % illustColors.length]})`,
+                      }}>
+                      <Illust className="treatment-illust" />
+                      <span className="treatment-visual-badge">0{i + 1}</span>
+                    </div>
+                    <div className="treatment-card-content">
+                      <h3>{x.title}</h3>
+                      <p>{x.body}</p>
+                      <div className="treatment-card-meta">
+                        <span>
+                          <Clock3 size={14} /> {x.time}
+                        </span>
+                        <strong>{x.price}</strong>
+                      </div>
+                      <button
+                        onClick={() => onNavigate('Appointment')}
+                        className="text-link link-underline pill-arrow">
+                        {s.viewService} <ArrowRight size={15} className="float-x" />
+                      </button>
+                    </div>
+                  </Tilt3D>
+                );
+              })}
+            </div>
+          </section>
+        ))}
+
         <ScrollReveal>
           <div className="service-cta-card service-bottom">
             <div>

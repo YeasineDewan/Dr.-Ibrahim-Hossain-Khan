@@ -80,7 +80,7 @@ export type Coupon = {
 
 export type Notification = {
   id: string;
-  type: 'appointment' | 'patient' | 'system';
+  type: 'appointment' | 'patient' | 'system' | 'order' | 'stock';
   title: string;
   body: string;
   time: string;

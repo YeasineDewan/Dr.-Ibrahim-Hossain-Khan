@@ -54,6 +54,34 @@ export const servicesCopy = {
         price: 'From $75',
       },
     ],
+    sections: {
+      skinHair: {
+        eyebrow: 'SECTION I',
+        title1: 'Skin and Hair Care',
+        titleEm: 'Dermatology & Restoration',
+        lead:
+          'Specialized care for hair loss, scalp disorders, pigmentation, acne, psoriasis and more — using evidence-based dermatology and regenerative therapies.',
+        treatments: [
+          { title: 'PRP Hair Restoration', body: 'Platelet-rich plasma therapy to stimulate hair follicles and improve density.', time: '45 min', price: 'From $120' },
+          { title: 'Acne & Scar Revision', body: 'Advanced protocols to reduce active breakouts and improve skin texture.', time: '30 min', price: 'From $90' },
+          { title: 'Psoriasis Management', body: 'Long-term flare control with topical, systemic and phototherapy options.', time: '45 min', price: 'From $110' },
+          { title: 'Hair Loss Evaluation', body: 'Comprehensive assessment of pattern, hormonal and nutritional causes.', time: '30 min', price: 'From $75' },
+        ],
+      },
+      infertility: {
+        eyebrow: 'SECTION II',
+        title1: 'Infertility Care',
+        titleEm: 'Holistic Fertility Support',
+        lead:
+          'Holistic fertility support combining medical evaluation, lifestyle optimization and reproductive wellness planning.',
+        treatments: [
+          { title: 'Fertility Assessment', body: 'Full evaluation for individuals and couples planning conception.', time: '60 min', price: 'From $150' },
+          { title: 'Hormonal Optimization', body: 'Balancing cycles, thyroid, prolactin and metabolic markers.', time: '45 min', price: 'From $120' },
+          { title: 'Lifestyle & Nutrition Plan', body: 'Diet, stress and exercise guidance tailored to reproductive goals.', time: '45 min', price: 'From $95' },
+          { title: 'Follow-up & Monitoring', body: 'Ongoing tracking of progress with adjusted treatment plans.', time: '30 min', price: 'From $60' },
+        ],
+      },
+    },
     viewService: 'View service details',
     bottomEyebrow: 'NOT SURE WHERE TO START?',
     bottomTitle1: 'We’ll help you find the',
@@ -116,6 +144,34 @@ export const servicesCopy = {
         price: '৳ ৭,৫০০ থেকে',
       },
     ],
+    sections: {
+      skinHair: {
+        eyebrow: 'অনুচ্ছেদ I',
+        title1: 'ত্বক ও চুলের যত্ন',
+        titleEm: 'ডার্মাটোলজি ও পুনরূদ্ধারণ',
+        lead:
+          'চুলের ঝড়, স্কাল্পের সমস্যা, পিগমেন্টেশন, অ্যাকন, সোরিয়াসিস এবং আরও অনেক কিছুর জন্য বিশেষ যত্ন — প্রমাণ-ভিত্তিক ডার্মাটোলজি এবং রিজেনারেটিভ থেরাপি ব্যবহার করে।',
+        treatments: [
+          { title: 'PRP চুল পুনরূদ্ধার', body: 'চুলের ফলিকুল стимулиট করে এবং ঘনত্ব উন্নত করতে প্লেটলেট-রিচ প্লাজমা থেরাপি।', time: '৪৫ মিনিট', price: '৳ ১২,০০০ থেকে' },
+          { title: 'অ্যাকন ও দাগ সংশোধন', body: 'সক্রিয় ব্রেকআউট কমাতে এবং ত্বকের টেক্সচার উন্নত করার জন্য উন্নত প্রোটোকল।', time: '৩০ মিনিট', price: '৳ ৯,০০০ থেকে' },
+          { title: 'সোরিয়াসিস ম্যানেজমেন্ট', body: 'টপিকাল, সিস্টেমিক এবং ফটোথেরাপি অপশন সহ দীর্ঘমেয়াদি ফ্লেয়ার কন্ট্রোল।', time: '৪৫ মিনিট', price: '৳ ১১,০০০ থেকে' },
+          { title: 'চুলের ঝড় মূল্যায়ন', body: 'প্যাটার্ন, হার্মোনাল এবং পুষ্টিকর কারণগুলোর জন্য সমগ্র মূল্যায়ন।', time: '৩০ মিনিট', price: '৳ ৭,৫০০ থেকে' },
+        ],
+      },
+      infertility: {
+        eyebrow: 'অনুচ্ছেদ II',
+        title1: 'infertility যত্ন',
+        titleEm: 'Holistic প্রজনন সহায়তা',
+        lead:
+          'চিকিৎসা মূল্যায়ন, জীবনযাত্রা অপ্টিমাইজেশন এবং প্রজনন স্বাস্থ্য পরিকল্পনা সংযোজিত infertility support।',
+        treatments: [
+          { title: 'প্রজননশীলতা মূল্যায়ন', body: 'কনসেপশন পরিকল্পনার জন্য ব্যক্তি এবং দম্পতিদের জন্য সম্পূর্ণ মূল্যায়ন।', time: '৬০ মিনিট', price: '৳ ১৫,০০০ থেকে' },
+          { title: 'হার্মোন অপ্টিমাইজেশন', body: 'চক্র, থাইরয়েড, প্রোল্যাক্টিন এবং মেটাবোলিক মার্কার সামঞ্জস্যতা তৈরি করা।', time: '৪৫ মিনিট', price: '৳ ১২,০০০ থেকে' },
+          { title: 'জীবনযাত্রা ও পুষ্টি পরিকল্পনা', body: 'প্রজনন লক্ষ্যের জন্য ডায়েট, স্ট্রেস এবং ব্যায়াম নির্দেশনা।', time: '৪৫ মিনিট', price: '৳ ৯,৫০০ থেকে' },
+          { title: 'ফলো-আপ ও মনিটরিং', body: 'অনুকূলিত চিকিৎসা পরিকল্পনার সাথে অগ্রগতি ট্র্যাকিং।', time: '৩০ মিনিট', price: '৳ ৬,০০০ থেকে' },
+        ],
+      },
+    },
     viewService: 'সেবার বিস্তারিত দেখুন',
     bottomEyebrow: 'কোথা থেকে শুরু করবেন বুঝতে পারছেন না?',
     bottomTitle1: 'সঠিক পথ খুঁজে পেতে',
