@@ -132,9 +132,6 @@
 .hero-visual {
   animation-delay: 0.15s;
 }
-.hero-card {
-  animation: float 4s ease-in-out infinite;
-}
 .service-card,
 .product-card,
 .chamber-card,
@@ -789,60 +786,11 @@ em {
   object-fit: cover;
   border-radius: 130px 14px 14px 14px;
 }
-.hero-card {
-  position: absolute;
-  left: -35px;
-  bottom: 34px;
-  background: #fff;
-  border: 1px solid #dfe8e8;
-  border-radius: 12px;
-  padding: 15px 18px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  box-shadow: 0 15px 35px #174b7818;
-}
-.hero-card strong,
-.hero-card small {
-  display: block;
-}
-.hero-card strong {
-  font-size: 13px;
-}
-.hero-card small {
-  font-size: 11px;
-  color: #7b8c92;
-  margin-top: 2px;
-}
 .status-dot {
   height: 8px;
   width: 8px;
   border-radius: 50%;
   background: #53b29d;
-}
-.hero-seal {
-  position: absolute;
-  right: -22px;
-  top: 34px;
-  background: #174b78;
-  color: #fff;
-  width: 93px;
-  height: 93px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  transform: rotate(8deg);
-}
-.hero-seal span {
-  font-size: 18px;
-  font-weight: 700;
-}
-.hero-seal small {
-  display: block;
-  font-size: 9px;
-  font-weight: 400;
-  color: #b9d6dc;
 }
 .stats-strip {
   background: #174b78;
@@ -4493,7 +4441,6 @@ html[lang='bn'] em {
   font-family: var(--font-bangla), 'Noto Sans Bengali', serif;
   font-style: normal;
 }
-html[data-lang='bn'] .hero-seal,
 html[lang='bn'] .stats strong,
 html[data-lang='bn'] .stats strong {
   font-family: var(--font-bangla), Georgia, serif;
@@ -5418,12 +5365,6 @@ html[data-lang='bn'] .stats strong {
   }
   .hero-visual > img {
     height: 380px;
-  }
-  .hero-card {
-    left: 10px;
-  }
-  .hero-seal {
-    right: 5px;
   }
   .stats {
     grid-template-columns: repeat(2, 1fr);
@@ -9083,64 +9024,6 @@ h2 em {
   font-size: 16px;
 }
 
-/* hero-card upgrade */
-.hero-card {
-  padding: 14px 20px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px) saturate(180%);
-  box-shadow: 0 24px 60px -12px rgba(15, 42, 68, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  left: -50px;
-  bottom: 30px;
-  position: absolute;
-  z-index: 6;
-}
-.hero-card strong {
-  font-size: 13px;
-  color: #0f172a;
-  font-weight: 700;
-}
-.hero-card small {
-  font-size: 11px;
-  color: #647985;
-  margin-top: 2px;
-  display: block;
-}
-
-/* hero-seal */
-.hero-seal {
-  position: absolute;
-  right: -22px;
-  top: 34px;
-  background: linear-gradient(135deg, #174b78, #14b8a6);
-  color: #fff;
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  transform: rotate(8deg);
-  box-shadow: 0 24px 50px -8px rgba(20, 184, 166, 0.4);
-  z-index: 6;
-}
-.hero-seal span {
-  font-size: 18px;
-  font-weight: 800;
-  line-height: 1;
-}
-.hero-seal small {
-  display: block;
-  font-size: 9px;
-  font-weight: 400;
-  color: #c8e8e6;
-  margin-top: 2px;
-}
-
 /* orbit dot */
 .orbit-dot {
   position: absolute;
@@ -9946,22 +9829,6 @@ h2 em {
   .cta-inner {
     grid-template-columns: 1fr !important;
     gap: 30px !important;
-  }
-}
-
-/* hero-card position fix */
-.hero-card {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  z-index: 5;
-}
-@media (max-width: 780px) {
-  .hero-card {
-    position: relative;
-    left: 0;
-    bottom: 0;
-    margin-top: 16px;
   }
 }
 
