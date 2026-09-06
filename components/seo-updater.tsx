@@ -9,20 +9,23 @@ const DEFAULT_OG_IMAGE = '/logo-256.png';
 const BASE_URL = 'https://dribrahimhossain.com';
 
 function updateMeta(tag: string, attributes: Record<string, string>) {
-  const selector = 'meta[' + tag + ']';
-  const element = document.head.querySelector(selector);
+  const [attrName, attrValue] = tag.split('=');
+  const metas = document.head.querySelectorAll('meta');
+  let element: HTMLMetaElement | null = null;
+  for (let i = 0; i < metas.length; i++) {
+    const m = metas[i];
+    if (m.getAttribute(attrName) === attrValue) {
+      element = m;
+      break;
+    }
+  }
   if (!element) {
-    const created = document.createElement('meta');
-    const keys = Object.keys(attributes);
-    for (let i = 0; i < keys.length; i++) {
-      created.setAttribute(keys[i], attributes[keys[i]]);
-    }
-    document.head.appendChild(created);
-  } else {
-    const keys = Object.keys(attributes);
-    for (let i = 0; i < keys.length; i++) {
-      element.setAttribute(keys[i], attributes[keys[i]]);
-    }
+    element = document.createElement('meta');
+    document.head.appendChild(element);
+  }
+  const keys = Object.keys(attributes);
+  for (let i = 0; i < keys.length; i++) {
+    element.setAttribute(keys[i], attributes[keys[i]]);
   }
 }
 

@@ -12,12 +12,14 @@ export function ScrollReveal({
   variant = 'up',
   delay = 0,
   repeat = false,
+  style,
 }: {
   children: ReactNode;
   className?: string;
   variant?: 'up' | 'fade' | 'left' | 'scale';
   delay?: number;
   repeat?: boolean;
+  style?: CSSProperties;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -40,7 +42,7 @@ export function ScrollReveal({
   }, []);
   const variantClass = revealClasses.find((name) => name === `reveal-${variant}`) ?? 'reveal-up';
   return (
-    <div ref={ref} className={`${variantClass} ${className}`} style={{ '--reveal-delay': `${delay}ms` } as CSSProperties}>
+    <div ref={ref} className={`${variantClass} ${className}`} style={{ '--reveal-delay': `${delay}ms`, ...style } as CSSProperties}>
       {children}
     </div>
   );

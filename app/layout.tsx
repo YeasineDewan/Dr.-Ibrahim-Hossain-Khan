@@ -321,6 +321,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://www.youtube.com" />
         <link rel="preconnect" href="https://yt3.ggpht.com" />
+        <link rel="preconnect" href="https://www.google.com" />
+        <link rel="preconnect" href="https://maps.googleapis.com" />
+        <link rel="alternate" hrefLang="en" href="https://dribrahimhossain.com" />
+        <link rel="alternate" hrefLang="bn" href="https://dribrahimhossain.com" />
+        <link rel="alternate" hrefLang="x-default" href="https://dribrahimhossain.com" />
         <link rel="icon" type="image/png" sizes="32x32" href="/ico-32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/ico-32.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/ico-64.png" />

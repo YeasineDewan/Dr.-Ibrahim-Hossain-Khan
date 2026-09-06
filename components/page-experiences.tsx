@@ -301,6 +301,35 @@ export function ChambersPage({ onNavigate }: { onNavigate: (p: string) => void }
             </Tilt3D>
           ))}
         </div>
+
+        <ScrollReveal className="section">
+          <div style={{ marginTop: 40 }}>
+            <div className="container">
+              <span className="section-eyebrow">{ch.mapLabel}</span>
+              <h2 style={{ marginTop: 10 }}>{lang === 'bn' ? 'ক্লিনিকের অবস্থান' : 'Clinic location'}</h2>
+              <div
+                style={{
+                  borderRadius: 18,
+                  overflow: 'hidden',
+                  border: '1px solid rgba(20,184,166,0.15)',
+                  boxShadow: '0 20px 40px -12px rgba(15,42,68,0.15)',
+                }}>
+                <iframe
+                  title="Clinic location on Google Maps"
+                  src="https://maps.google.com/maps?q=House+45+Road+22+Dhanmondi+Dhaka+Bangladesh&output=embed"
+                  width="100%"
+                  height="320"
+                  style={{ border: 0, display: 'block' }}
+                  allowFullScreen={false}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade" />
+              </div>
+              <p style={{ marginTop: 10, color: '#647985', fontSize: 13 }}>
+                {ch.chambers[0].address}
+              </p>
+            </div>
+          </div>
+        </ScrollReveal>
       </div>
     </main>
   );
