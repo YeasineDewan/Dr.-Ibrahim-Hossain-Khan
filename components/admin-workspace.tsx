@@ -36,6 +36,8 @@ import {
 import { adminCopy, useLanguage, t as tT } from '../lib/translations';
 import { useAdminData } from '../lib/admin-data';
 import { TODAY } from '../lib/utils';
+import { useAuth, AuthProvider } from './admin/permission-gate';
+import { type PermissionCheck, createDemoUser, isSuperUser, type Resource, NAV_RESOURCE_MAP } from '../lib/auth/rbac';
 import { Avatar, Pill, useToast } from './admin-ui';
 import { DashboardView } from './admin/dashboard';
 import { AnalyticsView, ActivityLogView } from './admin/analytics';
@@ -69,6 +71,17 @@ const iconFor = (x: string) =>
 export function AdminWorkspace({ onExit }: { onExit: () => void }) {
   const { lang } = useLanguage();
   const a = adminCopy[lang];
+  const { user, permissions, logout } = useAuth();
+  const isSuper = user ? isSuperUser(user) : false;
+  const navPermissions = permissions;
+  const canAccessItem = (item: string): boolean => {
+    const nav = NAV_RESOURCE_MAP[item];
+    if (!nav) return true;
+    if (isSuper) return true;
+    return navPermissions.some(
+      (p: PermissionCheck) => p.resource === '*' || (p.resource === nav.resource && p.action === nav.action)
+    );
+  };
   const [active, setActive] = useState('Dashboard');
   const [open, setOpen] = useState(true);
   const [expanded, setExpanded] = useState<string[]>(adminCopy.en.groups.map(g => g.label));
@@ -102,6 +115,18 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
     if (item === 'Follow-ups') return data.followUps.filter(f => f.status === 'Overdue').length;
     return 0;
   };
+
+  const visibleGroups = useMemo(
+    () =>
+      groups
+        .map((g: { label: string; items: string[] }, groupIndex: number) => ({
+          ...g,
+          items: g.items.filter((item) => canAccessItem(item)),
+          groupIndex: groups.indexOf(g),
+        }))
+        .filter((g: { label: string; items: string[] }) => g.items.length > 0),
+    [groups, navPermissions, isSuper]
+  );
 
   const renderModule = () => {
     switch (active) {
@@ -172,14 +197,15 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
           <ChevronDown size={14} className="float-x" />
         </div>
         <nav className="pro-admin-nav">
-          {groups.map((g, groupIndex) => (
-            <div className="pro-nav-group" key={g.label}>
-              <button className="pro-group-title" onClick={() => toggle(g.label)}>
-                {localizedGroups[groupIndex]?.label || g.label}
-                <ChevronDown className={expanded.includes(g.label) ? 'rotate' : ''} size={13} />
+          {visibleGroups.map((vg) => (
+            <div className="pro-nav-group" key={vg.label}>
+              <button className="pro-group-title" onClick={() => toggle(vg.label)}>
+                {localizedGroups[vg.groupIndex]?.label || vg.label}
+                <ChevronDown className={expanded.includes(vg.label) ? 'rotate' : ''} size={13} />
               </button>
-              {expanded.includes(g.label) &&
-                g.items.map((item, itemIndex) => {
+              {expanded.includes(vg.label) &&
+                vg.items.map((item) => {
+                  const itemIndex = groups[vg.groupIndex].items.indexOf(item);
                   const I = iconFor(item);
                   const badge = badgeFor(item);
                   return (
@@ -188,7 +214,7 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
                       onClick={() => setActive(item)}
                       className={`pro-nav-item ${active === item ? 'active' : ''} press`}>
                       <I size={16} className={active === item ? 'float-soft' : ''} />
-                      <span>{localizedGroups[groupIndex]?.items[itemIndex] || item}</span>
+                      <span>{localizedGroups[vg.groupIndex]?.items[itemIndex] || item}</span>
                       {badge > 0 && (
                         <b className={item === 'Follow-ups' ? 'coral pulse' : 'pulse'}>{badge}</b>
                       )}
@@ -236,5 +262,17 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
       </main>
       {toast.node}
     </div>
+  );
+}
+
+export function ProtectedAdminWorkspace({ onExit }: { onExit: () => void }) {
+  const demoUser = useMemo(
+    () => createDemoUser('admin', 'admin@clinic.demo', 'Dr. Ibrahim'),
+    []
+  );
+  return (
+    <AuthProvider initialUser={demoUser}>
+      <AdminWorkspace onExit={onExit} />
+    </AuthProvider>
   );
 }

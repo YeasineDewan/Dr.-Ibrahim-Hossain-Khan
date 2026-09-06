@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import type { WidgetProps } from '@/lib/dashboard/types';
 
-export function KPICardWidget({ data, config }: WidgetProps) {
+export const KPICardWidget = memo(function KPICardWidget({ data, config }: WidgetProps) {
   const value = data.value ?? 0;
   const delta = data.delta ?? 0;
   const label = data.label ?? 'KPI';
@@ -54,9 +54,9 @@ export function KPICardWidget({ data, config }: WidgetProps) {
       )}
     </div>
   );
-}
+});
 
-export function SparklineWidget({ data }: WidgetProps) {
+export const SparklineWidget = memo(function SparklineWidget({ data }: WidgetProps) {
   const values = data.values ?? [];
   const color = data.color ?? '#0d9488';
 
@@ -74,9 +74,9 @@ export function SparklineWidget({ data }: WidgetProps) {
       <polyline fill="none" stroke={color} strokeWidth="3" points={points} vectorEffect="non-scaling-stroke" />
     </svg>
   );
-}
+});
 
-export function ActivityFeedWidget({ data }: WidgetProps) {
+export const ActivityFeedWidget = memo(function ActivityFeedWidget({ data }: WidgetProps) {
   const items = data.items ?? [];
 
   return (
@@ -118,4 +118,4 @@ export function ActivityFeedWidget({ data }: WidgetProps) {
       ))}
     </div>
   );
-}
+});

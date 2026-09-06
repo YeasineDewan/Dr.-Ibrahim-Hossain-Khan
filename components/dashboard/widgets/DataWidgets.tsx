@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, memo } from 'react';
 import type { WidgetProps } from '@/lib/dashboard/types';
 
-export function DataTableWidget({ data, onAction, config }: WidgetProps) {
+export const DataTableWidget = memo(function DataTableWidget({ data, onAction, config }: WidgetProps) {
   const columns = data.columns ?? [];
   const rows = data.rows ?? [];
   const [sortKey, setSortKey] = useState<string | null>(null);
@@ -114,9 +114,9 @@ export function DataTableWidget({ data, onAction, config }: WidgetProps) {
       </div>
     </div>
   );
-}
+});
 
-export function PillListWidget({ data }: WidgetProps) {
+export const PillListWidget = memo(function PillListWidget({ data }: WidgetProps) {
   const items = data.items ?? [];
   const max = data.max ?? 10;
   const tone = data.tone ?? 'teal';
@@ -159,4 +159,4 @@ export function PillListWidget({ data }: WidgetProps) {
       )}
     </div>
   );
-}
+});

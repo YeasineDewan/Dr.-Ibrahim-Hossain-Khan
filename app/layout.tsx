@@ -3,6 +3,7 @@ import './globals.css';
 import './motion.css';
 import { Noto_Sans_Bengali } from 'next/font/google';
 import { LanguageProvider } from '../lib/translations';
+import { AuthProvider } from '../components/auth/AuthProvider';
 
 const bangla = Noto_Sans_Bengali({ subsets: ['bengali'], variable: '--font-bangla', preload: true });
 
@@ -37,7 +38,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="preload" href="/logo-128.png" as="image" type="image/png" fetchPriority="high" />
       </head>
       <body suppressHydrationWarning className="antialiased">
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

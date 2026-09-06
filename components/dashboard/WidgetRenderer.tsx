@@ -128,14 +128,14 @@ export function WidgetRenderer({
           updateWidgetConfig(widgetId, { filters: { ...config.filters, [action]: payload } });
         }}
         onDrillDown={(filter: Record<string, any>) => {
-          console.log('[Widget] Drill down:', widgetId, filter);
+          updateWidgetConfig(widgetId, { filters: { ...config.filters, ...filter } });
         }}
         onRefresh={() => {
           setLoading(true);
           setTimeout(() => setLoading(false), 500);
         }}
         onExport={(format: 'csv' | 'pdf' | 'png') => {
-          console.log('[Widget] Export:', widgetId, format);
+          // export handled by parent
         }}
       />
     </div>

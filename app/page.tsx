@@ -38,6 +38,8 @@ import {
 import { AboutPage } from '../components/about-page';
 import { ServiceDetailPage, serviceDetails } from '../components/service-detail-page';
 import { common, navCopy, t as tT, useLanguage, type Lang } from '../lib/translations';
+import { SeoUpdater, type PageKey } from '../components/seo-updater';
+import { AuthProvider, useAuth } from '../components/auth/AuthProvider';
 
 // Lazy-load heavy route components — they only ship when the user navigates
 const PatientPortal = dynamic(
@@ -48,7 +50,7 @@ const PatientPortal = dynamic(
   }
 );
 const AdminWorkspace = dynamic(
-  () => import('../components/admin-workspace').then(m => m.AdminWorkspace),
+  () => import('../components/admin-workspace').then(m => m.ProtectedAdminWorkspace),
   {
     ssr: false,
     loading: () => <RouteSkeleton />,
@@ -1548,6 +1550,7 @@ export default function Page() {
   const { lang, setLang } = useLanguage();
   const c = common[lang];
   const n = navCopy[lang];
+
   const render =
     page === 'Home' ? (
       <Home onNavigate={setPage} />
@@ -1580,6 +1583,17 @@ export default function Page() {
   return (
     <>
       <LanguageGate onChange={setLang} />
+      <SeoUpdater
+        page={(() => {
+          if (page === 'Home') return 'Home';
+          if (['About', 'Gallery', 'Services', 'Contact', 'Chambers', 'Appointment', 'Checkout', 'Success'].includes(page)) {
+            return page as PageKey;
+          }
+          if (page.startsWith('Service:')) return 'ServiceDetail';
+          return 'Home';
+        })()}
+        serviceSlug={page.startsWith('Service:') ? page.slice(8) : undefined}
+      />
       <MotionShell />
       <div className="utility-bar">
         <div className="container utility-inner">

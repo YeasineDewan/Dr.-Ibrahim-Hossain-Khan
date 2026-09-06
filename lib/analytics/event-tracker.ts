@@ -81,7 +81,6 @@ class EventTracker {
     if (this.buffer.length === 0) return;
     const events = [...this.buffer];
     this.buffer = [];
-    console.log('[Analytics] Flushing events:', events.length);
   }
 
   private startFlushInterval() {

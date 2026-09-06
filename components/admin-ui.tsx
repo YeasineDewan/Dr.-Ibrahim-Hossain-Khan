@@ -145,11 +145,13 @@ export function Stat({
 export function Pill({
   children,
   tone = 'neutral',
+  className = '',
 }: {
   children: ReactNode;
   tone?: 'neutral' | 'teal' | 'blue' | 'gold' | 'coral' | 'sand';
+  className?: string;
 }) {
-  return <span className={`adm-pill adm-pill-${tone}`}>{children}</span>;
+  return <span className={`adm-pill adm-pill-${tone} ${className}`.trim()}>{children}</span>;
 }
 
 export function Avatar({ name, size = 32 }: { name: string; size?: number }) {

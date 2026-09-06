@@ -1,6 +1,5 @@
 export async function exportToCSV(data: any[], filename: string): Promise<void> {
   if (!data || data.length === 0) {
-    console.warn('[Export] No data to export');
     return;
   }
 

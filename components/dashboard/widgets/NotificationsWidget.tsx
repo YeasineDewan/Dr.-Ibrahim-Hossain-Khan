@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 import type { WidgetProps } from '@/lib/dashboard/types';
 
-export function NotificationsWidget({ data }: WidgetProps) {
+export const NotificationsWidget = memo(function NotificationsWidget({ data }: WidgetProps) {
   const items = data.items ?? [];
   const max = data.max ?? 8;
 
@@ -53,4 +53,4 @@ export function NotificationsWidget({ data }: WidgetProps) {
       ))}
     </div>
   );
-}
+});

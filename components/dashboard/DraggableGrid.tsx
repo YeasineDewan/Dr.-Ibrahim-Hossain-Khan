@@ -77,13 +77,13 @@ function SortableWidget({ id, layout, onEditToggle, editMode }: SortableWidgetPr
             </span>
             <div style={{ display: 'flex', gap: 4 }}>
               <button
-                onClick={(e) => { e.stopPropagation(); console.log('[Widget] Configure:', id); }}
+                onClick={(e) => { e.stopPropagation(); }}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#647985' }}
               >
                 ⚙
               </button>
               <button
-                onClick={(e) => { e.stopPropagation(); console.log('[Widget] Remove:', id); }}
+                onClick={(e) => { e.stopPropagation(); }}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#ef4444' }}
               >
                 ×

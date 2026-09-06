@@ -79,7 +79,6 @@ class AuditLogger {
     if (this.buffer.length === 0) return;
     const entries = [...this.buffer];
     this.buffer = [];
-    console.log('[Audit] Flushing entries:', entries.length);
   }
 }
 
