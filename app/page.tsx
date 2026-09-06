@@ -38,6 +38,7 @@ import {
 import { AboutPage } from '../components/about-page';
 import { ServiceDetailPage, serviceDetails } from '../components/service-detail-page';
 import { ChamberDetailPage } from '../components/chamber-detail-page';
+import { WebVitals } from '../components/web-vitals';
 import { common, navCopy, t as tT, useLanguage, type Lang } from '../lib/translations';
 import { SeoUpdater, type PageKey } from '../components/seo-updater';
 import { AuthProvider, useAuth } from '../components/auth/AuthProvider';
@@ -1599,6 +1600,7 @@ export default function Page() {
         serviceSlug={page.startsWith('Service:') ? page.slice(8) : undefined}
         chamberSlug={page.startsWith('Chamber:') ? page.slice(8) : undefined}
       />
+      <WebVitals />
       <MotionShell />
       <div className="utility-bar">
         <div className="container utility-inner">

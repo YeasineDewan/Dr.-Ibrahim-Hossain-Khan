@@ -3,6 +3,7 @@
 import { ArrowLeft, ArrowRight, CheckCircle2, Clock3, HeartPulse, ShieldCheck } from 'lucide-react';
 import { serviceDetailsCopy, useLanguage, t as tT, common } from '../lib/translations';
 import { ScrollReveal } from './scroll-reveal';
+import { FaqSection } from './faq-section';
 
 type ServiceKey = 'prp' | 'psoriasis' | 'vitiligo' | 'ibs' | 'integrative' | 'preventive';
 
@@ -233,6 +234,42 @@ export function ServiceDetailPage({
           </div>
         </div>
       </ScrollReveal>
+      <FaqSection
+        title={lang === 'bn' ? 'জিজ্ঞাসা' : 'Questions about this service'}
+        lang={lang}
+        items={[
+          {
+            question: lang === 'bn' ? 'এই চিকিৎসায় কতবার ভিজিট দরকার?' : 'How many visits are needed for this treatment?',
+            answer: lang === 'bn'
+              ? 'প্রয়োজনীয় ভিজিটের সংখ্যা আপনার অবস্থার উপর নির্ভর করে। ডাঃ ইব্রাহিম প্রথম কনসালটেশনে একটি ব্যক্তিগত পরিকল্পনা তৈরি করবেন।'
+              : 'The number of visits depends on your specific condition. Dr. Ibrahim will create a personalized treatment plan during your initial consultation.',
+          },
+          {
+            question: lang === 'bn' ? 'চিকিৎসার পার্শ্বপ্রতিক্রিয়া কী?' : 'What are the side effects of this treatment?',
+            answer: lang === 'bn'
+              ? 'প্রতিটি চিকিৎসার মৃদু পার্শ্বপ্রতিক্রিয়া থাকতে পারে। ডাঃ ইব্রাহিম সবচেয়ে safer ব্যবস্থা ব্যবহার করেন এবং আপনাকে সম্পূর্ণ তথ্য দেন।'
+              : 'Most treatments have minimal side effects. Dr. Ibrahim uses the safest approaches and will fully inform you of any potential effects before treatment.',
+          },
+          {
+            question: lang === 'bn' ? 'এই চিকিৎসার জন্য প্রস্তুতি কী?' : 'How do I prepare for this treatment?',
+            answer: lang === 'bn'
+              ? 'প্রস্তুতি প্রয়োজনের উপর নির্ভর করে। সাধারণত স্বাস্থ্যকর জীবনযাত্রা বজায় রাখুন। নির্দিষ্ট প্রস্তুতি সম্পর্কে ডাঃ ইব্রাহিম আপনাকে Guide করবেন।'
+              : 'Preparation varies by treatment. Generally, maintain a healthy lifestyle. Dr. Ibrahim will guide you on specific preparations during your consultation.',
+          },
+          {
+            question: lang === 'bn' ? 'ফলাফল কতদিনে দেখা যাবে?' : 'How long before I see results?',
+            answer: lang === 'bn'
+              ? 'ফলাফলের সময় পরিকল্পনার উপর নির্ভর করে। কিছু চিকিৎসায় 2-4 সপ্তাহে improvement দেখা যায়, অন্যদের জন্য দীর্ঘ সময় লাগতে পারে।'
+              : 'Results timelines vary by treatment plan. Some improvements may be visible in 2-4 weeks, while others may take longer. Dr. Ibrahim will set realistic expectations.',
+          },
+          {
+            question: lang === 'bn' ? 'এই চিকিৎসার জন্য বolem বয়স সীমা কী?' : 'Is there an age limit for this treatment?',
+            answer: lang === 'bn'
+              ? 'প্রতিরোধমূলক ও যুবวัยকে alike চিকিৎসা সুবিধাজনক। ডাঃ ইব্রাহিম আপনার বয়স ও স্বাস্থ্যের অবস্থা মূল্যায়ন করে সেরা পরিকল্পনা দেবেন।'
+              : 'Treatment is beneficial across age groups. Dr. Ibrahim will assess your age and health status to create the most suitable plan for you.',
+          },
+        ]}
+      />
     </main>
   );
 }

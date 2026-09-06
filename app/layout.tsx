@@ -5,7 +5,7 @@ import { Noto_Sans_Bengali } from 'next/font/google';
 import { LanguageProvider } from '../lib/translations';
 import { AuthProvider } from '../components/auth/AuthProvider';
 
-const bangla = Noto_Sans_Bengali({ subsets: ['bengali'], variable: '--font-bangla', preload: true });
+const bangla = Noto_Sans_Bengali({ subsets: ['bengali'], variable: '--font-bangla', preload: true, display: 'swap' });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://dribrahimhossain.com'),
@@ -295,6 +295,46 @@ const jsonLd = {
           acceptedAnswer: {
             '@type': 'Answer',
             text: 'Yes, Dr. Ibrahim Hossain provides comprehensive IBS and gut health management with lifestyle mapping, nutrition-aware guidance and measured follow-up milestones as part of his integrative medicine services in Dhaka.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What are the consultation fees for dermatology in Dhaka?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Consultation fees vary by service. PRP therapy starts from ৳12,000, psoriasis treatment from ৳8,500, and preventive wellness from ৳7,500. Contact the clinic directly for exact pricing and package details.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How many sessions of PRP therapy are needed for hair restoration?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Most patients require 4-6 PRP sessions spaced 4-6 weeks apart for optimal hair restoration results. Dr. Ibrahim will create a personalized treatment plan during your consultation based on your specific needs.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Can psoriasis be completely cured?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'While psoriasis is a chronic condition, it can be effectively managed with evidence-based treatments. Dr. Ibrahim provides long-term flare control plans including topical treatments, systemic therapies and lifestyle modifications to help you achieve clear skin.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Is vitiligo treatment available in Dhaka?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes, Dr. Ibrahim Hossain provides compassionate vitiligo care at his Dhaka clinic. Treatment includes detailed skin assessment, personalized care planning, and integrative approaches to support repigmentation and skin health confidence.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What payment methods are accepted at the clinic?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'We accept Visa, MasterCard, bKash and Nagad. Payment can be made at the clinic during your visit. For specific insurance or payment plan inquiries, please contact our clinic directly.',
           },
         },
       ],
