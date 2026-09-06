@@ -152,7 +152,7 @@ export function GalleryPage() {
                 return (
                   <article className="gallery-video-card" key={`${slide}-${offset}`}>
                     <div className="gallery-video-media">
-                      <img src={item.image || videoImage} alt={item.title} loading="lazy" />
+                       <img src={item.image || videoImage} alt={item.title} loading="lazy" width="800" height="500" decoding="async" />
                       <span className="gallery-video-wash" />
                       <button
                         className="gallery-video-play"
@@ -201,7 +201,7 @@ export function GalleryPage() {
               boxShadow: 'none',
             }}
             onClick={e => e.stopPropagation()}>
-            <img src={photo(imgs[lightbox])} alt="" style={{ width: '100%', borderRadius: 16 }} />
+            <img src={photo(imgs[lightbox])} alt="" width="1200" height="800" decoding="async" style={{ width: '100%', borderRadius: 16 }} />
             <button
               className="modal-close"
               style={{ color: '#fff', top: 12, right: 12 }}

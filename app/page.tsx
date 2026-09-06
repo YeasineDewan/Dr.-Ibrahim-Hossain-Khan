@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useState, lazy, Suspense } from 'react';
+import { useEffect, useMemo, useState, useCallback, memo } from 'react';
 import dynamic from 'next/dynamic';
 import {
-  Activity,
   ArrowRight,
   CalendarDays,
   CalendarCheck,
@@ -115,7 +114,7 @@ import {
 } from '../components/illust-svg';
 
 // Smart navigation button: prefetches the target route chunk on hover/focus/touch
-function NavBtn({
+const NavBtn = memo(function NavBtn({
   to,
   onNavigate,
   className = '',
@@ -130,19 +129,21 @@ function NavBtn({
   style?: any;
   [k: string]: any;
 }) {
+  const handleClick = useCallback(() => onNavigate(to), [onNavigate, to]);
+  const handlePrefetch = useCallback(() => prefetchRoute(to), [to]);
   return (
     <button
-      onClick={() => onNavigate(to)}
-      onMouseEnter={() => prefetchRoute(to)}
-      onFocus={() => prefetchRoute(to)}
-      onTouchStart={() => prefetchRoute(to)}
+      onClick={handleClick}
+      onMouseEnter={handlePrefetch}
+      onFocus={handlePrefetch}
+      onTouchStart={handlePrefetch}
       className={className}
       style={style}
       {...rest}>
       {children}
     </button>
   );
-}
+});
 
 function RouteSkeleton() {
   return (
@@ -185,10 +186,10 @@ function prefetchRoute(name: string) {
 
 function useT() {
   const { lang } = useLanguage();
-  return { lang, t: (k: Parameters<typeof tT>[0]) => tT(k, lang) };
+  return useMemo(() => ({ lang, t: (k: Parameters<typeof tT>[0]) => tT(k, lang) }), [lang]);
 }
 
-function Button({
+const Button = memo(function Button({
   children,
   variant = 'primary',
   onClick,
@@ -206,12 +207,12 @@ function Button({
       {children}
     </button>
   );
-}
-function Pill({ children, tone = 'blue' }: { children: React.ReactNode; tone?: string }) {
+});
+const Pill = memo(function Pill({ children, tone = 'blue' }: { children: React.ReactNode; tone?: string }) {
   return <span className={`pill pill-${tone}`}>{children}</span>;
-}
+});
 
-function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
+const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
   const { lang, t } = useT();
   const navItems = navCopy[lang].navItems as readonly string[];
   const n = navCopy[lang];
@@ -222,6 +223,13 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
   const [searchVal, setSearchVal] = useState('');
   const [activeIdx, setActiveIdx] = useState(0);
   const [scrollPct, setScrollPct] = useState(0);
+  const handleNavClick = useCallback((item: string) => {
+    onNavigate(item);
+    setOpen(false);
+  }, [onNavigate]);
+  const handleSearchOpen = useCallback(() => setSearchOpen(true), []);
+  const handleSearchClose = useCallback(() => setSearchOpen(false), []);
+  const handleMenuToggle = useCallback(() => setOpen(v => !v), []);
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
@@ -245,6 +253,16 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [searchOpen]);
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
   return (
     <>
       <a href="#main" className="skip-link">
@@ -281,7 +299,7 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
             aria-label={common[lang].brandName}>
             <span className="brand-mark">
               <span className="brand-pulse" aria-hidden="true" />
-              <img src="/logo.png" alt="Dr. Ibrahim Clinic" className="brand-icon-img" />
+              <img src="/logo-128.png" alt="DR.IBRAHIM HOSSAIN" className="brand-icon-img" width="40" height="40" loading="eager" fetchPriority="high" decoding="async" />
             </span>
             <span className="brand-text">
               <strong>{common[lang].brandName}</strong>
@@ -294,10 +312,7 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
             {navItems.map((item, i) => (
               <button
                 key={item}
-                onClick={() => {
-                  onNavigate(item);
-                  setOpen(false);
-                }}
+                onClick={() => handleNavClick(item)}
                 onMouseEnter={() => {
                   setHovered(item);
                   prefetchRoute(item);
@@ -320,7 +335,7 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
             <button
               className="icon-btn press"
               aria-label={n.searchAria}
-              onClick={() => setSearchOpen(true)}>
+              onClick={handleSearchOpen}>
               <Search size={18} />
               <span className="icon-glow" aria-hidden="true" />
             </button>
@@ -341,7 +356,7 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
             </Magnetic>
             <button
               className="menu-btn press"
-              onClick={() => setOpen(!open)}
+              onClick={handleMenuToggle}
               aria-label={common[lang].openMenu}
               aria-expanded={open}>
               <span className="menu-bars">
@@ -358,6 +373,20 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
           <span className="scroll-progress-fill" style={{ width: `${scrollPct}%` }} />
           <span className="scroll-progress-glow" style={{ left: `${scrollPct}%` }} />
         </div>
+        {open && (
+          <div
+            className="nav-backdrop"
+            onClick={() => setOpen(false)}
+            aria-hidden="true"
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(15, 42, 68, 0.35)',
+              backdropFilter: 'blur(2px)',
+              zIndex: 98,
+            }}
+          />
+        )}
       </header>
 
       {/* ============ SEARCH OVERLAY ============ */}
@@ -393,14 +422,14 @@ function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
               </button>
             ))}
           </div>
-          <p className="search-hint">{n.searchHint}</p>
+           <p className="search-hint">{n.searchHint}</p>
         </div>
       </div>
     </>
   );
-}
+});
 
-function Footer({
+const Footer = memo(function Footer({
   onNavigate,
   onLangChange,
 }: {
@@ -416,16 +445,16 @@ function Footer({
   useEffect(() => {
     setYear(new Date().getFullYear());
   }, []);
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     if (email.trim()) {
       setSubscribed(true);
       setEmail('');
     }
-  };
-  const onBackToTop = () => {
+  }, [email]);
+  const onBackToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
   return (
     <footer className="site-footer">
       {/* === Decorative top wave === */}
@@ -433,15 +462,15 @@ function Footer({
         <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
           <defs>
             <linearGradient id="fwave" x1="0" x2="1" y1="0" y2="0">
-              <stop offset="0" stopColor="#14b8a6" />
-              <stop offset=".5" stopColor="#6366f1" />
-              <stop offset="1" stopColor="#ec4899" />
+              <stop offset="0" stopColor="#0f172a" />
+              <stop offset=".5" stopColor="#0b1322" />
+              <stop offset="1" stopColor="#0f172a" />
             </linearGradient>
           </defs>
           <path
             d="M0 60 C 200 20, 360 80, 600 50 S 1100 10, 1440 60 L 1440 80 0 80 Z"
             fill="url(#fwave)"
-            opacity=".9"
+            opacity=".95"
           />
         </svg>
       </div>
@@ -498,7 +527,7 @@ function Footer({
         <div className="footer-brand-block">
           <button className="brand footer-brand" onClick={() => onNavigate('Home')}>
             <span className="brand-mark">
-              <img src="/logo.png" alt="Dr. Ibrahim Clinic" className="brand-icon-img" />
+              <img src="/logo-128.png" alt="DR.IBRAHIM HOSSAIN" className="brand-icon-img" width="40" height="40" loading="lazy" decoding="async" />
             </span>
             <span>
               {c.brandName}
@@ -512,21 +541,17 @@ function Footer({
             <span>{n.responseTime}</span>
           </div>
 
-          <div className="footer-socials" aria-label={n.socialLabel}>
-            {[
-              { k: 'f', label: 'Facebook' },
-              { k: 'm', label: 'Messenger' },
-              { k: '◎', label: 'Instagram' },
-              { k: '♪', label: 'TikTok' },
-              { k: '▶', label: 'YouTube' },
-              { k: 'in', label: 'LinkedIn' },
-            ].map((s, i) => (
-              <button key={s.k + i} aria-label={s.label} className="press ripple">
-                {s.k}
-                <span className="social-glow" aria-hidden="true" />
-              </button>
-            ))}
-          </div>
+           <div className="footer-socials" aria-label={n.socialLabel}>
+             {[
+               { k: 'f', label: 'Facebook', href: n.socials.facebook },
+               { k: '◎', label: 'Instagram', href: n.socials.instagram },
+             ].map((s, i) => (
+               <a key={s.k + i} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label} className="press ripple social-btn">
+                 {s.k}
+                 <span className="social-glow" aria-hidden="true" />
+               </a>
+             ))}
+           </div>
         </div>
 
         {/* Explore */}
@@ -647,7 +672,7 @@ function Footer({
       </div>
     </footer>
   );
-}
+});
 
 function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
   const { lang } = useLanguage();
@@ -753,7 +778,7 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
                     background: 'linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 50%, #ede9fe 100%)',
                     boxShadow: '0 50px 100px -20px rgba(15,42,68,0.35)',
                     border: '1px solid rgba(255,255,255,0.8)',
-                    aspectRatio: '4/5',
+                    aspectRatio: '3/4',
                   }}>
                   <img
                     src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-t0aIFTDc6pB1akFlYbJx4hrSfNncT0.png"
@@ -761,6 +786,9 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
                     className="hero-photo"
                     loading="eager"
                     fetchPriority="high"
+                    width="500"
+                    height="625"
+                    decoding="async"
                   />
                   <svg
                     viewBox="0 0 400 100"
@@ -1337,7 +1365,7 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
   );
 }
 
-function SupportChat({ lang }: { lang: Lang }) {
+const SupportChat = memo(function SupportChat({ lang }: { lang: Lang }) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [sent, setSent] = useState(false);
@@ -1361,6 +1389,13 @@ function SupportChat({ lang }: { lang: Lang }) {
           whatsapp: 'WhatsApp',
           facebook: 'Facebook',
         };
+  const handleClose = useCallback(() => setOpen(false), []);
+  const handleSend = useCallback(() => {
+    if (message.trim()) {
+      setSent(true);
+      setMessage('');
+    }
+  }, [message]);
   return (
     <div className="support-chat-wrap">
       {open && (
@@ -1369,7 +1404,7 @@ function SupportChat({ lang }: { lang: Lang }) {
             <div>
               <span className="support-online-dot" /> {copy.label}
             </div>
-            <button type="button" onClick={() => setOpen(false)} aria-label="Close chat">
+            <button type="button" onClick={handleClose} aria-label="Close chat">
               <X size={17} />
             </button>
           </div>
@@ -1394,7 +1429,7 @@ function SupportChat({ lang }: { lang: Lang }) {
                   type="button"
                   className="support-send"
                   disabled={!message.trim()}
-                  onClick={() => setSent(true)}>
+                  onClick={handleSend}>
                   {copy.send}
                   <Send size={15} />
                 </button>
@@ -1406,7 +1441,7 @@ function SupportChat({ lang }: { lang: Lang }) {
               <MessageCircle size={15} /> {copy.whatsapp}
               <ExternalLink size={12} />
             </a>
-            <a href="https://www.facebook.com/" target="_blank" rel="noreferrer">
+            <a href="https://www.facebook.com/dribrahimhossainkhan/" target="_blank" rel="noreferrer">
               <MessageCircle size={15} /> {copy.facebook}
               <ExternalLink size={12} />
             </a>
@@ -1424,9 +1459,9 @@ function SupportChat({ lang }: { lang: Lang }) {
       </button>
     </div>
   );
-}
+});
 
-function SimplePage({ title, onNavigate }: { title: string; onNavigate: (p: string) => void }) {
+const SimplePage = memo(function SimplePage({ title, onNavigate }: { title: string; onNavigate: (p: string) => void }) {
   const { lang } = useLanguage();
   const c = common[lang];
   if (title === 'About') return <AboutPage onNavigate={onNavigate} />;
@@ -1501,7 +1536,7 @@ function SimplePage({ title, onNavigate }: { title: string; onNavigate: (p: stri
       </div>
     </section>
   );
-}
+});
 
 export default function Page() {
   const [page, setPage] = useState('Home');
@@ -1542,21 +1577,15 @@ export default function Page() {
       <div className="utility-bar">
         <div className="container utility-inner">
           <a href="tel:+8801719395553">
-            <Phone size={13} /> +880 1719 395 553
+            <Phone size={13} /> +880 1719-939553
           </a>
           <div className="utility-socials">
             <span>{n.utility.follow}</span>
-            <a href="#facebook" aria-label="Facebook">
+            <a href={n.socials.facebook} target="_blank" rel="noreferrer" aria-label="Facebook">
               f
             </a>
-            <a href="#instagram" aria-label="Instagram">
+            <a href={n.socials.instagram} target="_blank" rel="noreferrer" aria-label="Instagram">
               ◎
-            </a>
-            <a href="#youtube" aria-label="YouTube">
-              ▶
-            </a>
-            <a href="#linkedin" aria-label="LinkedIn">
-              in
             </a>
           </div>
         </div>

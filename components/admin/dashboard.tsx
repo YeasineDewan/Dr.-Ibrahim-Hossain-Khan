@@ -1,4 +1,5 @@
 'use client';
+import { useMemo } from 'react';
 import {
   CalendarDays,
   Users,
@@ -38,11 +39,11 @@ export function DashboardView({
   copy: any;
   onNavigate: (s: string) => void;
 }) {
-  const todays = data.appointments
+  const todays = useMemo(() => data.appointments
     .filter(a => a.date === TODAY)
-    .sort((a, b) => a.time.localeCompare(b.time));
-  const overdue = data.followUps.filter(f => f.status === 'Overdue').length;
-  const unread = data.notifications.filter(n => !n.read).length;
+    .sort((a, b) => a.time.localeCompare(b.time)), [data.appointments]);
+  const overdue = useMemo(() => data.followUps.filter(f => f.status === 'Overdue').length, [data.followUps]);
+  const unread = useMemo(() => data.notifications.filter(n => !n.read).length, [data.notifications]);
 
   return (
     <>

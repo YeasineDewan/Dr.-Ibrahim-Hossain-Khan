@@ -82,7 +82,7 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
       </button>
       <div className={`lang-gate-card ${closing ? 'is-closing' : ''}`}>
         <div className="lang-gate-eyebrow">
-          <Sparkles size={11} /> <span>DR. IBRAHIM CLINIC</span> <Sparkles size={11} />
+           <Sparkles size={11} /> <span>DR.IBRAHIM HOSSAIN</span> <Sparkles size={11} />
         </div>
         <div className="lang-gate-flag" aria-hidden="true">
           <Languages size={32} />

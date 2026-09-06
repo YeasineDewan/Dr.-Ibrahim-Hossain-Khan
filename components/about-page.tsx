@@ -29,7 +29,7 @@ export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }
   return (
     <>
       <section
-        className="about-hero aurora-bg"
+        className="about-hero aurora-bg scroll-reveal is-visible"
         style={{ position: 'relative', overflow: 'hidden' }}>
         <div className="blob blob-1" style={{ width: 320, height: 320, top: -80, right: -60 }} />
         <div className="blob blob-3" style={{ width: 240, height: 240, bottom: -40, left: -40 }} />
@@ -85,7 +85,7 @@ export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }
 
       <SexualMedicineSection copy={s} onNavigate={onNavigate} />
 
-      <section className="section about-story">
+      <section className="section about-story reveal-section">
         <div className="container split-grid">
           <div className="appear-up">
             <span className="pill">{a.philosophyPill}</span>
@@ -109,7 +109,7 @@ export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }
         </div>
       </section>
 
-      <section className="section about-video">
+      <section className="section about-video reveal-section">
         <div className="container">
           <div className="section-heading">
             <div>
@@ -147,7 +147,7 @@ export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }
         </div>
       </section>
 
-      <section className="section about-details">
+      <section className="section about-details reveal-section">
         <div className="container details-grid">
           <div>
             <span className="pill">{a.experiencePill}</span>
@@ -176,7 +176,7 @@ export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }
         </div>
       </section>
 
-      <section className="section about-extra">
+      <section className="section about-extra reveal-section">
         <div className="container">
           <div className="section-heading">
             <div>
@@ -199,7 +199,7 @@ export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }
         </div>
       </section>
 
-      <section className="section faq-section">
+      <section className="section faq-section reveal-section">
         <div className="container narrow">
           <span className="pill">{a.faqPill}</span>
           <h2>

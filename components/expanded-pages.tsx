@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 import {
   ArrowRight,
   Check,
@@ -87,10 +87,73 @@ const testimonials = (lang: 'en' | 'bn') =>
         ],
       ];
 
+const TreatmentCard = memo(function TreatmentCard({
+  x,
+  i,
+  sIdx,
+  onNavigate,
+  viewService,
+}: {
+  x: { title: string; body: string; time: string; price: string };
+  i: number;
+  sIdx: number;
+  onNavigate: (p: string) => void;
+  viewService: string;
+}) {
+  const Illust = illusts[(sIdx * 4 + i) % illusts.length];
+  return (
+    <Tilt3D key={x.title} max={5} className="treatment-card-inner">
+      <div
+        className="treatment-card-visual"
+        style={{
+          background: `linear-gradient(135deg, ${illustColors[(sIdx * 4 + i) % illustColors.length]})`,
+        }}>
+        <Illust className="treatment-illust" />
+        <span className="treatment-visual-badge">0{i + 1}</span>
+      </div>
+      <div className="treatment-card-content">
+        <h3>{x.title}</h3>
+        <p>{x.body}</p>
+        <div className="treatment-card-meta">
+          <span>
+            <Clock3 size={14} /> {x.time}
+          </span>
+          <strong>{x.price}</strong>
+        </div>
+        <button
+          onClick={() => onNavigate('Appointment')}
+          className="text-link link-underline pill-arrow">
+          {viewService} <ArrowRight size={15} className="float-x" />
+        </button>
+      </div>
+    </Tilt3D>
+  );
+});
+
+const PromiseCard = memo(function PromiseCard({
+  p,
+  i,
+}: {
+  p: { strong: string; body: string };
+  i: number;
+}) {
+  return (
+    <div key={i} className="service-promise-card">
+      <span className="promise-num">0{i + 1}</span>
+      <div className="promise-content">
+        <strong>{p.strong}</strong>
+        <span>{p.body}</span>
+      </div>
+    </div>
+  );
+});
+
 export function ServicesPage({ onNavigate }: { onNavigate: (p: string) => void }) {
   const { lang } = useLanguage();
   const s = servicesCopy[lang];
-  const sections = [s.sections.skinHair, s.sections.infertility] as const;
+  const sections = useMemo(() => [s.sections.skinHair, s.sections.infertility] as const, [s.sections.skinHair, s.sections.infertility]);
+  const promiseList = useMemo(() => s.promiseList, [s.promiseList]);
+  const handleNavigate = useCallback((p: string) => onNavigate(p), [onNavigate]);
   return (
     <main
       className="page-section services-page"
@@ -110,14 +173,8 @@ export function ServicesPage({ onNavigate }: { onNavigate: (p: string) => void }
 
         <ScrollReveal>
           <div className="service-promise grid-cards" style={{ margin: '40px 0 32px' }}>
-            {s.promiseList.map((p: { strong: string; body: string }, i: number) => (
-              <div key={i} className="service-promise-card">
-                <span className="promise-num">0{i + 1}</span>
-                <div className="promise-content">
-                  <strong>{p.strong}</strong>
-                  <span>{p.body}</span>
-                </div>
-              </div>
+            {promiseList.map((p: { strong: string; body: string }, i: number) => (
+              <PromiseCard key={i} p={p} i={i} />
             ))}
           </div>
         </ScrollReveal>
@@ -133,38 +190,18 @@ export function ServicesPage({ onNavigate }: { onNavigate: (p: string) => void }
                 <p className="lead max-copy" style={{ marginTop: 8 }}>{section.lead}</p>
               </div>
             </ScrollReveal>
-            <div className="grid-cards service-section-grid">
-              {section.treatments.map((x: { title: string; body: string; time: string; price: string }, i: number) => {
-                const Illust = illusts[(sIdx * 4 + i) % illusts.length];
-                return (
-                  <Tilt3D key={x.title} max={5} className="treatment-card-inner">
-                    <div
-                      className="treatment-card-visual"
-                      style={{
-                        background: `linear-gradient(135deg, ${illustColors[(sIdx * 4 + i) % illustColors.length]})`,
-                      }}>
-                      <Illust className="treatment-illust" />
-                      <span className="treatment-visual-badge">0{i + 1}</span>
-                    </div>
-                    <div className="treatment-card-content">
-                      <h3>{x.title}</h3>
-                      <p>{x.body}</p>
-                      <div className="treatment-card-meta">
-                        <span>
-                          <Clock3 size={14} /> {x.time}
-                        </span>
-                        <strong>{x.price}</strong>
-                      </div>
-                      <button
-                        onClick={() => onNavigate('Appointment')}
-                        className="text-link link-underline pill-arrow">
-                        {s.viewService} <ArrowRight size={15} className="float-x" />
-                      </button>
-                    </div>
-                  </Tilt3D>
-                );
-              })}
-            </div>
+            <ScrollReveal className="grid-cards service-section-grid">
+              {section.treatments.map((x: { title: string; body: string; time: string; price: string }, i: number) => (
+                <TreatmentCard
+                  key={x.title}
+                  x={x}
+                  i={i}
+                  sIdx={sIdx}
+                  onNavigate={handleNavigate}
+                  viewService={s.viewService}
+                />
+              ))}
+            </ScrollReveal>
           </section>
         ))}
 

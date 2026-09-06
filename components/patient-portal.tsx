@@ -172,10 +172,11 @@ export function PatientPortal({ onExit }: { onExit: () => void }) {
           </button>
         </div>
       </aside>
+      {menu && <button className="patient-side-backdrop" type="button" aria-label={lang === 'bn' ? 'মেনু বন্ধ করুন' : 'Close menu'} onClick={() => setMenu(false)} />}
 
       <main className="patient-main">
         <header className="patient-top">
-          <button className="patient-menu press" onClick={() => setMenu(!menu)} aria-label="Menu">
+          <button className="patient-menu press" type="button" onClick={() => setMenu(!menu)} aria-label={lang === 'bn' ? 'মেনু' : 'Menu'} aria-expanded={menu}>
             {menu ? <X size={20} /> : <Menu size={20} />}
           </button>
           <div className="patient-search glow-focus">
@@ -888,7 +889,7 @@ function PatientView({ name, copy, data }: { name: string; copy: any; data: any 
                       const doc = new jsPDF();
                       doc.setFontSize(18);
                       doc.setTextColor(23, 75, 120);
-                      doc.text(copy.brandFull || 'Dr. Ibrahim Clinic', 20, 22);
+                      doc.text(copy.brandFull || 'DR.IBRAHIM HOSSAIN', 20, 22);
                       doc.setFontSize(10);
                       doc.setTextColor(95, 117, 128);
                       doc.text(
@@ -1001,7 +1002,7 @@ function PatientView({ name, copy, data }: { name: string; copy: any; data: any 
             <div className="adm-detail-grid">
               <div>
                 <FileText size={14} />
-                <span>{bn ? 'সর্বশেষ বিল' : 'Latest invoice'}</span>
+                <span>{bn ? 'সর্বশেষ ���িল' : 'Latest invoice'}</span>
                 <strong>INV-20481</strong>
               </div>
               <div>

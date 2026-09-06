@@ -113,7 +113,7 @@ export function ServiceDetailPage({
   const intro = service.intro[lang];
   const points = service.points.map(p => p[lang]);
   return (
-    <main className="service-detail-page">
+    <main className="service-detail-page" aria-labelledby="service-detail-title">
       <section
         className="service-detail-hero aurora-bg"
         style={{ position: 'relative', overflow: 'hidden' }}>
@@ -121,21 +121,22 @@ export function ServiceDetailPage({
         <div className="blob blob-5" style={{ width: 220, height: 220, bottom: -50, left: -30 }} />
         <div className="container service-detail-grid">
           <div className="service-detail-copy appear-up">
-            <button className="back-link" onClick={() => onNavigate('Services')}>
+            <button type="button" className="back-link" onClick={() => onNavigate('Services')} aria-label={c.back}>
               <ArrowLeft size={15} /> {c.back}
             </button>
             <span className="pill pill-teal float-soft">{label}</span>
-            <h1 className="gradient-text">
+            <h1 id="service-detail-title" className="gradient-text">
               {title} {lang === 'bn' ? 'দীর্ঘস্থায়ী সুস্থতার জন্য' : 'for lasting wellbeing.'}
             </h1>
             <p className="lead">{intro}</p>
             <div className="detail-actions">
               <button
+                type="button"
                 className="btn btn-primary btn-pro shadow-glow-teal"
                 onClick={() => onNavigate('Appointment')}>
                 {c.bookConsult} <ArrowRight size={15} />
               </button>
-              <button className="btn btn-outline btn-pro" onClick={() => onNavigate('Contact')}>
+              <button type="button" className="btn btn-outline btn-pro" onClick={() => onNavigate('Contact')}>
                 {c.askQuestion}
               </button>
             </div>
