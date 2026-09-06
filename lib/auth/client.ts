@@ -1,8 +1,26 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import type { UserProfile, AuthTokens } from './types';
+'use client';
+
+import React, { useState, useEffect, useCallback } from 'react';
+import type { UserProfile, AuthTokens } from '@/lib/auth/types';
 
 const AUTH_USER_KEY = 'auth_user';
 const AUTH_TOKENS_KEY = 'auth_tokens';
+
+async function fetchCsrfToken(): Promise<string | null> {
+  try {
+    const response = await fetch('/api/auth/[...route]', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'csrf' }),
+      credentials: 'include',
+    });
+    if (!response.ok) return null;
+    const data = await response.json();
+    return data.csrfToken || null;
+  } catch {
+    return null;
+  }
+}
 
 export function useAuth() {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -25,10 +43,12 @@ export function useAuth() {
   }, []);
 
   const login = useCallback(async (email: string, password: string, rememberMe = false) => {
+    const csrfToken = await fetchCsrfToken();
     const response = await fetch('/api/auth/[...route]', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'login', email, password, rememberMe }),
+      credentials: 'include',
+      body: JSON.stringify({ action: 'login', email, password, rememberMe, csrfToken }),
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error);
@@ -61,13 +81,14 @@ export function useAuth() {
   const refreshTokens = useCallback(async () => {
     if (!tokens?.refreshToken) return false;
     try {
+      const csrfToken = await fetchCsrfToken();
       const response = await fetch('/api/auth/[...route]', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'x-refresh-token': tokens.refreshToken,
         },
-        body: JSON.stringify({ action: 'refresh' }),
+        body: JSON.stringify({ action: 'refresh', csrfToken }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);

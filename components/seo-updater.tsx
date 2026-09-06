@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { seoData, serviceDetailSeo, type PageKey, type SeoData } from '../lib/seo-data';
+import { seoData, serviceDetailSeo, chamberDetailSeo, type PageKey, type SeoData } from '../lib/seo-data';
 
 export type { PageKey };
 
@@ -150,14 +150,18 @@ function getBaseStructuredData(page: PageKey, seo: SeoData) {
 export function SeoUpdater({
   page,
   serviceSlug,
+  chamberSlug,
 }: {
   page: PageKey;
   serviceSlug?: string;
+  chamberSlug?: string;
 }) {
   const seo: SeoData =
     page === 'ServiceDetail' && serviceSlug && serviceDetailSeo[serviceSlug]
       ? serviceDetailSeo[serviceSlug]
-      : seoData[page] || seoData.Home;
+      : page === 'ChamberDetail' && chamberSlug && chamberDetailSeo[chamberSlug]
+        ? chamberDetailSeo[chamberSlug]
+        : seoData[page] || seoData.Home;
 
   useEffect(function () {
     document.title = seo.title;

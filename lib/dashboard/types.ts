@@ -19,11 +19,11 @@ export interface WidgetDefinition {
   exportable?: boolean;
 }
 
-export interface WidgetProps {
-  data: any;
+export interface WidgetProps<TData = Record<string, unknown>> {
+  data: TData;
   config: WidgetConfig;
-  onAction?: (action: string, payload: any) => void;
-  onDrillDown?: (filter: Record<string, any>) => void;
+  onAction?: (action: string, payload: unknown) => void;
+  onDrillDown?: (filter: Record<string, unknown>) => void;
   onRefresh?: () => void;
   onExport?: (format: 'csv' | 'pdf' | 'png') => void;
   permissionDenied?: boolean;
@@ -32,7 +32,7 @@ export interface WidgetProps {
 export interface WidgetConfig {
   refreshInterval: number;
   dateRange: { from: string; to: string };
-  filters: Record<string, any>;
+  filters: Record<string, unknown>;
   density: 'compact' | 'comfortable' | 'spacious';
   pinned: boolean;
 }
@@ -84,7 +84,7 @@ export interface FilterConfig {
 export interface SavedView {
   id: string;
   name: string;
-  filters: Record<string, any>;
+  filters: Record<string, unknown>;
   sorts: SortConfig[];
   createdAt: string;
 }

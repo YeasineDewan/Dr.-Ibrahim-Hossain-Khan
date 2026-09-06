@@ -233,73 +233,83 @@ export function ChambersPage({ onNavigate }: { onNavigate: (p: string) => void }
           <p className="lead max-copy">{ch.lead}</p>
         </ScrollReveal>
         <div className="chamber-grid grid-cards">
-          {ch.chambers.map((c, i) => (
-            <Tilt3D
-              key={c.name}
-              max={5}
-              className={`chamber-card chamber-${i} premium-card shine-card`}>
-              <div className="chamber-top">
-                <span
-                  className="num-badge"
-                  style={{ background: 'linear-gradient(135deg, #14b8a6, #6366f1)' }}>
-                  0{i + 1}
-                </span>
-                <span
-                  className="icon-halo"
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 10,
-                    background:
-                      'linear-gradient(135deg, rgba(20,184,166,0.15), rgba(99,102,241,0.1))',
-                    color: '#0d6e63',
-                    display: 'grid',
-                    placeItems: 'center',
-                  }}>
-                  <MapPin size={18} />
-                </span>
-              </div>
-              <h2>{c.name}</h2>
-              <strong>{c.place}</strong>
-              <p>{c.address}</p>
-              <div className="chamber-hours">
-                <Clock size={15} className="pulse" style={{ color: '#14b8a6' }} />
-                <span>
-                  {ch.visitingHours}
-                  <strong>{c.hours}</strong>
-                </span>
-              </div>
-              <div
-                className="chamber-map"
-                style={{
-                  borderRadius: 12,
-                  background: 'linear-gradient(135deg, #14b8a6, #6366f1)',
-                  color: '#fff',
-                  padding: 24,
-                  textAlign: 'center',
-                }}>
-                <div className="map-grid" />
-                <MapPin size={28} className="float-soft" />
-                <span style={{ display: 'block', marginTop: 6 }}>{ch.mapLabel}</span>
-              </div>
-              <div className="chamber-actions">
-                <a
-                  className="btn btn-outline btn-pro"
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}`}
-                  target="_blank"
-                  rel="noreferrer">
-                  {ch.directions}
-                </a>
-                <Magnetic>
-                  <button
-                    className="btn btn-primary btn-pro shadow-glow-teal btn-tilt"
-                    onClick={() => onNavigate('Appointment')}>
-                    {ch.bookHere}
-                  </button>
-                </Magnetic>
-              </div>
-            </Tilt3D>
-          ))}
+          {ch.chambers.map((c, i) => {
+            const slug = ['dhanmondi', 'banglamotor', 'uttara'][i];
+            return (
+              <Tilt3D
+                key={c.name}
+                max={5}
+                className={`chamber-card chamber-${i} premium-card shine-card`}>
+                <div
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => onNavigate(`Chamber:${slug}`)}>
+                  <div className="chamber-top">
+                    <span
+                      className="num-badge"
+                      style={{ background: 'linear-gradient(135deg, #14b8a6, #6366f1)' }}>
+                      0{i + 1}
+                    </span>
+                    <span
+                      className="icon-halo"
+                      style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 10,
+                        background:
+                          'linear-gradient(135deg, rgba(20,184,166,0.15), rgba(99,102,241,0.1))',
+                        color: '#0d6e63',
+                        display: 'grid',
+                        placeItems: 'center',
+                      }}>
+                      <MapPin size={18} />
+                    </span>
+                  </div>
+                  <h2>{c.name}</h2>
+                  <strong>{c.place}</strong>
+                  <p>{c.address}</p>
+                  <div className="chamber-hours">
+                    <Clock size={15} className="pulse" style={{ color: '#14b8a6' }} />
+                    <span>
+                      {ch.visitingHours}
+                      <strong>{c.hours}</strong>
+                    </span>
+                  </div>
+                  <div
+                    className="chamber-map"
+                    style={{
+                      borderRadius: 12,
+                      background: 'linear-gradient(135deg, #14b8a6, #6366f1)',
+                      color: '#fff',
+                      padding: 24,
+                      textAlign: 'center',
+                    }}>
+                    <div className="map-grid" />
+                    <MapPin size={28} className="float-soft" />
+                    <span style={{ display: 'block', marginTop: 6 }}>{ch.mapLabel}</span>
+                  </div>
+                  <div className="chamber-actions">
+                    <a
+                      className="btn btn-outline btn-pro"
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}`}
+                      target="_blank"
+                      rel="noreferrer">
+                      {ch.directions}
+                    </a>
+                    <Magnetic>
+                      <button
+                        className="btn btn-primary btn-pro shadow-glow-teal btn-tilt"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onNavigate('Appointment');
+                        }}>
+                        {ch.bookHere}
+                      </button>
+                    </Magnetic>
+                  </div>
+                </div>
+              </Tilt3D>
+            );
+          })}
         </div>
 
         <ScrollReveal className="section">

@@ -28,7 +28,9 @@ export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }
   const [playing, setPlaying] = useState(false);
   return (
     <>
-      <section className="about-hero" style={{ position: 'relative' }}>
+      <section className="about-hero">
+        <div className="about-hero-bg" />
+        <div className="about-hero-accent" />
         <div className="container about-hero-grid">
           <div className="appear-up">
             <span className="pill">
@@ -53,12 +55,27 @@ export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }
             </button>
           </div>
           <div className="about-portrait">
-            <img
-              src="/about_image.png"
-              alt="Dr. Ibrahim, family physician"
-              style={{ borderRadius: 18, width: '100%', height: 'auto', display: 'block' }}
-            />
-            <span className="portrait-caption" style={{ border: 0 }}>
+            <div className="portrait-frame">
+              <div className="portrait-glow" />
+              <img
+                src="/about_image.png"
+                alt="Dr. Ibrahim, family physician"
+                loading="eager"
+              />
+              <div className="portrait-corner-badge">
+                <Stethoscope size={16} />
+                <span>GMC Reg. No. 2822</span>
+              </div>
+              <div className="portrait-floating-badge badge-1">
+                <ShieldCheck size={14} />
+                <span>B.U.M.S.</span>
+              </div>
+              <div className="portrait-floating-badge badge-2">
+                <Sparkles size={14} />
+                <span>15+ yrs</span>
+              </div>
+            </div>
+            <span className="portrait-caption">
               {b.name}
               <br />
               <small>{b.role}</small>
@@ -108,8 +125,8 @@ export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }
           </div>
           <div className="video-card" onClick={() => setPlaying(!playing)}>
             <img
-              src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1600&q=85"
-              alt="Dr. Ibrahim speaking in the clinic"
+              src="/about_image.png"
+              alt="Dr. Ibrahim — speaking with patients in clinic"
             />
             <div className="video-shade" />
             <button

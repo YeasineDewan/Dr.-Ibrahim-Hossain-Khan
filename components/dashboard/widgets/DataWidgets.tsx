@@ -3,7 +3,8 @@
 import React, { useState, useMemo, memo } from 'react';
 import type { WidgetProps } from '@/lib/dashboard/types';
 
-export const DataTableWidget = memo(function DataTableWidget({ data, onAction, config }: WidgetProps) {
+export const DataTableWidget = memo(function DataTableWidget(props: WidgetProps<Record<string, unknown>>) {
+  const { data, onAction, config } = props as { data: Record<string, any>; onAction?: (action: string, payload: unknown) => void; config: any };
   const columns = data.columns ?? [];
   const rows = data.rows ?? [];
   const [sortKey, setSortKey] = useState<string | null>(null);
@@ -116,7 +117,8 @@ export const DataTableWidget = memo(function DataTableWidget({ data, onAction, c
   );
 });
 
-export const PillListWidget = memo(function PillListWidget({ data }: WidgetProps) {
+export const PillListWidget = memo(function PillListWidget(props: WidgetProps<Record<string, unknown>>) {
+  const { data } = props as { data: Record<string, any> };
   const items = data.items ?? [];
   const max = data.max ?? 10;
   const tone = data.tone ?? 'teal';

@@ -3,7 +3,8 @@
 import React, { useMemo, memo } from 'react';
 import type { WidgetProps } from '@/lib/dashboard/types';
 
-export const KPICardWidget = memo(function KPICardWidget({ data, config }: WidgetProps) {
+export const KPICardWidget = memo(function KPICardWidget(props: WidgetProps<Record<string, unknown>>) {
+  const { data, config } = props as { data: Record<string, any>; config: any };
   const value = data.value ?? 0;
   const delta = data.delta ?? 0;
   const label = data.label ?? 'KPI';
@@ -56,7 +57,8 @@ export const KPICardWidget = memo(function KPICardWidget({ data, config }: Widge
   );
 });
 
-export const SparklineWidget = memo(function SparklineWidget({ data }: WidgetProps) {
+export const SparklineWidget = memo(function SparklineWidget(props: WidgetProps<Record<string, unknown>>) {
+  const { data } = props as { data: Record<string, any> };
   const values = data.values ?? [];
   const color = data.color ?? '#0d9488';
 
@@ -76,7 +78,8 @@ export const SparklineWidget = memo(function SparklineWidget({ data }: WidgetPro
   );
 });
 
-export const ActivityFeedWidget = memo(function ActivityFeedWidget({ data }: WidgetProps) {
+export const ActivityFeedWidget = memo(function ActivityFeedWidget(props: WidgetProps<Record<string, unknown>>) {
+  const { data } = props as { data: Record<string, any> };
   const items = data.items ?? [];
 
   return (

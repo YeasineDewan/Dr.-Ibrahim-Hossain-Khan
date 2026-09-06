@@ -37,6 +37,7 @@ import {
 } from 'lucide-react';
 import { AboutPage } from '../components/about-page';
 import { ServiceDetailPage, serviceDetails } from '../components/service-detail-page';
+import { ChamberDetailPage } from '../components/chamber-detail-page';
 import { common, navCopy, t as tT, useLanguage, type Lang } from '../lib/translations';
 import { SeoUpdater, type PageKey } from '../components/seo-updater';
 import { AuthProvider, useAuth } from '../components/auth/AuthProvider';
@@ -1564,6 +1565,8 @@ export default function Page() {
       <ContactPage onNavigate={setPage} />
     ) : page === 'Chambers' ? (
       <ChambersPage onNavigate={setPage} />
+    ) : page.startsWith('Chamber:') ? (
+      <ChamberDetailPage slug={page.slice(8)} onNavigate={setPage} />
     ) : page === 'Appointment' ? (
       <AppointmentFlow onNavigate={setPage} />
     ) : page === 'Checkout' ? (
@@ -1590,9 +1593,11 @@ export default function Page() {
             return page as PageKey;
           }
           if (page.startsWith('Service:')) return 'ServiceDetail';
+          if (page.startsWith('Chamber:')) return 'ChamberDetail';
           return 'Home';
         })()}
         serviceSlug={page.startsWith('Service:') ? page.slice(8) : undefined}
+        chamberSlug={page.startsWith('Chamber:') ? page.slice(8) : undefined}
       />
       <MotionShell />
       <div className="utility-bar">

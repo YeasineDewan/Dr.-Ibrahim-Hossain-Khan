@@ -3,7 +3,8 @@
 import React, { memo } from 'react';
 import type { WidgetProps } from '@/lib/dashboard/types';
 
-export const NotificationsWidget = memo(function NotificationsWidget({ data }: WidgetProps) {
+export const NotificationsWidget = memo(function NotificationsWidget(props: WidgetProps<Record<string, unknown>>) {
+  const { data } = props as { data: Record<string, any> };
   const items = data.items ?? [];
   const max = data.max ?? 8;
 

@@ -8,7 +8,8 @@ export type PageKey =
   | 'Appointment'
   | 'Checkout'
   | 'Success'
-  | 'ServiceDetail';
+  | 'ServiceDetail'
+  | 'ChamberDetail';
 
 export interface SeoData {
   title: string;
@@ -246,6 +247,23 @@ export const seoData: Record<PageKey, SeoData> = {
     canonical: 'https://dribrahimhossain.com/services',
     ogImage: '/logo-256.png',
   },
+  ChamberDetail: {
+    title: 'Chamber Details | Dr. Ibrahim Hossain Khan',
+    description:
+      'Visit our chambers in Dhanmondi, Banglamotor, and Uttara. Find location details, hours, and contact information for each clinic.',
+    keywords: [
+      'chamber Dhaka',
+      'clinic location Bangladesh',
+      'Dhanmondi clinic',
+      'Banglamotor clinic',
+      'Uttara clinic',
+      'doctor chamber',
+      'clinic hours',
+      'clinic contact',
+    ],
+    canonical: 'https://dribrahimhossain.com/chambers',
+    ogImage: '/logo-256.png',
+  },
 };
 
 export const serviceDetailSeo: Record<string, SeoData> = {
@@ -424,6 +442,72 @@ export const serviceDetailSeo: Record<string, SeoData> = {
       'screening program Dhaka',
     ],
     canonical: 'https://dribrahimhossain.com/services/preventive-wellness',
+    ogImage: '/logo-256.png',
+  },
+};
+
+export const chamberDetailSeo: Record<string, SeoData> = {
+  dhanmondi: {
+    title: 'Dhanmondi Chamber | Dr. Ibrahim Hossain Khan Clinic',
+    description:
+      'Visit our Dhanmondi dermatology clinic in Dhaka. Expert skin care, PRP therapy, psoriasis treatment and integrative medicine at House 45, Road 22, Dhanmondi. Open Mon-Fri 8:00 AM - 5:00 PM.',
+    keywords: [
+      'dermatologist Dhanmondi',
+      'skin clinic Dhanmondi',
+      'doctor Dhanmondi Dhaka',
+      'PRP therapy Dhanmondi',
+      'psoriasis treatment Dhanmondi',
+      'hair loss treatment Dhanmondi',
+      'skin specialist Dhanmondi',
+      'medical clinic Dhanmondi',
+      'Dhanmondi healthcare',
+      'American Wellness Center Dhanmondi',
+      'dermatologist near Dhanmondi',
+      'skin doctor Dhaka',
+    ],
+    canonical: 'https://dribrahimhossain.com/chambers/dhanmondi',
+    ogImage: '/logo-256.png',
+  },
+  banglamotor: {
+    title: 'Banglamotor Chamber | Dr. Ibrahim Hossain Khan Clinic',
+    description:
+      'Our Banglamotor chamber in Dhaka offers comprehensive dermatology and integrative medicine services. Located at Rupayan Trade Center, Kazi Nazrul Islam Ave. Evening hours available Mon-Fri.',
+    keywords: [
+      'dermatologist Banglamotor',
+      'skin clinic Banglamotor',
+      'doctor Banglamotor Dhaka',
+      'PRP therapy Banglamotor',
+      'psoriasis treatment Banglamotor',
+      'skin specialist Banglamotor',
+      'medical clinic Banglamotor',
+      'Banglamotor healthcare',
+      'Medigo Health Care Banglamotor',
+      'evening clinic Dhaka',
+      'dermatologist near Banglamotor',
+      'skin doctor Dhaka',
+    ],
+    canonical: 'https://dribrahimhossain.com/chambers/banglamotor',
+    ogImage: '/logo-256.png',
+  },
+  uttara: {
+    title: 'Uttara Chamber | Dr. Ibrahim Hossain Khan Clinic',
+    description:
+      'Visit our Uttara dermatology clinic in Dhaka for expert skin care, PRP therapy and integrative medicine. Located at Ibn Sina Diagnostic Centre, Sector 7, Uttara. Convenient morning hours available.',
+    keywords: [
+      'dermatologist Uttara',
+      'skin clinic Uttara Dhaka',
+      'doctor Uttara Dhaka',
+      'PRP therapy Uttara',
+      'psoriasis treatment Uttara',
+      'hair loss treatment Uttara',
+      'skin specialist Uttara',
+      'medical clinic Uttara',
+      'Uttara healthcare Dhaka',
+      'Ibn Sina Diagnostic Centre Uttara',
+      'dermatologist near Uttara',
+      'skin doctor Dhaka',
+    ],
+    canonical: 'https://dribrahimhossain.com/chambers/uttara',
     ogImage: '/logo-256.png',
   },
 };

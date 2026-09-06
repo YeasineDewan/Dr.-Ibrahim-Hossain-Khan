@@ -36,8 +36,8 @@ import {
 import { adminCopy, useLanguage, t as tT } from '../lib/translations';
 import { useAdminData } from '../lib/admin-data';
 import { TODAY } from '../lib/utils';
-import { useAuth, AuthProvider } from './admin/permission-gate';
-import { type PermissionCheck, createDemoUser, isSuperUser, type Resource, NAV_RESOURCE_MAP } from '../lib/auth/rbac';
+import { useAuth } from '../components/auth/AuthProvider';
+import { type PermissionCheck, createDemoUser, isSuperUser, type Resource, NAV_RESOURCE_MAP, getUserPermissions } from '../lib/auth/rbac';
 import { Avatar, Pill, useToast } from './admin-ui';
 import { DashboardView } from './admin/dashboard';
 import { AnalyticsView, ActivityLogView } from './admin/analytics';
@@ -71,9 +71,9 @@ const iconFor = (x: string) =>
 export function AdminWorkspace({ onExit }: { onExit: () => void }) {
   const { lang } = useLanguage();
   const a = adminCopy[lang];
-  const { user, permissions, logout } = useAuth();
+  const { user, logout } = useAuth();
   const isSuper = user ? isSuperUser(user) : false;
-  const navPermissions = permissions;
+  const navPermissions = user ? getUserPermissions(user) : [];
   const canAccessItem = (item: string): boolean => {
     const nav = NAV_RESOURCE_MAP[item];
     if (!nav) return true;
@@ -271,8 +271,6 @@ export function ProtectedAdminWorkspace({ onExit }: { onExit: () => void }) {
     []
   );
   return (
-    <AuthProvider initialUser={demoUser}>
-      <AdminWorkspace onExit={onExit} />
-    </AuthProvider>
+    <AdminWorkspace onExit={onExit} />
   );
 }
