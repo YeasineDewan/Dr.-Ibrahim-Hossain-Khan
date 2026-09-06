@@ -115,7 +115,7 @@ import {
 } from '../components/illust-svg';
 
 // Smart navigation button: prefetches the target route chunk on hover/focus/touch
-function NavBtn({
+const NavBtn = memo(function NavBtn({
   to,
   onNavigate,
   className = '',
@@ -130,19 +130,21 @@ function NavBtn({
   style?: any;
   [k: string]: any;
 }) {
+  const handleClick = useCallback(() => onNavigate(to), [onNavigate, to]);
+  const handlePrefetch = useCallback(() => prefetchRoute(to), [to]);
   return (
     <button
-      onClick={() => onNavigate(to)}
-      onMouseEnter={() => prefetchRoute(to)}
-      onFocus={() => prefetchRoute(to)}
-      onTouchStart={() => prefetchRoute(to)}
+      onClick={handleClick}
+      onMouseEnter={handlePrefetch}
+      onFocus={handlePrefetch}
+      onTouchStart={handlePrefetch}
       className={className}
       style={style}
       {...rest}>
       {children}
     </button>
   );
-}
+});
 
 function RouteSkeleton() {
   return (
