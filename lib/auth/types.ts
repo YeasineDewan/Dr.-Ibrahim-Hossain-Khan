@@ -16,6 +16,7 @@ export interface UserProfile {
   lastLogin?: string;
   failedAttempts: number;
   lockedUntil?: string;
+  passwordHash?: string;
 }
 
 export interface AuthTokens {

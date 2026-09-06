@@ -1,59 +1,64 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAccessToken, verifyRefreshToken, generateTokens } from '../../../../lib/auth/tokens';
-import { hashPassword, verifyPassword, validateEmail, generateBackupCodes, sanitizeUser, validatePasswordStrength } from '../../../../lib/auth/password';
+import { hashPassword, verifyPassword, validateEmail, sanitizeUser, validatePasswordStrength } from '../../../../lib/auth/password';
+import { generateBackupCodes } from '../../../../lib/auth/mfa';
 import { ROLES, ROLE_BY_LEGACY_NAME, getUserPermissions } from '../../../../lib/auth/rbac';
 import type { UserProfile, LoginCredentials, MFASetupResponse } from '../../../../lib/auth/types';
 import { TOTP, generateSecret, generateURI } from 'otplib';
 import QRCode from 'qrcode';
 
-const USERS_KEY = 'auth_users';
-const SESSIONS_KEY = 'auth_sessions';
-const BLACKLIST_KEY = 'auth_blacklist';
+declare global {
+  var authUsers: UserProfile[] | undefined;
+  var authSessions: any[] | undefined;
+  var authBlacklist: any[] | undefined;
+}
 
 function getUsers(): UserProfile[] {
-  if (typeof window === 'undefined') return [];
-  const raw = sessionStorage.getItem(USERS_KEY);
-  return raw ? JSON.parse(raw) : [];
+  if (typeof globalThis.authUsers === 'undefined') {
+    globalThis.authUsers = [];
+  }
+  return globalThis.authUsers;
 }
 
 function saveUsers(users: UserProfile[]) {
-  if (typeof window === 'undefined') return;
-  sessionStorage.setItem(USERS_KEY, JSON.stringify(users));
+  globalThis.authUsers = users;
 }
 
 function getSessions() {
-  if (typeof window === 'undefined') return [];
-  const raw = sessionStorage.getItem(SESSIONS_KEY);
-  return raw ? JSON.parse(raw) : [];
+  if (typeof globalThis.authSessions === 'undefined') {
+    globalThis.authSessions = [];
+  }
+  return globalThis.authSessions;
 }
 
 function saveSessions(sessions: any[]) {
-  if (typeof window === 'undefined') return;
-  sessionStorage.setItem(SESSIONS_KEY, JSON.stringify(sessions));
+  globalThis.authSessions = sessions;
 }
 
 function getBlacklist() {
-  if (typeof window === 'undefined') return [];
-  const raw = sessionStorage.getItem(BLACKLIST_KEY);
-  return raw ? JSON.parse(raw) : [];
+  if (typeof globalThis.authBlacklist === 'undefined') {
+    globalThis.authBlacklist = [];
+  }
+  return globalThis.authBlacklist;
 }
 
 function saveBlacklist(blacklist: any[]) {
-  if (typeof window === 'undefined') return;
-  sessionStorage.setItem(BLACKLIST_KEY, JSON.stringify(blacklist));
+  globalThis.authBlacklist = blacklist;
 }
 
-function seedDemoUser() {
+async function seedDemoUser() {
   const users = getUsers();
   if (users.length === 0) {
+    const passwordHash = await hashPassword('admin123');
     const demoUser: UserProfile = {
       id: 'user-demo-001',
       email: 'admin@clinic.demo',
       name: 'Dr. Ibrahim',
-      roles: ['Admin'],
-      permissions: [],
+      roles: ['admin'],
+      permissions: getUserPermissions(['admin']),
       mfaEnabled: false,
       status: 'active',
+      passwordHash,
       failedAttempts: 0,
     };
     saveUsers([demoUser]);
@@ -83,7 +88,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Account is locked. Contact administrator.' }, { status: 423 });
       }
 
-      const valid = await verifyPassword(password, user.id + user.email);
+      const valid = await verifyPassword(password, user.passwordHash || '');
       if (!valid) {
         user.failedAttempts += 1;
         if (user.failedAttempts >= 5) {

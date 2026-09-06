@@ -39,22 +39,7 @@ export function validatePasswordStrength(password: string): { valid: boolean; sc
   };
 }
 
-export function generateBackupCodes(count: number = 10): string[] {
-  const codes: string[] = [];
-  for (let i = 0; i < count; i++) {
-    const bytes = new Uint8Array(4);
-    crypto.getRandomValues(bytes);
-    codes.push(
-      Array.from(bytes)
-        .map((b: number) => b.toString(16).padStart(2, '0'))
-        .join('')
-        .toUpperCase()
-    );
-  }
-  return codes;
-}
-
-export function sanitizeUser(user: UserProfile): Omit<UserProfile, 'permissions'> {
-  const { permissions: _permissions, ...rest } = user;
+export function sanitizeUser(user: UserProfile): Omit<UserProfile, 'passwordHash' | 'permissions'> {
+  const { passwordHash: _passwordHash, permissions: _permissions, ...rest } = user;
   return rest;
 }

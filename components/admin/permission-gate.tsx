@@ -132,7 +132,33 @@ export function AuthProvider({
   };
 
   const refreshSession = async () => {
-    return false;
+    try {
+      const response = await fetch('/api/auth/[...route]', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'refresh' }),
+        credentials: 'include',
+      });
+      if (!response.ok) return false;
+      const data = await response.json();
+      if (data.user) {
+        const userProfile: UserProfile = {
+          id: data.user.id,
+          email: data.user.email,
+          name: data.user.name,
+          roles: data.user.roles || [],
+          permissions: getUserPermissions(data.user),
+          mfaEnabled: data.user.mfaEnabled || false,
+          status: 'active',
+          failedAttempts: 0,
+        };
+        setUser(userProfile);
+        setPermissions(getUserPermissions(userProfile));
+      }
+      return true;
+    } catch {
+      return false;
+    }
   };
 
   return (

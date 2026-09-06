@@ -28,25 +28,17 @@ export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }
   const [playing, setPlaying] = useState(false);
   return (
     <>
-      <section
-        className="about-hero aurora-bg reveal-section"
-        style={{ position: 'relative', overflow: 'hidden' }}>
-        <div className="blob blob-1" style={{ width: 320, height: 320, top: -80, right: -60 }} />
-        <div className="blob blob-3" style={{ width: 240, height: 240, bottom: -40, left: -40 }} />
-        <ScrollReveal className="container about-hero-grid" variant="up">
-
+      <section className="about-hero" style={{ position: 'relative' }}>
+        <div className="container about-hero-grid">
           <div className="appear-up">
             <span className="pill">
-              <span className="heartbeat" style={{ display: 'inline-block' }}>
-                ●
-              </span>{' '}
               {a.heroPill}
             </span>
             <h1 className="gradient-text">
               {a.heroTitle1} <em>{a.heroTitleEm}</em>
             </h1>
             <p className="lead">{a.heroLead}</p>
-            <div className="about-credentials reveal-stagger is-visible">
+            <div className="about-credentials">
               {a.credentials.map((c, i) => (
                 <div key={i} className="lift">
                   <strong className="counter">{c.strong}</strong>
@@ -60,26 +52,19 @@ export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }
               {a.bookConsult} <ArrowRight size={16} />
             </button>
           </div>
-          <div className="about-portrait perspective" style={{ perspective: 1200 }}>
-            <div className="tilt-3d float-3d" style={{ borderRadius: 18, overflow: 'hidden' }}>
-              <img
-                src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=900&q=85"
-                alt="Dr. Ibrahim, family physician"
-                className="ken-burns"
-              />
-            </div>
-            <span className="portrait-caption glass" style={{ border: 0 }}>
+          <div className="about-portrait">
+            <img
+              src="/about_image.png"
+              alt="Dr. Ibrahim, family physician"
+              style={{ borderRadius: 18, width: '100%', height: 'auto', display: 'block' }}
+            />
+            <span className="portrait-caption" style={{ border: 0 }}>
               {b.name}
               <br />
               <small>{b.role}</small>
             </span>
-            <div
-              className="orbit"
-              style={{ width: 220, height: 220, top: -40, right: -40, position: 'absolute' }}>
-              <span className="orbit-dot" />
-            </div>
           </div>
-        </ScrollReveal>
+        </div>
       </section>
 
       <ScrollReveal variant="fade"><DoctorBioSection bio={b} onNavigate={onNavigate} /></ScrollReveal>

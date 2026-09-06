@@ -62,14 +62,16 @@ function getBaseStructuredData(page: PageKey, seo: SeoData) {
     name: 'DR.IBRAHIM HOSSAIN Clinic',
     description: seo.description,
     url: BASE_URL,
-    telephone: '+233302904420',
+    telephone: '+8801719395553',
     email: 'hello@dribrahim.clinic',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: '12 Independence Avenue',
-      addressLocality: 'Accra',
-      addressCountry: 'GH',
-    },
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'House 45, Road 22, Dhanmondi',
+        addressLocality: 'Dhaka',
+        addressRegion: 'Dhaka Division',
+        postalCode: '1209',
+        addressCountry: 'BD',
+      },
     openingHoursSpecification: {
       '@type': 'OpeningHoursSpecification',
       dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
@@ -87,8 +89,17 @@ function getBaseStructuredData(page: PageKey, seo: SeoData) {
       name: 'Dr. Ibrahim Hossain',
       credential: 'M.Sc · Skin & VD Integrative Medicine Consultant',
       specialty: 'Dermatology and Integrative Medicine',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'House 45, Road 22, Dhanmondi',
+        addressLocality: 'Dhaka',
+        addressRegion: 'Dhaka Division',
+        postalCode: '1209',
+        addressCountry: 'BD',
+      },
+      telephone: '+8801719395553',
     },
-    priceRange: '$$',
+    priceRange: '৳৳',
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: '4.9',
@@ -96,10 +107,16 @@ function getBaseStructuredData(page: PageKey, seo: SeoData) {
       bestRating: '5',
       worstRating: '1',
     },
-    areaServed: {
-      '@type': 'City',
-      name: 'Accra',
-    },
+    areaServed: [
+      {
+        '@type': 'City',
+        name: 'Dhaka',
+      },
+      {
+        '@type': 'City',
+        name: 'Dhanmondi',
+      },
+    ],
   };
 
   const breadcrumbData = {

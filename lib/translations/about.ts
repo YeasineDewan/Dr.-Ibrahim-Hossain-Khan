@@ -39,9 +39,9 @@ export const aboutCopy = {
     experienceTitle1: 'Rooted in',
     experienceTitleEm: 'evidence.',
     timeline: [
-      { strong: '2019 — Present', span: 'Founder & Lead Physician · DR.IBRAHIM HOSSAIN' },
-      { strong: '2015 — 2019', span: 'Senior Family Physician · Accra Medical Centre' },
-      { strong: '2010 — 2015', span: 'Medical training & clinical practice · Ghana' },
+      { strong: '2019 — Present', span: 'Founder & Lead Physician · DR.IBRAHIM HOSSAIN Clinic, Dhaka' },
+      { strong: '2015 — 2019', span: 'Senior Family Physician · Dhaka Medical Centre' },
+      { strong: '2010 — 2015', span: 'Medical training & clinical practice · Bangladesh' },
     ],
     expertiseHeading: 'Areas of expertise',
     expertise: [
@@ -139,9 +139,9 @@ export const aboutCopy = {
     experienceTitle1: 'প্রমাণের',
     experienceTitleEm: 'উপর প্রতিষ্ঠিত।',
     timeline: [
-      { strong: '২০১৯ — বর্তমান', span: 'প্রতিষ্ঠাতা ও প্রধান চিকিৎসক · ডাঃ ইব্রাহিম ক্লিনিক' },
-      { strong: '২০১৫ — ২০১৯', span: 'সিনিয়র পারিবারিক চিকিৎসক · আক্রা মেডিকেল সেন্টার' },
-      { strong: '২০১০ — ২০১৫', span: 'মেডিকেল প্রশিক্ষণ ও ক্লিনিক্যাল অনুশীলন · ঘানা' },
+      { strong: '২০১৯ — বর্তমান', span: 'প্রতিষ্ঠাতা ও প্রধান চিকিৎসক · ডাঃ ইব্রাহিম ক্লিনিক, ঢাকা' },
+      { strong: '২০১৫ — ২০১৯', span: 'সিনিয়র পারিবারিক চিকিৎসক · ঢাকা মেডিকেল সেন্টার' },
+      { strong: '২০১০ — ২০১৫', span: 'মেডিকেল প্রশিক্ষণ ও ক্লিনিক্যাল অনুশীলন · বাংলাদেশ' },
     ],
     expertiseHeading: 'দক্ষতার ক্ষেত্রসমূহ',
     expertise: [
