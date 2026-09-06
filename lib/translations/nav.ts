@@ -33,7 +33,7 @@ export const navCopy = {
     clinicHours: 'Mon–Fri · 08:00–17:00',
     clinicPhone: '+233 30 290 4420',
     clinicEmail: 'hello@dribrahim.clinic',
-    copyright: '© 2026 Dr. Ibrahim Clinic',
+    copyright: '© 2026 DR.IBRAHIM HOSSAIN',
     copyrightTagline: 'Patient-first care, always.',
     newsletterTitle: 'Care that keeps in touch.',
     newsletterBody:
@@ -174,7 +174,7 @@ export const navCopy = {
     clinicHours: 'সোম–শুক্র · সকাল ৮:০০–বিকাল ৫:০০',
     clinicPhone: '+৮৮০ ১৭১৯ ৩৯৫ ৫৫৩',
     clinicEmail: 'hello@dribrahim.clinic',
-    copyright: '© ২০২৬ ডাঃ ইব্রাহিম ক্লিনিক',
+    copyright: '© ২০২৬ ডাঃ ইব্রাহিম হোসেন',
     copyrightTagline: 'রোগী-প্রথম যত্ন, সর্বদা।',
     newsletterTitle: 'যত্ন যা যোগাযোগে থাকে।',
     newsletterBody: 'ওয়েলনেস টিপস, ক্লিনিক আপডেট এবং মৃদু রিমাইন্ডার — মাসে একবার, স্প্যাম নয়।',

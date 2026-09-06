@@ -888,7 +888,7 @@ function PatientView({ name, copy, data }: { name: string; copy: any; data: any 
                       const doc = new jsPDF();
                       doc.setFontSize(18);
                       doc.setTextColor(23, 75, 120);
-                      doc.text(copy.brandFull || 'Dr. Ibrahim Clinic', 20, 22);
+                      doc.text(copy.brandFull || 'DR.IBRAHIM HOSSAIN', 20, 22);
                       doc.setFontSize(10);
                       doc.setTextColor(95, 117, 128);
                       doc.text(

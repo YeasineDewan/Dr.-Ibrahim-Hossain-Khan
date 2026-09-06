@@ -39,7 +39,7 @@ export const aboutCopy = {
     experienceTitle1: 'Rooted in',
     experienceTitleEm: 'evidence.',
     timeline: [
-      { strong: '2019 — Present', span: 'Founder & Lead Physician · Dr. Ibrahim Clinic' },
+      { strong: '2019 — Present', span: 'Founder & Lead Physician · DR.IBRAHIM HOSSAIN' },
       { strong: '2015 — 2019', span: 'Senior Family Physician · Accra Medical Centre' },
       { strong: '2010 — 2015', span: 'Medical training & clinical practice · Ghana' },
     ],

@@ -7,10 +7,10 @@ import { LanguageProvider } from '../lib/translations';
 const bangla = Noto_Sans_Bengali({ subsets: ['bengali'], variable: '--font-bangla', preload: true });
 
 export const metadata: Metadata = {
-  title: 'Dr. Ibrahim Clinic | Human healthcare in Accra',
+  title: 'DR.IBRAHIM HOSSAIN | Human healthcare in Accra',
   description:
-    'Thoughtful medical care, preventive medicine and personalised wellness from Dr. Ibrahim Clinic in Accra.',
-  generator: 'Dr. Ibrahim Clinic',
+    'Thoughtful medical care, preventive medicine and personalised wellness from DR.IBRAHIM HOSSAIN in Accra.',
+  generator: 'DR.IBRAHIM HOSSAIN',
 };
 
 export const viewport: Viewport = {
@@ -34,7 +34,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="icon" type="image/png" sizes="32x32" href="/ico-32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/ico-32.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/ico-64.png" />
-        <link rel="preload" href="/logo.png" as="image" type="image/png" fetchPriority="high" />
+        <link rel="preload" href="/logo-128.png" as="image" type="image/png" fetchPriority="high" />
       </head>
       <body suppressHydrationWarning className="antialiased">
         <LanguageProvider>{children}</LanguageProvider>

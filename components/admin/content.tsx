@@ -284,7 +284,7 @@ export function ServicesCMSView({ copy }: { copy: any }) {
         <section className="pro-panel">
           <div className="adm-form-grid">
             <Field label="Site title">
-              <Input defaultValue="Dr. Ibrahim Clinic | Human healthcare in Accra" />
+               <Input defaultValue="DR.IBRAHIM HOSSAIN | Human healthcare in Accra" />
             </Field>
             <Field label="Meta description">
               <Textarea

@@ -558,7 +558,7 @@ export function SettingsView({
     'general'
   );
   const [settings, setSettings] = useState({
-    clinicName: 'Dr. Ibrahim Clinic',
+    clinicName: 'DR.IBRAHIM HOSSAIN',
     clinicEmail: 'hello@dribrahim.clinic',
     clinicPhone: '+880 1719 395 553',
     clinicAddress: 'House 45, Road 22, Dhanmondi, Dhaka 1209',
