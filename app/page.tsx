@@ -33,6 +33,7 @@ import {
   MessageCircle,
   Send,
   ExternalLink,
+  Gamepad2,
 } from 'lucide-react';
 import { AboutPage } from '../components/about-page';
 import { ServiceDetailPage, serviceDetails } from '../components/service-detail-page';
@@ -307,7 +308,7 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
             </span>
           </button>
 
-          <nav className={`main-nav ${open ? 'is-open' : ''}`} aria-label="Main">
+          <nav id="primary-navigation" className={`main-nav ${open ? 'is-open' : ''}`} aria-label="Main">
             <span className="nav-track" aria-hidden="true" />
             {navItems.map((item, i) => (
               <button
@@ -357,13 +358,10 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
             <button
               className="menu-btn press"
               onClick={handleMenuToggle}
-              aria-label={common[lang].openMenu}
-              aria-expanded={open}>
-              <span className="menu-bars">
-                <span />
-                <span />
-                <span />
-              </span>
+              aria-label={open ? (lang === 'bn' ? 'মেনু বন্ধ করুন' : 'Close menu') : common[lang].openMenu}
+              aria-expanded={open}
+              aria-controls="primary-navigation">
+              <MoreHorizontal size={22} strokeWidth={2.2} aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -1611,6 +1609,14 @@ export default function Page() {
           </button>
           <button className="patient-launch" onClick={() => setPage('Patient')}>
             <UserRound size={15} /> {n.patientPreview}
+          </button>
+          <button
+            className="patient-launch"
+            onClick={() => {
+              window.open('/game-tictactoe.html', '_blank', 'noopener,noreferrer');
+            }}
+          >
+            <Gamepad2 size={15} /> Tic Tac Toe
           </button>
         </>
       )}

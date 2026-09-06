@@ -1,15 +1,23 @@
 'use client';
 
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 
-const revealOptions: IntersectionObserverInit = { threshold: 0.12, rootMargin: '0px 0px -8% 0px' };
+const revealOptions: IntersectionObserverInit = { threshold: 0.14, rootMargin: '0px 0px -10% 0px' };
+
+const revealClasses = ['scroll-reveal', 'reveal-up', 'reveal-fade', 'reveal-left', 'reveal-scale'] as const;
 
 export function ScrollReveal({
   children,
   className = '',
+  variant = 'up',
+  delay = 0,
+  repeat = false,
 }: {
   children: ReactNode;
   className?: string;
+  variant?: 'up' | 'fade' | 'left' | 'scale';
+  delay?: number;
+  repeat?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -22,14 +30,17 @@ export function ScrollReveal({
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         node.classList.add('is-visible');
-        observer.unobserve(node);
+        if (!repeat) observer.unobserve(node);
+      } else if (repeat) {
+        node.classList.remove('is-visible');
       }
     }, revealOptions);
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
+  const variantClass = revealClasses.find((name) => name === `reveal-${variant}`) ?? 'reveal-up';
   return (
-    <div ref={ref} className={`scroll-reveal ${className}`}>
+    <div ref={ref} className={`${variantClass} ${className}`} style={{ '--reveal-delay': `${delay}ms` } as CSSProperties}>
       {children}
     </div>
   );

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tic Tac Toe</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --line: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #10b981;
+      --x: #38bdf8;
+      --o: #f472b6;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      height: 100%;
+    }
+    .wrap {
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .card {
+      width: min(420px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+    }
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .title {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 0.2px;
+    }
+    .badge {
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .cell {
+      aspect-ratio: 1 / 1;
+      background: #0b1220;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 42px;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+      transition: transform .08s ease, border-color .15s ease, background .15s ease;
+    }
+    .cell:hover { transform: translateY(-1px); border-color: #475569; }
+    .cell.x { color: var(--x); }
+    .cell.o { color: var(--o); }
+    .cell.win { background: #14302a; border-color: #10b981; }
+    .status {
+      min-height: 22px;
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .row { display: flex; gap: 10px; }
+    .btn {
+      flex: 1;
+      background: #0b1220;
+      color: var(--text);
+      border: 1px solid var(--line);
+      padding: 12px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn.primary { background: var(--accent); color: #052e16; border-color: var(--accent); }
+    .btn:hover { filter: brightness(1.05); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="top">
+        <h1 class="title">Tic Tac Toe</h1>
+        <div class="badge" id="score">X: 0 &nbsp; O: 0</div>
+      </div>
+      <div class="board" id="board" role="grid" aria-label="Tic Tac Toe board">
+        <button class="cell" data-i="0" aria-label="0"></button>
+        <button class="cell" data-i="1" aria-label="1"></button>
+        <button class="cell" data-i="2" aria-label="2"></button>
+        <button class="cell" data-i="3" aria-label="3"></button>
+        <button class="cell" data-i="4" aria-label="4"></button>
+        <button class="cell" data-i="5" aria-label="5"></button>
+        <button class="cell" data-i="6" aria-label="6"></button>
+        <button class="cell" data-i="7" aria-label="7"></button>
+        <button class="cell" data-i="8" aria-label="8"></button>
+      </div>
+      <div class="status" id="status" aria-live="polite">Your turn: X</div>
+      <div class="row">
+        <button class="btn primary" id="restart">Restart</button>
+        <button class="btn" id="resetScore">Reset score</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    const boardEl = document.getElementById('board');
+    const cells = [...boardEl.querySelectorAll('.cell')];
+    const statusEl = document.getElementById('status');
+    const restartBtn = document.getElementById('restart');
+    const resetScoreBtn = document.getElementById('resetScore');
+    const scoreEl = document.getElementById('score');
+
+    const WIN_LINES = [
+      [0,1,2],[3,4,5],[6,7,8],
+      [0,3,6],[1,4,7],[2,5,8],
+      [0,4,8],[2,4,6]
+    ];
+
+    let state = Array(9).fill('');
+    let turn = 'X';
+    let over = false;
+    let scores = { X: 0, O: 0 };
+
+    function updateScore() {
+      scoreEl.textContent = `X: ${scores.X}   O: ${scores.O}`;
+    }
+
+    function checkWin() {
+      for (const line of WIN_LINES) {
+        const [a,b,c] = line;
+        if (state[a] && state[a] === state[b] && state[a] === state[c]) return { winner: state[a], line };
+      }
+      if (state.every(Boolean)) return { winner: 'draw', line: [] };
+      return null;
+    }
+
+    function render() {
+      cells.forEach((cell, i) => {
+        const val = state[i];
+        cell.textContent = val;
+        cell.classList.toggle('x', val === 'X');
+        cell.classList.toggle('o', val === 'O');
+        cell.disabled = over || Boolean(val);
+      });
+      const result = checkWin();
+      if (result) {
+        over = true;
+        if (result.winner === 'draw') {
+          statusEl.textContent = 'Draw!';
+        } else {
+          statusEl.textContent = `${result.winner} wins`;
+          result.line.forEach((i) => cells[i].classList.add('win'));
+          scores[result.winner] += 1;
+          updateScore();
+        }
+        return;
+      }
+      statusEl.textContent = `Your turn: ${turn}`;
+    }
+
+    function restart() {
+      state = Array(9).fill('');
+      turn = 'X';
+      over = false;
+      cells.forEach((c) => c.classList.remove('win'));
+      render();
+    }
+
+    cells.forEach((cell) => {
+      cell.addEventListener('click', () => {
+        const i = Number(cell.dataset.i);
+        if (over || state[i]) return;
+        state[i] = turn;
+        turn = turn === 'X' ? 'O' : 'X';
+        render();
+      });
+    });
+
+    restartBtn.addEventListener('click', restart);
+    resetScoreBtn.addEventListener('click', () => {
+      scores = { X: 0, O: 0 };
+      updateScore();
+      restart();
+    });
+
+    render();
+    updateScore();
+  </script>
+</body>
+</html>
