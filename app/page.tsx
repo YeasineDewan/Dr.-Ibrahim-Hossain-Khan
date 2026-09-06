@@ -308,7 +308,7 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
             </span>
           </button>
 
-          <nav className={`main-nav ${open ? 'is-open' : ''}`} aria-label="Main">
+          <nav id="primary-navigation" className={`main-nav ${open ? 'is-open' : ''}`} aria-label="Main">
             <span className="nav-track" aria-hidden="true" />
             {navItems.map((item, i) => (
               <button
@@ -358,13 +358,10 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
             <button
               className="menu-btn press"
               onClick={handleMenuToggle}
-              aria-label={common[lang].openMenu}
-              aria-expanded={open}>
-              <span className="menu-bars">
-                <span />
-                <span />
-                <span />
-              </span>
+              aria-label={open ? (lang === 'bn' ? 'মেনু বন্ধ করুন' : 'Close menu') : common[lang].openMenu}
+              aria-expanded={open}
+              aria-controls="primary-navigation">
+              <MoreHorizontal size={22} strokeWidth={2.2} aria-hidden="true" />
             </button>
           </div>
         </div>
