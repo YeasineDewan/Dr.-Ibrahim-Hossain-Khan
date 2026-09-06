@@ -39,7 +39,7 @@ import { AboutPage } from '../components/about-page';
 import { ServiceDetailPage, serviceDetails } from '../components/service-detail-page';
 import { ChamberDetailPage } from '../components/chamber-detail-page';
 import { WebVitals } from '../components/web-vitals';
-import { common, navCopy, t as tT, useLanguage, type Lang } from '../lib/translations';
+import { common, doctorBio, navCopy, t as tT, useLanguage, type Lang } from '../lib/translations';
 import { SeoUpdater, type PageKey } from '../components/seo-updater';
 import { AuthProvider, useAuth } from '../components/auth/AuthProvider';
 
@@ -243,15 +243,25 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
   const handleSearchClose = useCallback(() => setSearchOpen(false), []);
   const handleMenuToggle = useCallback(() => setOpen(v => !v), []);
   useEffect(() => {
+    let raf = 0;
+    let pending = false;
     const onScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 20);
-      const h = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollPct(h > 0 ? Math.min(100, (y / h) * 100) : 0);
+      if (pending) return;
+      pending = true;
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        setScrolled(y > 20);
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        setScrollPct(h > 0 ? Math.min(100, (y / h) * 100) : 0);
+        pending = false;
+      });
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(raf);
+    };
   }, []);
   useEffect(() => {
     const id = setInterval(() => setActiveIdx(i => (i + 1) % 3), 8000);
@@ -686,216 +696,72 @@ const Footer = memo(function Footer({
 function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
   const { lang } = useLanguage();
   const n = navCopy[lang];
+  const b = doctorBio[lang];
   return (
     <ScrollReveal className="home-reveal">
       <>
         {/* ============ HERO ============ */}
-        <section
-          className="hero aurora-bg scene-3d"
-          style={{ position: 'relative', overflow: 'hidden' }}>
+        <section className="about-hero">
           <div
-            className="hero-glow"
-            style={{ width: 500, height: 500, top: -150, left: -100, opacity: 0.25 }}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background:
+                "url('/Hero_img.png') center center / cover no-repeat",
+              opacity: 0.32,
+              mixBlendMode: 'screen',
+              zIndex: 0,
+            }}
           />
-          <div
-            className="grid-dots"
-            style={{ position: 'absolute', inset: 0, opacity: 0.18, pointerEvents: 'none' }}
-          />
-
-          <div className="container hero-grid">
-            <div className="hero-copy">
-              <div className="chip-pro appear-down">
-                <span className="dot" />
-                <span>{n.homePill}</span>
-              </div>
-              {/* Typewriter headline */}
-              <h1
-                style={{
-                  lineHeight: 1.05,
-                  letterSpacing: '-0.04em',
-                  fontSize: 'clamp(38px, 5vw, 68px)',
-                  fontWeight: 800,
-                  color: '#0f172a',
-                  margin: '18px 0 14px',
-                }}>
-                <span className="tw-words">
-                  <span style={{ color: '#0f172a' }}>{n.homeTitle1}</span>
-                </span>
-                <br />
-                <span
-                  className="tw-words"
-                  style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic', fontWeight: 400 }}>
-                  <span
-                    style={{
-                      background: 'linear-gradient(90deg, #f59e0b, #ec4899, #6366f1)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                    }}>
-                    {n.homeTitleEm}
-                  </span>
-                </span>
+          <div className="about-hero-accent" />
+          <div className="container about-hero-grid">
+            <div className="appear-up">
+              <span className="pill">{n.homePill}</span>
+              <h1 className="gradient-text">
+                {n.homeTitle1} <em>{n.homeTitleEm}</em>
               </h1>
-              <p className="appear-up" style={{ animationDelay: '4s' }}>
-                {n.homeLead}
-              </p>
-              <div className="hero-buttons appear-up" style={{ animationDelay: '4.2s' }}>
-                <Magnetic>
-                  <Button
-                    onClick={() => onNavigate('Appointment')}
-                    className="btn-pro shadow-glow-teal btn-tilt">
-                    {n.heroBookBtn} <ArrowRight size={17} className="float-x" />
-                  </Button>
-                </Magnetic>
-                <Button
-                  variant="ghost"
-                  onClick={() => onNavigate('Services')}
-                  className="btn-ghost-pro">
-                  {n.heroExploreBtn}
-                </Button>
-              </div>
-              <div className="trust-row appear-up" style={{ animationDelay: '4.4s' }}>
-                <div className="avatar-stack">
-                  <span className="avatar-ring" style={{ display: 'grid', placeItems: 'center' }}>
-                    AM
-                  </span>
-                  <span style={{ marginLeft: -7 }}>KO</span>
-                  <span style={{ marginLeft: -7 }}>DN</span>
-                  <span style={{ marginLeft: -7, background: '#fce7e2', color: '#a95044' }}>
-                    +2k
-                  </span>
-                </div>
-                <div>
-                  <div className="stars">
-                    ★★★★★ <b>{n.homeRating}</b>
+              <p className="lead">{n.homeLead}</p>
+              <div className="about-credentials">
+                {n.stats.slice(0, 3).map((s, i) => (
+                  <div key={i} className="lift">
+                    <strong className="counter">{s.strong}</strong>
+                    <span>{s.label}</span>
                   </div>
-                  <small className="muted">{n.homeRatingBody}</small>
-                </div>
+                ))}
               </div>
+              <button
+                className="btn btn-primary btn-pro shadow-glow-teal"
+                onClick={() => onNavigate('Appointment')}>
+                {n.heroBookBtn} <ArrowRight size={16} />
+              </button>
             </div>
-
-            {/* ===== HERO VISUAL: large featured image ===== */}
-            <div
-              className="hero-visual hero-visual-large perspective"
-              style={{ perspective: 1500 }}>
-              <Tilt3D max={4} scale={1.01} className="float-3d hero-main-card">
-                <div
-                  className="hero-main-bg hero-photo-wrap"
-                  style={{
-                    borderRadius: '32px',
-                    overflow: 'hidden',
-                    position: 'relative',
-                    background: 'linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 50%, #ede9fe 100%)',
-                    boxShadow: '0 50px 100px -20px rgba(15,42,68,0.35)',
-                    border: '1px solid rgba(255,255,255,0.8)',
-                    aspectRatio: '3/4',
-                  }}>
-                  <img
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-t0aIFTDc6pB1akFlYbJx4hrSfNncT0.png"
-                    alt="Dr. Ibrahim Hossain in a white coat"
-                    className="hero-photo"
-                    loading="eager"
-                    fetchPriority="high"
-                    width="500"
-                    height="625"
-                    decoding="async"
-                  />
-                  <svg
-                    viewBox="0 0 400 100"
-                    preserveAspectRatio="none"
-                    style={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      height: 90,
-                      opacity: 0.35,
-                    }}>
-                    <path
-                      d="M0,50 L60,50 L80,50 L90,20 L100,80 L110,30 L130,50 L200,50 L220,50 L230,25 L240,75 L250,50 L320,50 L340,50 L350,30 L360,70 L370,50 L400,50"
-                      stroke="#14b8a6"
-                      strokeWidth="2.5"
-                      fill="none"
-                      className="ecg-stroke"
-                    />
-                  </svg>
-                  <span className="hero-sheen" aria-hidden="true" />
+            <div className="about-portrait">
+              <div className="portrait-frame">
+                <div className="portrait-glow" />
+                <img
+                  src="/Hero_img.png"
+                  alt="Dr. Ibrahim, family physician"
+                  loading="eager"
+                />
+                <div className="portrait-corner-badge">
+                  <Stethoscope size={16} />
+                  <span>GMC Reg. No. 2822</span>
                 </div>
-              </Tilt3D>
-
-              <div
-                className="hero-mini-pill glass-panel shine-card float-soft"
-                style={{
-                  position: 'absolute',
-                  top: 20,
-                  right: 20,
-                  zIndex: 5,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 6,
-                  padding: '8px 14px',
-                  borderRadius: 100,
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: '#0d9488',
-                }}>
-                <span className="status-dot pulse" />
-                <span>Live · {n.availableToday}</span>
-              </div>
-
-              <div
-                className="hero-mini-pill glass-panel shine-card float-soft"
-                style={{
-                  position: 'absolute',
-                  bottom: 20,
-                  left: 20,
-                  zIndex: 5,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  padding: '10px 14px',
-                  borderRadius: 14,
-                }}>
-                <StarsArt style={{ width: 70, height: 22 }} />
-                <div style={{ fontSize: 12, lineHeight: 1.2 }}>
-                  <strong style={{ display: 'block', color: '#0f172a' }}>4.9/5</strong>
-                  <small style={{ color: '#647985', fontSize: 10 }}>2k+ reviews</small>
+                <div className="portrait-floating-badge badge-1">
+                  <ShieldCheck size={14} />
+                  <span>B.U.M.S.</span>
+                </div>
+                <div className="portrait-floating-badge badge-2">
+                  <Sparkles size={14} />
+                  <span>15+ yrs</span>
                 </div>
               </div>
-
-              <div
-                className="hero-seal-mini spin-3d"
-                style={{
-                  position: 'absolute',
-                  top: 20,
-                  left: 20,
-                  width: 72,
-                  height: 72,
-                  borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #14b8a6, #6366f1)',
-                  color: '#fff',
-                  display: 'grid',
-                  placeItems: 'center',
-                  textAlign: 'center',
-                  boxShadow: '0 20px 40px -10px rgba(20,184,166,0.55)',
-                  zIndex: 4,
-                }}>
-                <div>
-                  <div style={{ fontSize: 18, fontWeight: 800, lineHeight: 1 }}>15+</div>
-                  <div style={{ fontSize: 9, fontWeight: 500, opacity: 0.9, marginTop: 2 }}>
-                    years
-                  </div>
-                </div>
-              </div>
+              <span className="portrait-caption">
+                {b.name}
+                <br />
+                <small>{b.role}</small>
+              </span>
             </div>
-          </div>
-
-          {/* ECG heartbeat line at the bottom */}
-          <div
-            className="heartbeat-line"
-            style={{ position: 'absolute', bottom: 0, left: 0, right: 0, opacity: 0.5 }}>
-            <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
-              <path d="M0,30 L100,30 L120,30 L130,10 L140,50 L150,30 L200,30 L220,30 L230,15 L240,45 L250,30 L350,30 L370,30 L380,10 L390,50 L400,30 L500,30 L520,30 L530,20 L540,40 L550,30 L700,30 L720,30 L730,10 L740,50 L750,30 L850,30 L870,30 L880,18 L890,42 L900,30 L1200,30" />
-            </svg>
           </div>
         </section>
 

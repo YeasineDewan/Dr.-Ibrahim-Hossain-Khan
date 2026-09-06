@@ -4202,7 +4202,7 @@ th {
   background:
     radial-gradient(circle at 70% 30%, rgba(231, 157, 94, 0.42) 0 1px, transparent 4px),
     radial-gradient(circle at 82% 62%, rgba(56, 193, 149, 0.22) 0 2px, transparent 5px),
-    url('/about_image.png') right 8% center / min(58vw, 760px) auto no-repeat;
+    url('/about_image.png') center center / cover no-repeat;
   opacity: 0.32;
   mix-blend-mode: screen;
   z-index: 0;
@@ -4282,7 +4282,7 @@ th {
 .about-portrait img {
   display: block;
   width: 100%;
-  height: clamp(610px, 48vw, 760px);
+  height: clamp(720px, 55vw, 920px);
   object-fit: contain;
   object-position: center bottom;
   border-radius: 24px;
@@ -5637,7 +5637,7 @@ html[data-lang='bn'] .stats strong {
     gap: 45px;
   }
 .about-portrait img {
-  height: min(620px, 132vw);
+  height: min(720px, 145vw);
 }
   .video-card {
     height: 380px;
@@ -12551,9 +12551,8 @@ h2 em {
   display: grid;
   place-items: center;
   padding: 20px;
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  background: rgba(15, 23, 42, 0.92);
+  contain: layout style paint;
   animation: langGateIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .lang-gate-backdrop.is-closing {
@@ -12593,6 +12592,9 @@ h2 em {
   background-size: 48px 48px;
   mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%);
   -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%);
+}
+.lang-gate-backdrop:not(.is-closing) .lang-gate-orb {
+  animation-play-state: paused;
 }
 .lang-gate-orb {
   position: absolute;

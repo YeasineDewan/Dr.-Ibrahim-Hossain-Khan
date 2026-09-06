@@ -31,7 +31,6 @@ export function MotionShell({ onBook }: { onBook?: () => void }) {
   }, []);
 
   useEffect(() => {
-    // Skip custom cursor on touch / small screens to avoid perf hit
     if (typeof window === 'undefined') return;
     if (window.matchMedia('(pointer: coarse)').matches) return;
     if (window.innerWidth < 768) return;
@@ -44,19 +43,28 @@ export function MotionShell({ onBook }: { onBook?: () => void }) {
     document.body.appendChild(ring);
     let rx = 0,
       ry = 0,
-      dx = 0,
-      dy = 0;
+      dx = -100,
+      dy = -100;
     let frameRequested: number | null = null;
+    let dirty = false;
     const onMove = (e: MouseEvent) => {
       dx = e.clientX;
       dy = e.clientY;
       dot.style.transform = `translate3d(${dx}px, ${dy}px, 0) translate(-50%, -50%)`;
+      if (!dirty) {
+        dirty = true;
+        frameRequested = requestAnimationFrame(updateRing);
+      }
     };
-    const loop = () => {
+    const updateRing = () => {
+      dirty = false;
       rx += (dx - rx) * 0.18;
       ry += (dy - ry) * 0.18;
       ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
-      frameRequested = requestAnimationFrame(loop);
+      if (Math.abs(dx - rx) > 0.1 || Math.abs(dy - ry) > 0.1) {
+        dirty = true;
+        frameRequested = requestAnimationFrame(updateRing);
+      }
     };
     const onOver = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
@@ -72,7 +80,6 @@ export function MotionShell({ onBook }: { onBook?: () => void }) {
     };
     window.addEventListener('mousemove', onMove, { passive: true });
     document.addEventListener('mouseover', onOver, { passive: true });
-    frameRequested = requestAnimationFrame(loop);
     return () => {
       window.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseover', onOver);
