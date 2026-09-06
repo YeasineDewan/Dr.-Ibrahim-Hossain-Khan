@@ -190,7 +190,7 @@ export function ServicesPage({ onNavigate }: { onNavigate: (p: string) => void }
                 <p className="lead max-copy" style={{ marginTop: 8 }}>{section.lead}</p>
               </div>
             </ScrollReveal>
-            <div className="grid-cards service-section-grid">
+            <ScrollReveal className="grid-cards service-section-grid">
               {section.treatments.map((x: { title: string; body: string; time: string; price: string }, i: number) => (
                 <TreatmentCard
                   key={x.title}
@@ -201,7 +201,7 @@ export function ServicesPage({ onNavigate }: { onNavigate: (p: string) => void }
                   viewService={s.viewService}
                 />
               ))}
-            </div>
+            </ScrollReveal>
           </section>
         ))}
 
