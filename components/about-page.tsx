@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   ArrowRight,
   Check,
@@ -29,11 +29,12 @@ export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }
   return (
     <>
       <section
-        className="about-hero aurora-bg scroll-reveal is-visible"
+        className="about-hero aurora-bg reveal-section"
         style={{ position: 'relative', overflow: 'hidden' }}>
         <div className="blob blob-1" style={{ width: 320, height: 320, top: -80, right: -60 }} />
         <div className="blob blob-3" style={{ width: 240, height: 240, bottom: -40, left: -40 }} />
-        <div className="container about-hero-grid">
+        <ScrollReveal className="container about-hero-grid" variant="up">
+
           <div className="appear-up">
             <span className="pill">
               <span className="heartbeat" style={{ display: 'inline-block' }}>
@@ -78,12 +79,12 @@ export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }
               <span className="orbit-dot" />
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
-      <DoctorBioSection bio={b} onNavigate={onNavigate} />
+      <ScrollReveal variant="fade"><DoctorBioSection bio={b} onNavigate={onNavigate} /></ScrollReveal>
 
-      <SexualMedicineSection copy={s} onNavigate={onNavigate} />
+      <ScrollReveal variant="left"><SexualMedicineSection copy={s} onNavigate={onNavigate} /></ScrollReveal>
 
       <section className="section about-story reveal-section">
         <div className="container split-grid">

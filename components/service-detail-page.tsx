@@ -2,6 +2,7 @@
 
 import { ArrowLeft, ArrowRight, CheckCircle2, Clock3, HeartPulse, ShieldCheck } from 'lucide-react';
 import { serviceDetailsCopy, useLanguage, t as tT, common } from '../lib/translations';
+import { ScrollReveal } from './scroll-reveal';
 
 type ServiceKey = 'prp' | 'psoriasis' | 'vitiligo' | 'ibs' | 'integrative' | 'preventive';
 
@@ -156,7 +157,7 @@ export function ServiceDetailPage({
           </div>
         </div>
       </section>
-      <section className="section service-detail-body">
+      <ScrollReveal className="section service-detail-body" variant="up">
         <div className="container service-detail-columns">
           <div>
             <span className="pill">{c.planPill}</span>
@@ -186,8 +187,8 @@ export function ServiceDetailPage({
             </button>
           </aside>
         </div>
-      </section>
-      <section className="section service-detail-extra">
+      </ScrollReveal>
+      <ScrollReveal className="section service-detail-extra" variant="left">
         <div className="container">
           <div className="service-feature-grid">
             <article>
@@ -213,8 +214,8 @@ export function ServiceDetailPage({
             </div>
           </div>
         </div>
-      </section>
-      <section className="cta-section">
+      </ScrollReveal>
+      <ScrollReveal className="cta-section" variant="scale">
         <div className="container cta-inner">
           <div>
             <span className="pill pill-teal">{c.ctaPill}</span>
@@ -231,7 +232,7 @@ export function ServiceDetailPage({
             </button>
           </div>
         </div>
-      </section>
+      </ScrollReveal>
     </main>
   );
 }
