@@ -33,6 +33,7 @@ import {
   MessageCircle,
   Send,
   ExternalLink,
+  Gamepad2,
 } from 'lucide-react';
 import { AboutPage } from '../components/about-page';
 import { ServiceDetailPage, serviceDetails } from '../components/service-detail-page';
@@ -1611,6 +1612,14 @@ export default function Page() {
           </button>
           <button className="patient-launch" onClick={() => setPage('Patient')}>
             <UserRound size={15} /> {n.patientPreview}
+          </button>
+          <button
+            className="patient-launch"
+            onClick={() => {
+              window.open('/game-tictactoe.html', '_blank', 'noopener,noreferrer');
+            }}
+          >
+            <Gamepad2 size={15} /> Tic Tac Toe
           </button>
         </>
       )}
