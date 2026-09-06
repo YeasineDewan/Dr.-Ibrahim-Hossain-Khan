@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState, startTransition } from 'react';
 import { Download, Globe2, Sparkles, Check, ArrowRight, Languages, X } from 'lucide-react';
 import { common, useLanguage } from '../lib/translations';
 
@@ -8,10 +8,15 @@ export function copy() {
   return common;
 }
 
-export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => void }) {
+export const LanguageGate = memo(function LanguageGate({
+  onChange,
+}: {
+  onChange: (lang: 'en' | 'bn') => void;
+}) {
   const [open, setOpen] = useState(false);
   const [hovered, setHovered] = useState<'en' | 'bn' | null>(null);
   const [closing, setClosing] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
@@ -29,31 +34,41 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
     }
   }, []);
 
-  if (!open) return null;
-  const t = common.en;
-  const choose = (lang: 'en' | 'bn') => {
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+
+  const choose = useCallback(
+    (lang: 'en' | 'bn') => {
+      setClosing(true);
+      setTimeout(() => {
+        startTransition(() => onChange(lang));
+        try {
+          window.localStorage.setItem(
+            'dribrahim.lang.gate-seen',
+            JSON.stringify({ expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000 })
+          );
+        } catch {
+          /* noop */
+        }
+        try {
+          window.localStorage.setItem('dribrahim.lang', lang);
+        } catch {
+          /* noop */
+        }
+        setOpen(false);
+      }, 80);
+    },
+    [onChange]
+  );
+  const dismiss = useCallback(() => {
     setClosing(true);
-    setTimeout(() => {
-      onChange(lang);
-      try {
-        window.localStorage.setItem(
-          'dribrahim.lang.gate-seen',
-          JSON.stringify({ expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000 })
-        );
-      } catch {
-        /* noop */
-      }
-      try {
-        window.localStorage.setItem('dribrahim.lang', lang);
-      } catch {
-        /* noop */
-      }
-      setOpen(false);
-    }, 260);
-  };
-  const dismiss = () => {
-    setClosing(true);
-    setTimeout(() => {
+    const onAnimationEnd = () => {
       try {
         window.localStorage.setItem(
           'dribrahim.lang.gate-seen',
@@ -63,8 +78,16 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
         /* noop */
       }
       setOpen(false);
-    }, 200);
-  };
+      cardRef.current?.removeEventListener('animationend', onAnimationEnd);
+    };
+    const node = cardRef.current;
+    node?.addEventListener('animationend', onAnimationEnd);
+    setTimeout(onAnimationEnd, 150);
+  }, []);
+
+  if (!open) return null;
+  const t = common.en;
+
   return (
     <div
       className={`lang-gate-backdrop ${closing ? 'is-closing' : ''}`}
@@ -80,9 +103,9 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
       <button className="lang-gate-skip" onClick={dismiss}>
         {common.en.skipForNow}
       </button>
-      <div className={`lang-gate-card ${closing ? 'is-closing' : ''}`}>
+      <div ref={cardRef} className={`lang-gate-card ${closing ? 'is-closing' : ''}`}>
         <div className="lang-gate-eyebrow">
-           <Sparkles size={11} /> <span>DR.IBRAHIM HOSSAIN</span> <Sparkles size={11} />
+          <Sparkles size={11} /> <span>DR.IBRAHIM HOSSAIN</span> <Sparkles size={11} />
         </div>
         <div className="lang-gate-flag" aria-hidden="true">
           <Languages size={32} />
@@ -136,9 +159,9 @@ export function LanguageGate({ onChange }: { onChange: (lang: 'en' | 'bn') => vo
       </div>
     </div>
   );
-}
+});
 
-export function LanguageControl({
+export const LanguageControl = memo(function LanguageControl({
   lang,
   onChange,
   compact = false,
@@ -166,7 +189,7 @@ export function LanguageControl({
       </div>
     </div>
   );
-}
+});
 
 export function InvoiceButton({
   type = 'appointment',

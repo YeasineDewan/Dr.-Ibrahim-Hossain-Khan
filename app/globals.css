@@ -12551,9 +12551,8 @@ h2 em {
   display: grid;
   place-items: center;
   padding: 20px;
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  background: rgba(15, 23, 42, 0.92);
+  contain: layout style paint;
   animation: langGateIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .lang-gate-backdrop.is-closing {
@@ -12593,6 +12592,9 @@ h2 em {
   background-size: 48px 48px;
   mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%);
   -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%);
+}
+.lang-gate-backdrop:not(.is-closing) .lang-gate-orb {
+  animation-play-state: paused;
 }
 .lang-gate-orb {
   position: absolute;

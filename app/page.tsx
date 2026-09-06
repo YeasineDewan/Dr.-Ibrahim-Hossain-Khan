@@ -243,15 +243,25 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
   const handleSearchClose = useCallback(() => setSearchOpen(false), []);
   const handleMenuToggle = useCallback(() => setOpen(v => !v), []);
   useEffect(() => {
+    let raf = 0;
+    let pending = false;
     const onScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 20);
-      const h = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollPct(h > 0 ? Math.min(100, (y / h) * 100) : 0);
+      if (pending) return;
+      pending = true;
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        setScrolled(y > 20);
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        setScrollPct(h > 0 ? Math.min(100, (y / h) * 100) : 0);
+        pending = false;
+      });
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(raf);
+    };
   }, []);
   useEffect(() => {
     const id = setInterval(() => setActiveIdx(i => (i + 1) % 3), 8000);
