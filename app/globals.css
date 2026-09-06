@@ -3031,7 +3031,9 @@ th {
 .patient-main {
   flex: 1;
   min-width: 0;
-}
+  position: relative;
+  z-index: 1;
+  }
 .patient-top {
   height: 76px;
   background: #fff;
@@ -4710,18 +4712,16 @@ html[data-lang='bn'] .stats strong {
   margin-top: 28px;
 }
 .service-section-grid {
-  display: flex;
-  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
   align-items: stretch;
-  overflow-x: auto;
-  padding: 4px 4px 18px;
-  scroll-snap-type: x proximity;
-  scrollbar-width: thin;
+  overflow: visible;
+  padding: 4px;
   }
   .service-section-grid > * {
-  flex: 0 0 min(286px, 78vw);
-  scroll-snap-align: start;
+  min-width: 0;
+  scroll-snap-align: none;
   }
   .service-section-grid > *:nth-child(2) { transition-delay: 80ms; }
   .service-section-grid > *:nth-child(3) { transition-delay: 160ms; }
@@ -4741,7 +4741,10 @@ html[data-lang='bn'] .stats strong {
   background: linear-gradient(90deg, #0d9488, #6366f1);
   opacity: 0.6;
 }
-@media (max-width: 768px) {
+  @media (max-width: 1100px) {
+  .service-section-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 768px) {
   .service-section-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -8434,8 +8437,9 @@ html[data-lang='bn'] .adm-modal {
     top: 0;
   }
   .patient-side.is-open {
-    left: 0;
+  left: 0;
   }
+  .patient-side-backdrop { display: block; position: fixed; inset: 0; z-index: 40; border: 0; background: rgba(15, 42, 68, 0.34); }
   .patient-search {
     display: none;
   }
@@ -10548,9 +10552,8 @@ h2 em {
   overflow: hidden;
   color: #cbd5e1;
   background:
-    radial-gradient(1200px 600px at 20% 0%, rgba(20, 184, 166, 0.08), transparent 70%),
-    radial-gradient(900px 500px at 100% 100%, rgba(99, 102, 241, 0.1), transparent 70%),
-    linear-gradient(180deg, #0f172a 0%, #0b1322 100%);
+  radial-gradient(900px 500px at 18% 0%, rgba(59, 155, 145, 0.14), transparent 68%),
+  linear-gradient(180deg, #174b78 0%, #123a5a 100%);
   overflow: hidden;
   content-visibility: auto;
   contain-intrinsic-size: auto 520px;
