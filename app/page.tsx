@@ -54,6 +54,13 @@ const AdminWorkspace = dynamic(
     loading: () => <RouteSkeleton />,
   }
 );
+const MediaUploadForm = dynamic(
+  () => import('../components/admin/media-upload-form').then(m => m.MediaUploadForm),
+  {
+    ssr: false,
+    loading: () => <RouteSkeleton />,
+  }
+);
 const GalleryPage = dynamic(
   () => import('../components/page-experiences').then(m => m.GalleryPage),
   { ssr: false, loading: () => <RouteSkeleton /> }
@@ -1564,6 +1571,8 @@ export default function Page() {
       <AdminWorkspace onExit={() => setPage('Home')} />
     ) : page === 'Patient' ? (
       <PatientPortal onExit={() => setPage('Home')} />
+    ) : page === 'MediaUpload' ? (
+      <MediaUploadForm />
     ) : (
       <SimplePage title={page} onNavigate={setPage} />
     );

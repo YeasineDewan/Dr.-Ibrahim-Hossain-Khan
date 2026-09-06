@@ -2372,6 +2372,19 @@ footer {
   .admin-mobile-menu {
     display: block;
   }
+  .patient-side {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 30;
+    transform: translateX(-100%);
+    box-shadow: 10px 0 30px #0002;
+  }
+  .patient-side.is-open {
+    transform: none;
+  }
+  .patient-menu {
+    display: block;
+  }
   .pro-admin-header {
     padding: 0 16px;
     gap: 12px;
@@ -2417,6 +2430,20 @@ footer {
   .pro-profile strong,
   .pro-profile svg {
     display: none;
+  }
+}
+@media (max-width: 1024px) {
+  .pro-admin-sidebar {
+    width: 240px;
+  }
+  .pro-admin-content {
+    padding: 24px;
+  }
+  .pro-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .patient-side {
+    width: 240px;
   }
 }
 .admin-app {
