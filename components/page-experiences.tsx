@@ -240,63 +240,75 @@ export function ChambersPage({ onNavigate }: { onNavigate: (p: string) => void }
                 key={c.name}
                 max={5}
                 className={`chamber-card chamber-${i} premium-card shine-card`}>
-                <div
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => onNavigate(`Chamber:${slug}`)}>
-                  <div className="chamber-top">
-                    <span
-                      className="num-badge"
-                      style={{ background: 'linear-gradient(135deg, #14b8a6, #6366f1)' }}>
-                      0{i + 1}
-                    </span>
-                    <span
-                      className="icon-halo"
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 10,
-                        background:
-                          'linear-gradient(135deg, rgba(20,184,166,0.15), rgba(99,102,241,0.1))',
-                        color: '#0d6e63',
-                        display: 'grid',
-                        placeItems: 'center',
-                        overflow: 'hidden',
-                        padding: 0,
-                      }}>
-                      {slug === 'banglamotor' && c.name === 'Banglamotor' ? (
-                        <img
-                          src="/medigo_logo.png"
-                          alt="Medigo Healthcare"
-                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                        />
-                      ) : (
-                        <MapPin size={18} />
-                      )}
-                    </span>
+                <div style={{ cursor: 'pointer', width: '100%' }} onClick={() => onNavigate(`Chamber:${slug}`)}>
+                  <div className="chamber-card-header">
+                    {slug === 'banglamotor' ? (
+                      <img src="/medigo_logo.png" alt={c.place} className="chamber-logo" />
+                    ) : (
+                      <div
+                        className="chamber-logo"
+                        style={{
+                          display: 'grid',
+                          placeItems: 'center',
+                          color: '#3b9b91',
+                        }}>
+                        <MapPin size={28} />
+                      </div>
+                    )}
+                    <h2>{c.name}</h2>
+                    <strong>{c.place}</strong>
                   </div>
-                  <h2>{c.name}</h2>
-                  <strong>{c.place}</strong>
-                  <p>{c.address}</p>
-                  <div className="chamber-hours">
-                    <Clock size={15} className="pulse" style={{ color: '#14b8a6' }} />
-                    <span>
-                      {ch.visitingHours}
-                      <strong>{c.hours}</strong>
-                    </span>
+                  <div className="chamber-card-body">
+                    <div className="chamber-info-row">
+                      <MapPin size={16} />
+                      <div>
+                        <strong>{lang === 'bn' ? 'ঠিকানা' : 'Address'}</strong>
+                        <span>{c.address}</span>
+                      </div>
+                    </div>
+                    {c.phone && (
+                      <div className="chamber-info-row">
+                        <Phone size={16} />
+                        <div>
+                          <strong>{lang === 'bn' ? 'ফোন' : 'Phone'}</strong>
+                          <span>{c.phone}</span>
+                        </div>
+                      </div>
+                    )}
+                    {c.email && (
+                      <div className="chamber-info-row">
+                        <Mail size={16} />
+                        <div>
+                          <strong>Email</strong>
+                          <span>{c.email}</span>
+                        </div>
+                      </div>
+                    )}
+                    <div className="chamber-hours-card">
+                      <Clock3 size={16} />
+                      <span>
+                        {ch.visitingHours}: <strong>{c.hours}</strong>
+                      </span>
+                    </div>
                   </div>
-                  <div
-                    className="chamber-map"
-                    style={{
-                      borderRadius: 12,
-                      background: 'linear-gradient(135deg, #14b8a6, #6366f1)',
-                      color: '#fff',
-                      padding: 24,
-                      textAlign: 'center',
-                    }}>
-                    <div className="map-grid" />
-                    <MapPin size={28} className="float-soft" />
-                    <span style={{ display: 'block', marginTop: 6 }}>{ch.mapLabel}</span>
-                  </div>
+                  {slug === 'banglamotor' ? (
+                    <div className="chamber-map-card">
+                      <iframe
+                        title="Medigo Healthcare location"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.0504414247616!2d90.39536509999999!3d23.7455806!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b90033178451%3A0x3a30eeb7d453498f!2sMedigo%20Healthcare!5e0!3m2!1sen!2sbd!4v1788817173079!5m2!1sen!2sbd"
+                        allowFullScreen=""
+                        loading="lazy"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                      />
+                    </div>
+                  ) : (
+                    <div style={{ padding: '0 24px 24px', width: '100%' }}>
+                      <div className="chamber-map-placeholder">
+                        <MapPin size={32} />
+                        <span>{lang === 'bn' ? 'মানচিত্র দেখুন' : 'View on map'}</span>
+                      </div>
+                    </div>
+                  )}
                   <div className="chamber-actions">
                     <a
                       className="btn btn-outline btn-pro"
