@@ -10,7 +10,6 @@ import {
   ChevronDown,
   Clock3,
   HeartPulse,
-  Menu,
   Search,
   ShieldCheck,
   Stethoscope,
@@ -383,6 +382,14 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
               <UserRound size={18} />
               <span className="icon-glow" aria-hidden="true" />
             </button>
+            <a
+              className="icon-btn press social-header-link"
+              href={n.socials.youtube}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={n.youtubeLabel}>
+              <PlaySquare size={18} aria-hidden="true" />
+            </a>
             <Magnetic className="header-cta-magnetic">
               <Button
                 onClick={() => onNavigate('Appointment')}
@@ -412,13 +419,7 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
             className="nav-backdrop"
             onClick={() => setOpen(false)}
             aria-hidden="true"
-            style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(15, 42, 68, 0.35)',
-              backdropFilter: 'blur(2px)',
-              zIndex: 98,
-            }}
+              role="presentation"
           />
         )}
       </header>

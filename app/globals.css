@@ -14110,6 +14110,23 @@ h2 em {
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   z-index: 98;
+  cursor: pointer;
+}
+.site-header .main-nav {
+  z-index: 100;
+}
+.site-header .header-actions,
+.site-header .brand {
+  position: relative;
+  z-index: 101;
+}
+@media (max-width: 980px) {
+  .site-header .main-nav {
+    z-index: 100;
+  }
+  .site-header .header-actions {
+    flex-wrap: nowrap;
+  }
 }
 
 /* Ensure touch targets are at least 44x44px */
