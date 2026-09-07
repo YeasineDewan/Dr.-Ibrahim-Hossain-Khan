@@ -10,7 +10,6 @@ import {
   ChevronDown,
   Clock3,
   HeartPulse,
-  Menu,
   Search,
   ShieldCheck,
   Stethoscope,
@@ -376,14 +375,6 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
               <Search size={18} />
               <span className="icon-glow" aria-hidden="true" />
             </button>
-            <a
-              className="icon-btn press social-header-link"
-              href={n.socials.youtube}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={n.youtubeLabel}>
-              <PlaySquare size={18} aria-hidden="true" />
-            </a>
             <button
               className="icon-btn press"
               aria-label={n.patientDashboardAria}
@@ -391,7 +382,7 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
               <UserRound size={18} />
               <span className="icon-glow" aria-hidden="true" />
             </button>
-            <Magnetic>
+            <Magnetic className="header-cta-magnetic">
               <Button
                 onClick={() => onNavigate('Appointment')}
                 className="header-cta btn-pro shadow-glow-teal press">
@@ -420,13 +411,7 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
             className="nav-backdrop"
             onClick={() => setOpen(false)}
             aria-hidden="true"
-            style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(15, 42, 68, 0.35)',
-              backdropFilter: 'blur(2px)',
-              zIndex: 98,
-            }}
+              role="presentation"
           />
         )}
       </header>
@@ -1424,7 +1409,7 @@ const SimplePage = memo(function SimplePage({ title, onNavigate }: { title: stri
             </h2>
             <p>
               {lang === 'bn'
-                ? 'আমাদের দল শুনতে, গাইড করতে এবং আপনার যত্ন নিতে প্রস্তুত।'
+                ? 'আমাদের দল শুনতে, গাইড করতে এবং আপনার য���্ন নিতে প্রস্তুত।'
                 : 'Our team is ready to listen, guide and care for you.'}
             </p>
             <Button onClick={() => onNavigate('Appointment')}>

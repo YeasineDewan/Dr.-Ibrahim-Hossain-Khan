@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Activity,
   LayoutDashboard,
@@ -87,6 +87,20 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
   const [expanded, setExpanded] = useState<string[]>(adminCopy.en.groups.map(g => g.label));
   const toggle = (g: string) =>
     setExpanded(e => (e.includes(g) ? e.filter(x => x !== g) : [...e, g]));
+
+  useEffect(() => {
+    if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
+
+  const selectItem = (item: string) => {
+    setActive(item);
+    setOpen(false);
+  };
 
   const groups = adminCopy.en.groups as unknown as { label: string; items: string[] }[];
   const localizedGroups = a.groups as unknown as { label: string; items: string[] }[];
@@ -199,19 +213,25 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
         <nav className="pro-admin-nav">
           {visibleGroups.map((vg) => (
             <div className="pro-nav-group" key={vg.label}>
-              <button className="pro-group-title" onClick={() => toggle(vg.label)}>
-                {localizedGroups[vg.groupIndex]?.label || vg.label}
-                <ChevronDown className={expanded.includes(vg.label) ? 'rotate' : ''} size={13} />
+              <button
+                className="pro-group-title"
+                onClick={() => toggle(vg.label)}
+                aria-expanded={expanded.includes(vg.label)}
+                aria-controls={`admin-group-${vg.groupIndex}`}>
+                <span>{localizedGroups[vg.groupIndex]?.label || vg.label}</span>
+                <ChevronDown className={expanded.includes(vg.label) ? 'rotate' : ''} size={13} aria-hidden="true" />
               </button>
               {expanded.includes(vg.label) &&
-                vg.items.map((item) => {
+                <div id={`admin-group-${vg.groupIndex}`} className="pro-nav-group-items">
+                {vg.items.map((item) => {
                   const itemIndex = groups[vg.groupIndex].items.indexOf(item);
                   const I = iconFor(item);
                   const badge = badgeFor(item);
                   return (
                     <button
                       key={item}
-                      onClick={() => setActive(item)}
+                      onClick={() => selectItem(item)}
+                      aria-current={active === item ? 'page' : undefined}
                       className={`pro-nav-item ${active === item ? 'active' : ''} press`}>
                       <I size={16} className={active === item ? 'float-soft' : ''} />
                       <span>{localizedGroups[vg.groupIndex]?.items[itemIndex] || item}</span>
@@ -221,6 +241,7 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
                     </button>
                   );
                 })}
+                </div>}
             </div>
           ))}
         </nav>
@@ -228,6 +249,7 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
           <LogOut size={15} /> {a.backToWebsite}
         </button>
       </aside>
+      {open && <button className="admin-sidebar-scrim" aria-label="Close sidebar" onClick={() => setOpen(false)} />}
 
       <main className="pro-admin-main">
         <header className="pro-admin-header">
