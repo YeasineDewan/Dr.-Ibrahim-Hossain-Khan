@@ -38,6 +38,13 @@ export function ScrollReveal({
       }
     }, revealOptions);
     observer.observe(node);
+    if (
+      node.getBoundingClientRect().top < window.innerHeight &&
+      node.getBoundingClientRect().bottom > 0
+    ) {
+      node.classList.add('is-visible');
+      if (!repeat) observer.unobserve(node);
+    }
     return () => observer.disconnect();
   }, []);
   const variantClass = revealClasses.find((name) => name === `reveal-${variant}`) ?? 'reveal-up';
