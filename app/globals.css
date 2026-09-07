@@ -3786,29 +3786,37 @@ th {
 }
 .chamber-card-header {
   width: 100%;
-  padding: 28px 24px 20px;
+  padding: 48px 32px 32px;
   background: linear-gradient(135deg, #f8faf9 0%, #edf7f4 100%);
   border-bottom: 1px solid #f1f5f4;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 18px;
 }
 .chamber-logo {
-  width: 64px;
-  height: 64px;
-  border-radius: 14px;
+  width: 240px;
+  height: 240px;
+  border-radius: 28px;
   object-fit: contain;
-  padding: 8px;
-  background: #fff;
-  border: 1px solid #e2e8e8;
-  box-shadow: 0 4px 12px -4px rgba(15, 42, 68, 0.1);
+  padding: 12px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 .chamber-card-header h2 {
   font-size: 22px;
   margin: 0;
   color: #0f172a;
   letter-spacing: -0.02em;
+}
+.chamber-address {
+  font-size: 13px;
+  font-weight: 500;
+  color: #647985;
+  margin: 6px 0 0;
+  line-height: 1.5;
+  max-width: 320px;
 }
 .chamber-card-header strong {
   font-size: 13px;
@@ -3912,10 +3920,14 @@ th {
     grid-template-columns: 1fr;
     gap: 20px;
   }
+  .chamber-logo {
+    width: 200px;
+    height: 200px;
+  }
 }
 @media (max-width: 480px) {
   .chamber-card-header {
-    padding: 24px 20px 16px;
+    padding: 28px 20px 20px;
   }
   .chamber-card-body {
     padding: 16px 20px;
@@ -3925,6 +3937,12 @@ th {
   }
   .chamber-map-card iframe {
     height: 180px;
+  }
+  .chamber-logo {
+    width: 160px;
+    height: 160px;
+    border-radius: 20px;
+    padding: 10px;
   }
 }
 .chamber-actions {

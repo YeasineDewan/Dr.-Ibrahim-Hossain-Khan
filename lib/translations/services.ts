@@ -253,8 +253,8 @@ export const chambersCopy = {
     mapLabel: 'Google Maps location',
     chambers: [
       {
-        name: 'Banglamotor',
-        place: 'Medigo Healthcare',
+        name: 'Medigo Healthcare',
+        place: 'Banglamotor',
         address: 'Rupayan Trade Center, 3rd Floor, 114 Kazi Nazrul Islam Ave, Dhaka 1100.',
         hours: '4:00 PM – 9:00 PM',
         phone: '01886-643626',
@@ -265,6 +265,8 @@ export const chambersCopy = {
         place: 'Ibn Sina Diagnostic Centre',
         address: 'Sector 7, Sonargaon Janapath, Uttara.',
         hours: '10:00 AM – 1:00 PM',
+        phone: '',
+        email: '',
       },
     ],
   },
@@ -279,8 +281,8 @@ export const chambersCopy = {
     mapLabel: 'গুগল ম্যাপ লোকেশন',
     chambers: [
       {
-        name: 'বাংলামোটর',
-        place: 'মেডিগো হেলথকেয়ার',
+        name: 'মেডিগো হেলথকেয়ার',
+        place: 'বাংলামোটর',
         address: 'রূপায়ন ট্রেড সেন্টার, ৩য় তলা, ১১৪ কাজী নজরুল ইসলাম অ্যাভিনিউ, ঢাকা ১১০০।',
         hours: 'বিকাল ৪:০০ – রাত ৯:০০',
         phone: '০১৮৮৬-৬৪৩৬২৬',
@@ -291,6 +293,8 @@ export const chambersCopy = {
         place: 'ইবনে সিনা ডায়াগনস্টিক সেন্টার',
         address: 'সেক্টর ৭, সোনারগাঁও জনপথ, উত্তরা।',
         hours: 'সকাল ১০:০০ – দুপুর ১:০০',
+        phone: '',
+        email: '',
       },
     ],
   },

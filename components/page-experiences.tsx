@@ -12,6 +12,8 @@ import {
   X,
   CalendarDays,
   Sparkles,
+  Phone,
+  Mail,
 } from 'lucide-react';
 import {
   chambersCopy,
@@ -245,27 +247,14 @@ export function ChambersPage({ onNavigate }: { onNavigate: (p: string) => void }
                     {slug === 'banglamotor' ? (
                       <img src="/medigo_logo.png" alt={c.place} className="chamber-logo" />
                     ) : (
-                      <div
-                        className="chamber-logo"
-                        style={{
-                          display: 'grid',
-                          placeItems: 'center',
-                          color: '#3b9b91',
-                        }}>
-                        <MapPin size={28} />
+                      <div className="chamber-logo" style={{ display: 'grid', placeItems: 'center', color: '#3b9b91' }}>
+                        <MapPin size={96} />
                       </div>
                     )}
                     <h2>{c.name}</h2>
-                    <strong>{c.place}</strong>
+                    <p className="chamber-address">{c.address}</p>
                   </div>
                   <div className="chamber-card-body">
-                    <div className="chamber-info-row">
-                      <MapPin size={16} />
-                      <div>
-                        <strong>{lang === 'bn' ? 'ঠিকানা' : 'Address'}</strong>
-                        <span>{c.address}</span>
-                      </div>
-                    </div>
                     {c.phone && (
                       <div className="chamber-info-row">
                         <Phone size={16} />
@@ -285,7 +274,7 @@ export function ChambersPage({ onNavigate }: { onNavigate: (p: string) => void }
                       </div>
                     )}
                     <div className="chamber-hours-card">
-                      <Clock3 size={16} />
+                      <Clock size={16} />
                       <span>
                         {ch.visitingHours}: <strong>{c.hours}</strong>
                       </span>
@@ -296,7 +285,7 @@ export function ChambersPage({ onNavigate }: { onNavigate: (p: string) => void }
                       <iframe
                         title="Medigo Healthcare location"
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.0504414247616!2d90.39536509999999!3d23.7455806!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b90033178451%3A0x3a30eeb7d453498f!2sMedigo%20Healthcare!5e0!3m2!1sen!2sbd!4v1788817173079!5m2!1sen!2sbd"
-                        allowFullScreen=""
+                        allowFullScreen={true}
                         loading="lazy"
                         referrerPolicy="strict-origin-when-cross-origin"
                       />
