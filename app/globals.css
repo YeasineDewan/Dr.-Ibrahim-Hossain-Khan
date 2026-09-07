@@ -12449,6 +12449,13 @@ h2 em {
 }
 
 /* === Header CTA (Book appointment) === */
+.header-cta-magnetic {
+  display: inline-flex !important;
+  align-items: center;
+  margin-left: 0;
+  vertical-align: middle;
+  flex: 0 0 auto;
+}
 .header-cta {
   display: inline-flex !important;
   align-items: center;

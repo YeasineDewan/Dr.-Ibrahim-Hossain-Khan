@@ -376,14 +376,6 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
               <Search size={18} />
               <span className="icon-glow" aria-hidden="true" />
             </button>
-            <a
-              className="icon-btn press social-header-link"
-              href={n.socials.youtube}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={n.youtubeLabel}>
-              <PlaySquare size={18} aria-hidden="true" />
-            </a>
             <button
               className="icon-btn press"
               aria-label={n.patientDashboardAria}
@@ -391,7 +383,7 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
               <UserRound size={18} />
               <span className="icon-glow" aria-hidden="true" />
             </button>
-            <Magnetic>
+            <Magnetic className="header-cta-magnetic">
               <Button
                 onClick={() => onNavigate('Appointment')}
                 className="header-cta btn-pro shadow-glow-teal press">
