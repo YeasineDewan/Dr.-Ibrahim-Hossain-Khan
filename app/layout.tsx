@@ -10,11 +10,11 @@ const bangla = Noto_Sans_Bengali({ subsets: ['bengali'], variable: '--font-bangl
 export const metadata: Metadata = {
   metadataBase: new URL('https://dribrahimhossain.com'),
   title: {
-    default: 'DR.IBRAHIM HOSSAIN | Board-Certified Dermatologist & Integrative Medicine Specialist in Bangladesh',
-    template: '%s | DR.IBRAHIM HOSSAIN',
+    default: 'Dr. Ibrahim Hossain | Skin, Veneral disease and integrative medicine Specialist',
+    template: '%s | Dr. Ibrahim Hossain',
   },
   description:
-    'Expert dermatology, veneral medicine and integrative care by Dr. Ibrahim Hossain Khan in Dhaka, Bangladesh. Board-certified consultant dermatologist specializing in PRP therapy, psoriasis management, vitiligo treatment, IBS care, hormonal optimization, infertility support and family medicine. Book your consultation today.',
+    'Dr. Ibrahim Hossain — Skin, Veneral disease and integrative medicine Specialist. Dermatology, veneral medicine and integrative care in Dhaka, Bangladesh. PRP therapy, psoriasis, vitiligo, IBS, hormonal optimization, infertility support and family medicine. Book your consultation today.',
   keywords: [
     'Dr. Ibrahim Hossain',
     'Dr. Ibrahim Hossain Khan',
@@ -54,8 +54,8 @@ export const metadata: Metadata = {
     'patient-centered care Dhaka',
   ],
   authors: [{ name: 'Dr. Ibrahim Hossain', url: 'https://dribrahimhossain.com' }],
-  creator: 'DR.IBRAHIM HOSSAIN',
-  publisher: 'DR.IBRAHIM HOSSAIN',
+  creator: 'Dr. Ibrahim Hossain',
+  publisher: 'Dr. Ibrahim Hossain',
   formatDetection: {
     email: false,
     address: false,
@@ -65,16 +65,16 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://dribrahimhossain.com',
-    siteName: 'DR.IBRAHIM HOSSAIN',
-    title: 'DR.IBRAHIM HOSSAIN | Dermatologist & Integrative Medicine Specialist in Dhaka, Bangladesh',
+    siteName: 'Dr. Ibrahim Hossain',
+    title: 'Dr. Ibrahim Hossain | Skin, Veneral disease and integrative medicine Specialist',
     description:
-      'Expert dermatology, veneral medicine and integrative care by Dr. Ibrahim Hossain Khan. PRP therapy, psoriasis, vitiligo, IBS, family medicine and personalized wellness in Dhaka, Bangladesh.',
+      'Dr. Ibrahim Hossain — Skin, Veneral disease and integrative medicine Specialist. PRP therapy, psoriasis, vitiligo, IBS, family medicine and personalized wellness in Dhaka, Bangladesh.',
     images: [
       {
         url: '/logo-256.png',
         width: 256,
         height: 256,
-        alt: 'DR.IBRAHIM HOSSAIN',
+        alt: 'Dr. Ibrahim Hossain',
       },
       {
         url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-t0aIFTDc6pB1akFlYbJx4hrSfNncT0.png',
@@ -86,9 +86,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'DR.IBRAHIM HOSSAIN | Dermatologist & Integrative Medicine Specialist in Dhaka, Bangladesh',
+    title: 'Dr. Ibrahim Hossain | Skin, Veneral disease and integrative medicine Specialist',
     description:
-      'Expert dermatology, veneral medicine and integrative care by Dr. Ibrahim Hossain Khan. PRP therapy, psoriasis, vitiligo, IBS and family medicine in Dhaka, Bangladesh.',
+      'Dr. Ibrahim Hossain — Skin, Veneral disease and integrative medicine Specialist. PRP therapy, psoriasis, vitiligo, IBS and family medicine in Dhaka, Bangladesh.',
     images: ['/logo-256.png'],
     creator: '@dribrahimhossain',
   },
@@ -112,8 +112,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  category: 'health',
-  classification: 'Medical Clinic',
 };
 
 export const viewport: Viewport = {
@@ -128,8 +126,8 @@ const jsonLd = {
     {
       '@type': 'MedicalBusiness',
       '@id': 'https://dribrahimhossain.com/#organization',
-      name: 'DR.IBRAHIM HOSSAIN Clinic',
-      description: 'Skin, Veneral & Integrative Medicine Specialist in Dhaka, Bangladesh.',
+      name: 'Dr. Ibrahim Hossain',
+      description: 'Skin, Veneral disease and integrative medicine Specialist.',
       url: 'https://dribrahimhossain.com',
       telephone: '+8801719395553',
       email: 'hello@dribrahim.clinic',
@@ -148,6 +146,7 @@ const jsonLd = {
         closes: '17:00',
       },
       image: '/logo-256.png',
+      alt: 'Dr. Ibrahim Hossain',
       sameAs: [
         'https://www.facebook.com/dribrahimhossainkhan/',
         'https://www.instagram.com/dribrahimhossain',

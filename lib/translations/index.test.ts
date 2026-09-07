@@ -3,7 +3,7 @@ import { t } from './index';
 describe('Translation function', () => {
   it('returns English by default', () => {
     const result = t('common', 'en');
-    expect(result.brandName).toBe('DR.IBRAHIM HOSSAIN');
+    expect(result.brandName).toBe('Dr. Ibrahim Hossain');
     expect(result.brandFull).toBeTruthy();
   });
 

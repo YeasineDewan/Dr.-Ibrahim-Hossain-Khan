@@ -45,7 +45,7 @@ import {
   ArrowRight,
   Settings,
 } from 'lucide-react';
-import { patientCopy, useLanguage } from '../lib/translations';
+import { patientCopy, common, useLanguage } from '../lib/translations';
 import { useAdminData } from '../lib/admin-data';
 import { Avatar, Pill as PillUI, Sparkline, Donut, Stat } from './admin-ui';
 import {
@@ -889,7 +889,7 @@ function PatientView({ name, copy, data }: { name: string; copy: any; data: any 
                       const doc = new jsPDF();
                       doc.setFontSize(18);
                       doc.setTextColor(23, 75, 120);
-                      doc.text(copy.brandFull || 'DR.IBRAHIM HOSSAIN', 20, 22);
+                      doc.text(copy.brandFull || common[lang].brandFull, 20, 22);
                       doc.setFontSize(10);
                       doc.setTextColor(95, 117, 128);
                       doc.text(

@@ -335,7 +335,7 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
             aria-label={common[lang].brandName}>
             <span className="brand-mark">
               <span className="brand-pulse" aria-hidden="true" />
-              <img src="/logo-128.png" alt="DR.IBRAHIM HOSSAIN" className="brand-icon-img" width="40" height="40" loading="eager" fetchPriority="high" decoding="async" />
+              <img src="/logo-128.png" alt="Dr. Ibrahim Hossain" className="brand-icon-img" width="40" height="40" loading="eager" fetchPriority="high" decoding="async" />
             </span>
             <span className="brand-text">
               <strong>{common[lang].brandName}</strong>
@@ -411,7 +411,7 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
             className="nav-backdrop"
             onClick={() => setOpen(false)}
             aria-hidden="true"
-              role="presentation"
+            role="presentation"
           />
         )}
       </header>
@@ -554,7 +554,7 @@ const Footer = memo(function Footer({
         <div className="footer-brand-block">
           <button className="brand footer-brand" onClick={() => onNavigate('Home')}>
             <span className="brand-mark">
-              <img src="/logo-128.png" alt="DR.IBRAHIM HOSSAIN" className="brand-icon-img" width="40" height="40" loading="lazy" decoding="async" />
+              <img src="/logo-128.png" alt="Dr. Ibrahim Hossain" className="brand-icon-img" width="40" height="40" loading="lazy" decoding="async" />
             </span>
             <span>
               {c.brandName}

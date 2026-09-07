@@ -39,7 +39,7 @@ export const aboutCopy = {
     experienceTitle1: 'Rooted in',
     experienceTitleEm: 'evidence.',
     timeline: [
-      { strong: '2019 — Present', span: 'Founder & Lead Physician · DR.IBRAHIM HOSSAIN Clinic, Dhaka' },
+      { strong: '2019 — Present', span: 'Founder & Lead Physician · Dr. Ibrahim Hossain Clinic, Dhaka' },
       { strong: '2015 — 2019', span: 'Senior Family Physician · Dhaka Medical Centre' },
       { strong: '2010 — 2015', span: 'Medical training & clinical practice · Bangladesh' },
     ],

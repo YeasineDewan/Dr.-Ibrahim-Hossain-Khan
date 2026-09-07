@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Page Not Found | DR.IBRAHIM HOSSAIN',
-  description: 'The page you are looking for does not exist. Return to DR.IBRAHIM HOSSAIN clinic homepage for dermatology and integrative medicine services in Dhaka, Bangladesh.',
+  title: 'Page Not Found | Dr. Ibrahim Hossain',
+  description: 'The page you are looking for does not exist. Return to Dr. Ibrahim Hossain clinic homepage for dermatology and integrative medicine services in Dhaka, Bangladesh.',
   robots: {
     index: false,
     follow: true,
