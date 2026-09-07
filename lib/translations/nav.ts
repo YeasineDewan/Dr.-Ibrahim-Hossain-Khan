@@ -3,6 +3,7 @@ export const navCopy = {
   en: {
     navItems: ['Home', 'About', 'Services', 'Gallery', 'Chambers', 'Contact'],
     utility: { phoneLabel: 'Call us', follow: 'Follow us' },
+    youtubeLabel: 'YouTube channel',
     notice: [
       'New evening appointments available this week',
       'Free wellness screening with selected consultations',
@@ -54,6 +55,7 @@ export const navCopy = {
       facebook: 'https://www.facebook.com/dribrahimhossainkhan/',
       instagram: 'https://www.instagram.com/dribrahimhossain',
       whatsapp: 'https://wa.me/8801719395553',
+      youtube: 'https://www.youtube.com/@dr.ibrahimhossain',
     },
     // Home
     homePill: 'Trusted care in Dhaka',
@@ -145,6 +147,7 @@ export const navCopy = {
   bn: {
     navItems: ['হোম', 'পরিচিতি', 'সেবাসমূহ', 'গ্যালারি', 'চেম্বার', 'যোগাযোগ'],
     utility: { phoneLabel: 'আমাদের কল করুন', follow: 'আমাদের অনুসরণ করুন' },
+    youtubeLabel: 'ইউটিউব চ্যানেল',
     notice: [
       'এই সপ্তাহে নতুন সন্ধ্যা অ্যাপয়েন্টমেন্ট পাওয়া যাচ্ছে',
       'নির্বাচিত কনসালটেশনের সাথে ফ্রি ওয়েলনেস স্ক্রিনিং',
@@ -170,7 +173,7 @@ export const navCopy = {
     contactHeading: 'যোগাযোগ',
     helpLink: 'সাহায্য ও যোগাযোগ',
     patientPortalLink: 'রোগী পোর্টাল',
-    clinicAddress: 'হাউস ৪৫, রোড ২২, ধানমন্ডি, ঢাকা ১২০৯, বাংলাদেশ',
+    clinicAddress: 'হাউস ৪৫, ��োড ২২, ধানমন্ডি, ঢাকা ১২০৯, বাংলাদেশ',
     clinicHours: 'সোম–শুক্র · সকাল ৮:০০–বিকাল ৫:০০',
     clinicPhone: '+৮৮০ ১৭১৯ ৩৯৫ ৫৫৩',
     clinicEmail: 'hello@dribrahim.clinic',
@@ -194,6 +197,7 @@ export const navCopy = {
       facebook: 'https://www.facebook.com/dribrahimhossainkhan/',
       instagram: 'https://www.instagram.com/dribrahimhossain',
       whatsapp: 'https://wa.me/8801719395553',
+      youtube: 'https://www.youtube.com/@dr.ibrahimhossain',
     },
     homePill: 'আক্রায় বিশ্বস্ত চিকিৎসা',
     homeTitle1: 'এমন স্বাস্থ্যসেবা যা অনুভূত হয়',
@@ -272,7 +276,7 @@ export const navCopy = {
     ctaPill: 'আপনার পরবর্তী ধাপ',
     ctaTitle1: 'ভালোভাবে যত্ন পেতে',
     ctaTitleEm: 'প্রস্তুত?',
-    ctaBody: 'নিয়মিত চেকআপ হোক বা নির্দিষ্ট কোনো বিষয় হোক — আমরা সাহায্য করতে এখানে আছি।',
+    ctaBody: 'নিয়মিত চেকআপ হোক বা নির্দিষ্ট কোনো বিষয় হোক — আমরা সাহ��য্য করতে এখানে আছি।',
     ctaBtn: 'আপনার ভিজিট বুক করুন',
     adminPreview: 'অ্যাডমিন প্রিভিউ',
     patientPreview: 'রোগী পোর্টাল',

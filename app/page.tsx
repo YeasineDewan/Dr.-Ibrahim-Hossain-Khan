@@ -34,6 +34,7 @@ import {
   Send,
   ExternalLink,
   Gamepad2,
+  PlaySquare,
 } from 'lucide-react';
 import { AboutPage } from '../components/about-page';
 import { ServiceDetailPage, serviceDetails } from '../components/service-detail-page';
@@ -243,6 +244,23 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
   const handleSearchClose = useCallback(() => setSearchOpen(false), []);
   const handleMenuToggle = useCallback(() => setOpen(v => !v), []);
   useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (!(target instanceof Node)) return;
+      if (!document.querySelector('.site-header')?.contains(target)) setOpen(false);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [open]);
+  useEffect(() => {
     let raf = 0;
     let pending = false;
     const onScroll = () => {
@@ -276,13 +294,10 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
     return () => document.removeEventListener('keydown', onKey);
   }, [searchOpen]);
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    const previousOverflow = document.body.style.overflow;
+    if (open) document.body.style.overflow = 'hidden';
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = previousOverflow;
     };
   }, [open]);
   return (
@@ -361,6 +376,14 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
               <Search size={18} />
               <span className="icon-glow" aria-hidden="true" />
             </button>
+            <a
+              className="icon-btn press social-header-link"
+              href={n.socials.youtube}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={n.youtubeLabel}>
+              <PlaySquare size={18} aria-hidden="true" />
+            </a>
             <button
               className="icon-btn press"
               aria-label={n.patientDashboardAria}
@@ -564,9 +587,10 @@ const Footer = memo(function Footer({
              {[
                { k: 'f', label: 'Facebook', href: n.socials.facebook },
                { k: '◎', label: 'Instagram', href: n.socials.instagram },
+               { k: 'youtube', label: n.youtubeLabel, href: n.socials.youtube },
              ].map((s, i) => (
                <a key={s.k + i} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label} className="press ripple social-btn">
-                 {s.k}
+                 {s.k === 'youtube' ? <PlaySquare size={18} aria-hidden="true" /> : s.k}
                  <span className="social-glow" aria-hidden="true" />
                </a>
              ))}
@@ -1480,6 +1504,9 @@ export default function Page() {
             </a>
             <a href={n.socials.instagram} target="_blank" rel="noreferrer" aria-label="Instagram">
               ◎
+            </a>
+            <a href={n.socials.youtube} target="_blank" rel="noreferrer" aria-label={n.youtubeLabel}>
+              <PlaySquare size={15} aria-hidden="true" />
             </a>
           </div>
         </div>
