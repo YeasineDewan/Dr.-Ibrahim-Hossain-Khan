@@ -235,10 +235,87 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
   const [searchVal, setSearchVal] = useState('');
   const [activeIdx, setActiveIdx] = useState(0);
   const [scrollPct, setScrollPct] = useState(0);
-  const handleNavClick = useCallback((item: string) => {
-    onNavigate(item);
-    setOpen(false);
-  }, [onNavigate]);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [servicesSlide, setServicesSlide] = useState(0);
+  const servicesSlides = useMemo(
+    () => [
+      {
+        eyebrow: n.servicesSliderEyebrow1,
+        title: n.servicesSliderTitle1,
+        cta: n.servicesSliderCta1,
+        slug: n.servicesSliderSlug1,
+      },
+      {
+        eyebrow: n.servicesSliderEyebrow2,
+        title: n.servicesSliderTitle2,
+        cta: n.servicesSliderCta2,
+        slug: n.servicesSliderSlug2,
+      },
+    ],
+    [n.servicesSliderEyebrow1, n.servicesSliderTitle1, n.servicesSliderCta1, n.servicesSliderSlug1, n.servicesSliderEyebrow2, n.servicesSliderTitle2, n.servicesSliderCta2, n.servicesSliderSlug2]
+  );
+  const servicesCats = useMemo(
+    () => [
+      {
+        icon: 'skin',
+        name: n.servicesCat1Name,
+        desc: n.servicesCat1Desc,
+        to: 'Service:skin-hair-care',
+      },
+      {
+        icon: 'fertility',
+        name: n.servicesCat2Name,
+        desc: n.servicesCat2Desc,
+        to: 'Service:infertility-care',
+      },
+    ],
+    [n.servicesCat1Name, n.servicesCat1Desc, n.servicesCat1To, n.servicesCat2Name, n.servicesCat2Desc, n.servicesCat2To]
+  );
+  // Localized nav labels (e.g. 'যোগাযোग') must map back to the canonical
+  // English view name the render switch keys on, otherwise Bengali nav breaks.
+  const navItemViewMap = useMemo(() => {
+    const en = navCopy.en.navItems as readonly string[];
+    const loc = navCopy[lang].navItems as readonly string[];
+    const map = new Map<string, string>();
+    en.forEach((view, i) => map.set(view, view).set(loc[i], view));
+    // Service category "to" labels are also localized (e.g. 'সেবা' → 'Services')
+    map.set(n.servicesCat1To, 'Services').set(n.servicesCat2To, 'Services');
+    return map;
+  }, [lang, n.servicesCat1To, n.servicesCat2To]);
+  const handleNavClick = useCallback(
+    (item: string) => {
+      onNavigate(navItemViewMap.get(item) || item);
+      setOpen(false);
+      setServicesOpen(false);
+    },
+    [onNavigate, navItemViewMap]
+  );
+  const handleServicesClose = useCallback(() => setServicesOpen(false), []);
+  useEffect(() => {
+    if (!servicesOpen) return;
+    const id = setInterval(() => {
+      setServicesSlide(s => (s + 1) % servicesSlides.length);
+    }, 4500);
+    return () => clearInterval(id);
+  }, [servicesOpen, servicesSlides.length]);
+  useEffect(() => {
+    if (!servicesOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setServicesOpen(false);
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (!(target instanceof Node)) return;
+      const panel = document.querySelector('.nav-dd-panel');
+      if (panel && !panel.contains(target)) setServicesOpen(false);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [servicesOpen]);
   const handleSearchOpen = useCallback(() => setSearchOpen(true), []);
   const handleSearchClose = useCallback(() => setSearchOpen(false), []);
   const handleMenuToggle = useCallback(() => setOpen(v => !v), []);
@@ -345,26 +422,142 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
 
           <nav id="primary-navigation" className={`main-nav ${open ? 'is-open' : ''}`} aria-label="Main">
             <span className="nav-track" aria-hidden="true" />
-            {navItems.map((item, i) => (
-              <button
-                key={item}
-                onClick={() => handleNavClick(item)}
-                onMouseEnter={() => {
-                  setHovered(item);
-                  prefetchRoute(item);
-                }}
-                onFocus={() => {
-                  setHovered(item);
-                  prefetchRoute(item);
-                }}
-                onTouchStart={() => prefetchRoute(item)}
-                onMouseLeave={() => setHovered(null)}
-                className={`nav-link link-underline ${hovered === item ? 'is-hover' : ''}`}
-                style={{ animationDelay: `${0.05 + i * 0.04}s` }}>
-                <span className="nav-label">{item}</span>
-                <span className="nav-dot" aria-hidden="true" />
-              </button>
-            ))}
+            {navItems.map((item, i) => {
+              if (item === n.servicesDropdownLabel) {
+                return (
+                  <div
+                    key={item}
+                    className={`nav-dd ${servicesOpen ? 'is-open' : ''}`}
+                    onMouseEnter={() => setServicesOpen(true)}
+                    onMouseLeave={() => setServicesOpen(false)}
+                    onFocus={() => setServicesOpen(true)}
+                    onBlur={() => setServicesOpen(false)}>
+                    <button
+                      type="button"
+                      className="nav-link link-underline nav-dd-toggle"
+                      aria-expanded={servicesOpen}
+                      aria-haspopup="menu"
+                      aria-controls="services-dropdown-panel"
+                      onClick={() => handleNavClick('Services')}
+                      onKeyDown={event => {
+                        if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault();
+                          setServicesOpen(true);
+                        }
+                      }}
+                      style={{ animationDelay: `${0.05 + i * 0.04}s` }}>
+                      <span className="nav-label">{item}</span>
+                      <ChevronDown size={14} aria-hidden="true" />
+                      <span className="nav-dot" aria-hidden="true" />
+                    </button>
+                    <div
+                      id="services-dropdown-panel"
+                      className="nav-dd-panel"
+                      role="menu"
+                      aria-label="Services categories">
+                      <div className="nav-dd-panel-inner">
+                        <div className="nav-dd-col">
+                          <div className="nav-dd-col-title">Browse by category</div>
+                          {servicesCats.map(cat => (
+                            <button
+                              key={cat.name}
+                              type="button"
+                              className="nav-dd-cat"
+                              role="menuitem"
+                              onClick={() => {
+                                handleNavClick(cat.to);
+                                setServicesOpen(false);
+                              }}>
+                              <span className="nav-dd-cat-icon" aria-hidden="true">
+                                {cat.icon === 'skin' ? <Sparkles size={18} /> : <HeartPulse size={18} />}
+                              </span>
+                              <span>
+                                <div className="nav-dd-cat-name">{cat.name}</div>
+                                <div className="nav-dd-cat-desc">{cat.desc}</div>
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                        <div className="nav-dd-col">
+                          <div className="nav-dd-col-title">Featured care</div>
+                          <div className="nav-dd-slider">
+                            <div className="nav-dd-slider-track">
+                              {servicesSlides.map((slide, s) => (
+                                <div
+                                  key={s}
+                                  className={`nav-dd-slide nav-dd-slide-link ${servicesSlide === s ? 'is-active' : ''}`}
+                                  role="button"
+                                  tabIndex={servicesSlide === s ? 0 : -1}
+                                  aria-label={`${slide.cta} — ${slide.title}`}
+                                  onClick={() => {
+                                    if (slide.slug) {
+                                      handleNavClick(`Service:${slide.slug}`);
+                                    } else {
+                                      handleNavClick(servicesCats[s % servicesCats.length].to);
+                                    }
+                                    setServicesOpen(false);
+                                  }}
+                                  onKeyDown={e => {
+                                    if ((e.key === 'Enter' || e.key === ' ') && slide.slug) {
+                                      e.preventDefault();
+                                      handleNavClick(`Service:${slide.slug}`);
+                                      setServicesOpen(false);
+                                    }
+                                  }}>
+                                  <div>
+                                    <div className="nav-dd-slide-eyebrow">{slide.eyebrow}</div>
+                                    <div className="nav-dd-slide-title">{slide.title}</div>
+                                  </div>
+                                  <div className="nav-dd-slide-foot">
+                                    <span>{slide.cta}</span>
+                                    <span className="nav-dd-slide-arrow" aria-hidden="true">→</span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="nav-dd-dots" aria-label="Slider indicators">
+                              {servicesSlides.map((_, s) => (
+                                <span
+                                  key={s}
+                                  className={`nav-dd-dot ${servicesSlide === s ? 'is-on' : ''}`}
+                                  onClick={() => setServicesSlide(s)}
+                                  role="button"
+                                  tabIndex={0}
+                                  aria-label={`Slide ${s + 1}`}
+                                  onKeyDown={e => {
+                                    if (e.key === 'Enter' || e.key === ' ') setServicesSlide(s);
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+              return (
+                <button
+                  key={item}
+                  onClick={() => handleNavClick(item)}
+                  onMouseEnter={() => {
+                    setHovered(item);
+                    prefetchRoute(navItemViewMap.get(item) || item);
+                  }}
+                  onFocus={() => {
+                    setHovered(item);
+                    prefetchRoute(navItemViewMap.get(item) || item);
+                  }}
+                  onTouchStart={() => prefetchRoute(navItemViewMap.get(item) || item)}
+                  onMouseLeave={() => setHovered(null)}
+                  className={`nav-link link-underline ${hovered === item ? 'is-hover' : ''}`}
+                  style={{ animationDelay: `${0.05 + i * 0.04}s` }}>
+                  <span className="nav-label">{item}</span>
+                  <span className="nav-dot" aria-hidden="true" />
+                </button>
+              );
+            })}
           </nav>
 
           <div className="header-actions">
@@ -586,10 +779,18 @@ const Footer = memo(function Footer({
         <div className="footer-col">
           <h4>{n.exploreHeading}</h4>
           <ul className="footer-link-list">
-            {['About', 'Services', 'Chambers', 'Gallery'].map((x, i) => (
-              <li key={x} style={{ animationDelay: `${0.05 + i * 0.05}s` }}>
-                <button onClick={() => onNavigate(x)} className="footer-link link-underline">
-                  {n.navItems[['About', 'Services', 'Chambers', 'Gallery'].indexOf(x)] || x}
+            {(
+              [
+                { view: 'About', idx: 1 },
+                { view: 'Services', idx: 2 },
+                { view: 'Chambers', idx: 4 },
+                { view: 'Gallery', idx: 3 },
+                { view: 'Contact', idx: 5 },
+              ] as const
+            ).map(({ view, idx }, i) => (
+              <li key={view} style={{ animationDelay: `${0.05 + i * 0.05}s` }}>
+                <button onClick={() => onNavigate(view)} className="footer-link link-underline">
+                  {n.navItems[idx] || view}
                 </button>
               </li>
             ))}
@@ -1380,7 +1581,7 @@ const SimplePage = memo(function SimplePage({ title, onNavigate }: { title: stri
     (lang === 'bn'
       ? {
           title1: title,
-          em: 'ক্লিনিকে।',
+          em: '���্লিনিকে।',
           lead: 'আধুনিক স্বাস্থ্যসেবার একটি বিবেচিত, মানবিক দৃষ্টিভঙ্গি।',
         }
       : {
