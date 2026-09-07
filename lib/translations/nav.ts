@@ -34,7 +34,7 @@ export const navCopy = {
     clinicHours: 'Mon–Fri · 08:00–17:00',
     clinicPhone: '+880 1719-939553',
     clinicEmail: 'hello@dribrahim.clinic',
-    copyright: '© 2026 DR.IBRAHIM HOSSAIN',
+    copyright: '© 2026 Dr. Ibrahim Hossain',
     copyrightTagline: 'Patient-first care, always.',
     newsletterTitle: 'Care that keeps in touch.',
     newsletterBody:

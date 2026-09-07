@@ -1,9 +1,9 @@
 // Common / shared translations used across the site.
 export const common = {
   en: {
-    brandName: 'DR.IBRAHIM HOSSAIN',
-    brandTagline: 'Skin, Veneral & Integrative Medicine Specialist',
-    brandFull: 'Dr. Ibrahim Hossain Khan Clinic',
+    brandName: 'Dr. Ibrahim Hossain',
+    brandTagline: 'Skin, Veneral disease and integrative medicine Specialist',
+    brandFull: 'Dr. Ibrahim Hossain Clinic',
     doctorName: 'Dr. Ibrahim Hossain',
     doctorCredentials: 'M.Sc · Skin & VD Integrative Medicine Consultant',
     doctorShortCred: 'Skin & VD Integrative Medicine Consultant',
@@ -72,7 +72,7 @@ export const common = {
   },
   bn: {
     brandName: 'ডাঃ ইব্রাহিম হোসেন',
-    brandTagline: 'Skin, Veneral & Integrative Medicine Specialist',
+    brandTagline: 'Skin, Veneral disease and integrative medicine Specialist',
     brandFull: 'ডাঃ ইব্রাহিম হোসেন ক্লিনিক',
     doctorName: 'ডাঃ ইব্রাহিম হোসেন',
     doctorCredentials: 'এম.এস.সি · Skin & VD Integrative Medicine কনসালটেন্ট',

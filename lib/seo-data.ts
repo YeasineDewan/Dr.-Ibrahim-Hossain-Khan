@@ -22,9 +22,9 @@ export interface SeoData {
 
 export const seoData: Record<PageKey, SeoData> = {
   Home: {
-    title: 'DR.IBRAHIM HOSSAIN | Board-Certified Dermatologist & Integrative Medicine Specialist',
+    title: 'Dr. Ibrahim Hossain | Skin, Veneral disease and integrative medicine Specialist',
     description:
-      'Expert dermatology, veneral medicine and integrative care by Dr. Ibrahim Hossain Khan. Dhaka-based consultant dermatologist specializing in PRP therapy, psoriasis management, vitiligo treatment, IBS care, hormonal optimization, infertility support and family medicine. Book your consultation today.',
+      'Dr. Ibrahim Hossain — Skin, Veneral disease and integrative medicine Specialist. Dermatology, veneral medicine and integrative care in Dhaka, Bangladesh. PRP therapy, psoriasis, vitiligo, IBS, hormonal optimization, infertility support and family medicine. Book your consultation today.',
     keywords: [
       'Dr. Ibrahim Hossain',
       'Dr. Ibrahim Hossain Khan',
@@ -130,7 +130,7 @@ export const seoData: Record<PageKey, SeoData> = {
   Gallery: {
     title: 'Clinic Gallery | Dr. Ibrahim Hossain Khan',
     description:
-      'Explore our modern clinic spaces, compassionate care moments and state-of-the-art facilities. See the DR.IBRAHIM HOSSAIN clinic environment designed for your comfort and wellbeing in Dhaka, Bangladesh.',
+      'Explore our modern clinic spaces, compassionate care moments and state-of-the-art facilities. See the Dr. Ibrahim Hossain clinic environment designed for your comfort and wellbeing in Dhaka, Bangladesh.',
     keywords: [
       'clinic gallery Dhaka',
       'dermatology clinic photos',
@@ -166,9 +166,9 @@ export const seoData: Record<PageKey, SeoData> = {
     ogImage: '/logo-256.png',
   },
   Contact: {
-    title: 'Contact Us | Dr. Ibrahim Hossain Khan Clinic',
+    title: 'Contact Us | Dr. Ibrahim Hossain',
     description:
-      'Contact DR.IBRAHIM HOSSAIN clinic in Dhaka for appointments, enquiries and general support. Call +233 30 290 4420, email hello@dribrahim.clinic, or send us a message. We reply within one working day.',
+      'Contact Dr. Ibrahim Hossain clinic in Dhaka for appointments, enquiries and general support. Call +880 1719-939553, email hello@dribrahim.clinic, or send us a message. We reply within one working day.',
     keywords: [
       'contact dermatologist Dhaka',
       'clinic contact Bangladesh',
@@ -185,7 +185,7 @@ export const seoData: Record<PageKey, SeoData> = {
     ogImage: '/logo-256.png',
   },
   Appointment: {
-    title: 'Book Appointment | Dr. Ibrahim Hossain Khan',
+    title: 'Book Appointment | Dr. Ibrahim Hossain',
     description:
       'Book your dermatology or integrative medicine appointment online. Choose your service, chamber, date and time. Flexible scheduling available Monday through Friday at our Dhaka clinic.',
     keywords: [
@@ -204,9 +204,9 @@ export const seoData: Record<PageKey, SeoData> = {
     ogImage: '/logo-256.png',
   },
   Checkout: {
-    title: 'Checkout | Dr. Ibrahim Hossain Khan',
+    title: 'Checkout | Dr. Ibrahim Hossain',
     description:
-      'Complete your appointment booking or service order securely. Review your selected service, chamber, date and time before confirming your visit to DR.IBRAHIM HOSSAIN clinic.',
+      'Complete your appointment booking or service order securely. Review your selected service, chamber, date and time before confirming your visit to Dr. Ibrahim Hossain clinic.',
     keywords: [
       'appointment checkout',
       'clinic payment Bangladesh',
@@ -218,9 +218,9 @@ export const seoData: Record<PageKey, SeoData> = {
     ogImage: '/logo-256.png',
   },
   Success: {
-    title: 'Booking Confirmed | Dr. Ibrahim Hossain Khan',
+    title: 'Booking Confirmed | Dr. Ibrahim Hossain',
     description:
-      'Your appointment or order with DR.IBRAHIM HOSSAIN has been confirmed. Check your details, prepare for your visit and contact us if you need to reschedule.',
+      'Your appointment or order with Dr. Ibrahim Hossain has been confirmed. Check your details, prepare for your visit and contact us if you need to reschedule.',
     keywords: [
       'appointment confirmed',
       'booking success Bangladesh',

@@ -4,10 +4,6 @@ import { memo, useCallback, useEffect, useRef, useState, startTransition } from 
 import { Download, Globe2, Sparkles, Check, ArrowRight, Languages, X } from 'lucide-react';
 import { common, useLanguage } from '../lib/translations';
 
-export function copy() {
-  return common;
-}
-
 export const LanguageGate = memo(function LanguageGate({
   onChange,
 }: {
@@ -105,7 +101,7 @@ export const LanguageGate = memo(function LanguageGate({
       </button>
       <div ref={cardRef} className={`lang-gate-card ${closing ? 'is-closing' : ''}`}>
         <div className="lang-gate-eyebrow">
-          <Sparkles size={11} /> <span>DR.IBRAHIM HOSSAIN</span> <Sparkles size={11} />
+          <Sparkles size={11} /> <span>{common.en.brandName}</span> <Sparkles size={11} />
         </div>
         <div className="lang-gate-flag" aria-hidden="true">
           <Languages size={32} />

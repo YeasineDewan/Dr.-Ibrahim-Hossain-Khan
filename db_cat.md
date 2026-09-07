@@ -648,3 +648,271 @@ Always store currency separately if multi-currency is ever needed (see `products
 
 ### 4.15 Pagination and offline persistence
 The current implementation persists all entities to `sessionStorage` under key `dribrahim.admin.content` (`lib/admin-data.ts:1140`). For a real backend, replace this with paginated fetches and replace the `addX` upsert helper with an HTTP `PUT` / `POST` per resource.
+
+---
+
+## 5. Critical: Missing Constraints & Data Integrity
+
+### 5.1 Non-null critical lookup columns
+Several foreign keys are `NULL`-able when they should not be (clinics can't operate without these):
+
+- **`appointments.patient_id`** is `NULL`-able (`db_cat.md:163`). An appointment without a patient is meaningless. Make it `NOT NULL`.
+- **`appointments.chamber_id`** is `NULL`-able. An appointment must have a location — enforce `NOT NULL`.
+- **`appointments.doctor_id`** and **`appointments.service_id`** should also be `NOT NULL` (every appointment needs a doctor and a service reason).
+- **`invoices.appointment_id`** is `NULL`-able — fine if you support product-only invoices, but consider a `CHECK (appointment_id IS NOT NULL OR order_id IS NOT NULL)` so an invoice always has a parent.
+- **`follow_ups.patient_id`** should be `NOT NULL`.
+
+### 5.2 Missing unique constraints
+- **`users.email`** is unique ✓, but **`patients.email`** is also unique (`db_cat.md:55`) — good.
+- **`patients.phone`** has no index. Add `INDEX (phone)` — phone search is a daily clinic operation.
+- **`coupons.code`** is unique ✓, but no index on **`appointments.appt_date + appt_time`** as a composite for slot-booking conflicts. Add `UNIQUE (chamber_id, appt_date, appt_time)` to prevent double-booking.
+- **`reviews`** has no constraint preventing duplicate reviews per `(patient_id, service_id)` — add `UNIQUE (patient_id, service_id)` (or per-visit).
+
+### 5.3 Polymorphic FKs are not enforceable
+`notifications.target_type / target_id` (`db_cat.md:277-278`) and `activity_log.target` (`db_cat.md:287`) cannot have FK constraints. Mitigate by:
+- Replacing with explicit nullable FKs (`appointment_id`, `patient_id`, `order_id`) + a discriminator `target_type`.
+- Or, if polymorphism must stay, add a `CHECK (target_type IN (...))` and consider a trigger validating `target_id` existence in the referenced table.
+
+### 5.4 `prescription_audit_trail.actor` is a free string
+Should reference `users(id)` (`db_cat.md:223`). FK it.
+
+### 5.5 `prescriptions.signature_data_url` as TEXT
+Base64 PNG signatures can be 100KB+. Store the signature as a separate row in `signatures` with `BYTEA` or object storage URL, not inline base64 in the prescription row — keeps the table lean and queryable.
+
+---
+
+## 6. High Priority: Performance & Indexing
+
+### 6.1 Missing indexes on hot read paths
+- `appointments(appt_date)` ✓ listed, but the **doctor's daily schedule** query needs `(doctor_id, appt_date)`.
+- `patients(name)` — clinic staff search by name constantly. Add `INDEX (name)`.
+- `audit_entries(timestamp DESC)` — required for paginated audit logs.
+- `analytics_events(timestamp DESC)` — and consider **partitioning by month** (`PARTITION BY RANGE (timestamp)`).
+- `notifications(user_id, read, created_at DESC)` — drives the bell-icon dropdown.
+- `sessions(user_id)` and `sessions(expires_at)` — for session validation and cleanup.
+- `auth_tokens(access_token)` and `(refresh_token)` — already `UNIQUE` per spec, but make sure these are `HASH` indexes for O(1) lookup, not stored in plaintext (see §9.2).
+
+### 6.2 Composite indexes missed
+- `appointments(chamber_id, appt_date, status)` — for chamber-day-grid views.
+- `prescriptions(patient_id, rx_date DESC)` — patient prescription timeline.
+- `follow_ups(assigned_to, status, due_date)` — staff task queues.
+- `order_items(order_id)` is implied by PK but add `(product_id)` for sales-by-product queries.
+
+### 6.3 JSONB columns need GIN indexes if searched
+`dashboard_layouts.layout`, `saved_views.filters`, `audit_entries.details`, `analytics_events.properties`, `seo_pages.structured_data`, `media_uploads.tags` — add `GIN` indexes only on those you actually query into. Don't index speculatively.
+
+---
+
+## 7. High Priority: Missing Entities
+
+The schema is missing several tables that the code clearly uses:
+
+| Missing table | Source | Suggested fields |
+|---|---|---|
+| **`appointments_status_history`** | kanban transitions in admin | `id`, `appointment_id`, `from_status`, `to_status`, `changed_by`, `changed_at`, `reason` |
+| **`notifications_read`** (optional split) | bulk-clear-all UX | separate from `notifications` if read-state grows |
+| **`patient_vitals_history`** | already in `patient_vitals`, but add `recorded_by` FK to users | — |
+| **`orders` / `order_items`** | referenced (`db_cat.md:453`) | flesh out: `currency`, `shipping_address`, `billing_address`, `placed_by` |
+| **`patient_insurance`** / **`insurance_providers`** | implied by clinic context | `provider_id`, `patient_id`, `policy_number`, `valid_until` |
+| **`refills`** | `prescriptions.refill_count` increments | dedicated table: `id`, `prescription_id`, `requested_at`, `approved_by`, `status` |
+| **`attachments`** | `patient_documents` exists but no general attachment table for prescriptions/messages | `id`, `parent_type`, `parent_id`, `storage_url`, `mime`, `size` |
+| **`staff_schedules`** / **`chamber_schedules`** | implied by `chambers.hours` (free-text) | `chamber_id`, `day_of_week`, `open_time`, `close_time`, `capacity` |
+| **`translations`** | i18n strings live in code | `key`, `lang`, `value`, `namespace` (per §4.13) |
+| **`webhook_deliveries`** | if notifications integrate SMS/email | `id`, `channel`, `payload`, `status`, `attempt`, `last_error` |
+
+---
+
+## 8. Medium: Type & Schema Refinements
+
+### 8.1 `gender` enum too narrow
+`'Male','Female','Other'` misses `'Prefer not to say'`. Add it.
+
+### 8.2 `blood_group` as VARCHAR
+Clinic reality: A+, A-, B+, B-, AB+, AB-, O+, O-, plus rare types. Use a lookup table `blood_groups(code, label)` or `CHECK` constraint — better than free-text to enable reporting.
+
+### 8.3 `appointments.appt_time` as TIME
+Good. But also add `TIMEZONE` (`appointments_tz VARCHAR(40)`, default `'Asia/Dhaka'`) — Bangladesh has no DST but cross-border telemedicine may need it.
+
+### 8.4 `duration_min` as INT
+Good. But also store `start_at TIMESTAMPTZ` and `end_at TIMESTAMPTZ` (computed or trigger-maintained) — eliminates date-arithmetic bugs in conflict checks.
+
+### 8.5 `appointments.appt_type` enum
+Add `'Home-visit'` if the clinic offers it.
+
+### 8.6 `appointments.fee` should be `NOT NULL` with default
+Good (`db_cat.md:176`), but make it `DEFAULT0` to allow tentative/waitlist entries before pricing.
+
+### 8.7 `payments.method` as free VARCHAR
+Restrict: `CHECK (method IN ('Cash','bKash','Nagad','Card','Bank','Insurance'))`.
+
+### 8.8 `payments.last4 CHAR(4)`
+`CHAR(4)` right-pads whitespace — use `VARCHAR(4)` or split into `card_brand` + `card_last4`.
+
+### 8.9 `media_uploads.size_bytes BIGINT`
+Good. Add `checksum VARCHAR(64)` (SHA-256) for deduplication and integrity verification.
+
+### 8.10 `videos.duration` as VARCHAR
+Should be `INTERVAL` or `INT` (seconds). Currently `'12:34'` strings are not queryable.
+
+### 8.11 `reviews.rating` as SMALLINT
+Add `CHECK (rating BETWEEN 1 AND 5)` ✓ (already specified). Good. But consider splitting into `rating_overall`, `rating_bedside`, `rating_wait_time` for richer analytics.
+
+### 8.12 `prescriptions.refill_count >= refills_allowed` invariant
+Enforce with `CHECK (refill_count <= refills_allowed)` or a `BEFORE INSERT/UPDATE` trigger.
+
+### 8.13 `appointments.status` enum
+Add `'No-show'` — common in clinic operations and kanban needs it.
+
+### 8.14 `users.failed_attempts` reset
+Schema doesn't say so. Add a trigger or app logic to reset to0 on successful login.
+
+### 8.15 `users.locked_until` cleanup
+Add a partial index `users(locked_until) WHERE locked_until IS NOT NULL` for the lockout cron.
+
+---
+
+## 9. Security & Privacy
+
+### 9.1 PHI (Protected Health Information) column classification
+Tag every column containing PHI (`patients.dob`, `address`, `phone`, `email`, `patient_visits.notes`, `patient_documents`, `patient_vitals`, `prescriptions.diagnosis`) and:
+- Encrypt at rest (column-level or TDE).
+- Add a `phi_tags` table or row-level security policies for `front-desk`, `nurse`, `doctor`, etc.
+
+### 9.2 `auth_tokens.access_token` and `refresh_token` as TEXT
+These should be **hashed** before storage (never store the raw token). Either:
+- Store `access_token_hash`, `refresh_token_hash` (SHA-256 hex), or
+- Use `BYTEA` for hashed bytes.
+Same for `sessions.id` — opaque session IDs should be stored hashed.
+
+### 9.3 `users.password_hash` as VARCHAR(255)
+Good length for Argon2id. Enforce via app layer.
+
+### 9.4 `audit_entries.details` as JSONB
+If it stores PHI, redact before write (or note that audit logs may contain PHI and apply the same encryption).
+
+### 9.5 Row-level security (RLS)
+Enable PostgreSQL RLS on `patients`, `prescriptions`, `patient_visits`, `patient_notes`, `patient_documents`, `patient_vitals`, `messages` — restrict by `assigned_doctor_id`, `chamber_id`, or `patient_id` ownership.
+
+### 9.6 Soft deletes
+Currently the schema has no `deleted_at` columns. PHI regulations require retention but also the right to erasure. Add `deleted_at TIMESTAMPTZ` (nullable) on `patients`, `prescriptions`, `appointments`, `messages`, plus an `erasure_requested_at` for GDPR-style workflows.
+
+---
+
+## 10. Audit, Logging & Observability
+
+### 10.1 `activity_log` vs `audit_entries` overlap
+Both exist. Define non-overlapping responsibilities:
+- `activity_log` — user-visible "what happened" feed (e.g. "Dr. Ibrahim approved review REV-001").
+- `audit_entries` — security/permission trail (who tried what, denied attempts).
+- Add `prescription_audit_trail` is fine — it's domain-specific.
+
+### 10.2 Missing `appointments_status_history`
+State transitions must be auditable — see §7.
+
+### 10.3 No `created_by` / `updated_by` on most tables
+Only `created_at`/`updated_at` exist. Add `created_by`, `updated_by` (FK → users) on `patients`, `appointments`, `prescriptions`, `orders`, `invoices`, `coupons`, `reviews`, `faqs`.
+
+---
+
+## 11. i18n & Multi-Currency
+
+### 11.1 `_bn` columns are scattered
+`db_cat.md:641` recommends `_bn` mirrors + a `translations` table. Concrete:
+- Keep `_bn` for short, fixed-vocabulary strings (`services.name_bn`, `roles.name_bn`, `videos.title_bn`).
+- Add `translations(id, key VARCHAR(120), lang CHAR(2), value TEXT, UNIQUE(key, lang))`.
+- Add a `i18n_languages` table with `code`, `name`, `native_name`, `is_default`, `is_active`.
+
+### 11.2 Money column currency
+`products.currency` exists but `invoices`, `payments`, `appointments.fee` lack currency. Add `currency CHAR(3) NOT NULL DEFAULT 'BDT'` to all monetary tables — required if the clinic ever bills in USD/EUR (e.g. for foreign patients).
+
+### 11.3 `NUMERIC(10,2)` is fine for BDT
+But for INR/EUR with bigger numbers, `NUMERIC(12,2)` is safer. Consider standardizing on `NUMERIC(12,2)` everywhere.
+
+---
+
+## 12. Configuration & Operational
+
+### 12.1 Missing reference/lookup tables
+Promote these enums to tables for admin UI management:
+- `appointment_statuses`, `appointment_types`
+- `prescription_statuses`
+- `payment_methods`, `payment_statuses`
+- `order_statuses`
+- `review_statuses`
+- `notification_types`
+- `user_statuses`
+- `chamber_statuses`
+- `service_statuses`
+
+### 12.2 Missing `chambers.hours` structured form
+Free-text `VARCHAR(80)` is bad. Replace with `chamber_schedules(chamber_id, day_of_week SMALLINT, open_time TIME, close_time TIME, is_closed BOOLEAN)`.
+
+### 12.3 ID generation
+`db_cat.md:595` suggests sequences or UUID v5. Recommend:
+- `VARCHAR` business IDs (`DR-20481`, `APT-001`) — keep for human-readable paper trail.
+- Add `uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid()` as a stable internal key for joins/foreign APIs.
+- Generate via Postgres sequences: `CREATE SEQUENCE patient_id_seq;`.
+
+### 12.4 Time zone
+Set DB session to `Asia/Dhaka` (`SET TIME ZONE 'Asia/Dhaka'`). All `TIMESTAMPTZ` columns store UTC; conversion happens at the app/UI layer.
+
+### 12.5 Missing `migrations` / `seed` strategy
+`db_cat.md` is a blueprint, not migration scripts. Add:
+- A real migrations folder (`prisma/migrations/` or `drizzle/`, or `supabase/migrations/`).
+- Seed scripts for the 8 default roles, permissions matrix, demo doctor, sample chambers.
+
+### 12.6 Backup / PITR
+Not in the doc but critical for medical data — daily encrypted backups with PITR (point-in-time recovery) for30 days, off-site replication.
+
+---
+
+## 13. Concrete Add-On Schema (proposed)
+
+```sql
+-- Status history table (audit trail for state machines)
+CREATE TABLE appointments_status_history (
+  id              BIGSERIAL PRIMARY KEY,
+  appointment_id  VARCHAR(32) NOT NULL REFERENCES appointments(id) ON DELETE CASCADE,
+  from_status     VARCHAR(16),
+  to_status       VARCHAR(16) NOT NULL,
+  changed_by      VARCHAR(32) REFERENCES users(id),
+  changed_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  reason TEXT
+);
+CREATE INDEX ON appointments_status_history(appointment_id, changed_at DESC);
+
+-- Soft delete + audit columns
+ALTER TABLE patients        ADD COLUMN deleted_at TIMESTAMPTZ, ADD COLUMN created_by VARCHAR(32) REFERENCES users(id), ADD COLUMN updated_by VARCHAR(32) REFERENCES users(id);
+ALTER TABLE appointments ADD COLUMN deleted_at TIMESTAMPTZ, ADD COLUMN created_by VARCHAR(32) REFERENCES users(id), ADD COLUMN updated_by VARCHAR(32) REFERENCES users(id);
+ALTER TABLE prescriptions   ADD COLUMN deleted_at TIMESTAMPTZ, ADD COLUMN created_by VARCHAR(32) REFERENCES users(id), ADD COLUMN updated_by VARCHAR(32) REFERENCES users(id);
+
+-- Double-booking prevention
+ALTER TABLE appointments ADD CONSTRAINT no_double_booking UNIQUE (chamber_id, appt_date, appt_time);
+
+-- Doctor daily schedule lookup
+CREATE INDEX appointments_doctor_day ON appointments(doctor_id, appt_date);
+
+-- Patient name search
+CREATE INDEX patients_name_trgm ON patients USING GIN (name gin_trgm_ops);
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+-- Token hashingALTER TABLE auth_tokens
+  RENAME COLUMN access_token  TO access_token_hash,
+  RENAME COLUMN refresh_token TO refresh_token_hash;
+
+-- Notifications deep-link FKs
+ALTER TABLE notifications
+  ADD COLUMN appointment_id VARCHAR(32) REFERENCES appointments(id) ON DELETE CASCADE,
+  ADD COLUMN patient_id     VARCHAR(32) REFERENCES patients(id)     ON DELETE CASCADE,
+  ADD COLUMN order_id       VARCHAR(32) REFERENCES orders(id)       ON DELETE CASCADE;
+```
+
+---
+
+## 14. Top 5 Quick Wins (do these first)
+
+1. **Add `NOT NULL`** to `appointments.{patient_id, chamber_id, doctor_id, service_id}` and **`UNIQUE (chamber_id, appt_date, appt_time)`** to prevent double-booking.
+2. **Hash `auth_tokens` and `sessions.id`** — currently plaintext; major security flaw.
+3. **Add missing indexes** for hot queries (`patients.name`, `appointments(doctor_id, appt_date)`, `audit_entries(timestamp DESC)`, `notifications(user_id, read, created_at DESC)`).
+4. **Add `appointments_status_history` + `created_by/updated_by`** columns — enables state-machine auditing and accountability.
+5. **Promote free-text enums to lookup tables** (`blood_groups`, `chamber_schedules`, `payment_methods`, etc.) — enables admin-managed vocabulary and reporting.

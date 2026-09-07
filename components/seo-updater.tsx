@@ -62,7 +62,7 @@ function getBaseStructuredData(page: PageKey, seo: SeoData) {
     '@context': 'https://schema.org',
     '@type': 'MedicalBusiness',
     '@id': BASE_URL + '/#organization',
-    name: 'DR.IBRAHIM HOSSAIN Clinic',
+    name: 'Dr. Ibrahim Hossain Clinic',
     description: seo.description,
     url: BASE_URL,
     telephone: '+8801719395553',
