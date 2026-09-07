@@ -382,14 +382,6 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
               <UserRound size={18} />
               <span className="icon-glow" aria-hidden="true" />
             </button>
-            <a
-              className="icon-btn press social-header-link"
-              href={n.socials.youtube}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={n.youtubeLabel}>
-              <PlaySquare size={18} aria-hidden="true" />
-            </a>
             <Magnetic className="header-cta-magnetic">
               <Button
                 onClick={() => onNavigate('Appointment')}
@@ -1417,7 +1409,7 @@ const SimplePage = memo(function SimplePage({ title, onNavigate }: { title: stri
             </h2>
             <p>
               {lang === 'bn'
-                ? 'আমাদের দল শুনতে, গাইড করতে এবং আপনার যত্ন নিতে প্রস্তুত।'
+                ? 'আমাদের দল শুনতে, গাইড করতে এবং আপনার য���্ন নিতে প্রস্তুত।'
                 : 'Our team is ready to listen, guide and care for you.'}
             </p>
             <Button onClick={() => onNavigate('Appointment')}>
