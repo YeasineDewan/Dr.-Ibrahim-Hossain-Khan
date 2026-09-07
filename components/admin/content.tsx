@@ -284,7 +284,7 @@ export function ServicesCMSView({ copy }: { copy: any }) {
         <section className="pro-panel">
           <div className="adm-form-grid">
             <Field label="Site title">
-               <Input defaultValue="Dr. Ibrahim Hossain | Skin, Veneral disease and integrative medicine Specialist" />
+               <Input defaultValue="Dr. Ibrahim Hossain | Skin, Venereal disease & Integrative Medicine Specialist" />
             </Field>
             <Field label="Meta description">
               <Textarea

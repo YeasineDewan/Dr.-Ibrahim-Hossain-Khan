@@ -22,9 +22,9 @@ export interface SeoData {
 
 export const seoData: Record<PageKey, SeoData> = {
   Home: {
-    title: 'Dr. Ibrahim Hossain | Skin, Veneral disease and integrative medicine Specialist',
+    title: 'Dr. Ibrahim Hossain | Skin, Venereal disease & Integrative Medicine Specialist',
     description:
-      'Dr. Ibrahim Hossain — Skin, Veneral disease and integrative medicine Specialist. Dermatology, veneral medicine and integrative care in Dhaka, Bangladesh. PRP therapy, psoriasis, vitiligo, IBS, hormonal optimization, infertility support and family medicine. Book your consultation today.',
+      'Dr. Ibrahim Hossain — Skin, Venereal disease & Integrative Medicine Specialist. Dermatology, veneral medicine and integrative care in Dhaka, Bangladesh. PRP therapy, psoriasis, vitiligo, IBS, hormonal optimization, infertility support and family medicine. Book your consultation today.',
     keywords: [
       'Dr. Ibrahim Hossain',
       'Dr. Ibrahim Hossain Khan',

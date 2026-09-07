@@ -2,7 +2,7 @@
 export const common = {
   en: {
     brandName: 'Dr. Ibrahim Hossain',
-    brandTagline: 'Skin, Veneral disease and integrative medicine Specialist',
+    brandTagline: 'Skin, Venereal disease & Integrative Medicine Specialist',
     brandFull: 'Dr. Ibrahim Hossain Clinic',
     doctorName: 'Dr. Ibrahim Hossain',
     doctorCredentials: 'M.Sc · Skin & VD Integrative Medicine Consultant',
@@ -72,7 +72,7 @@ export const common = {
   },
   bn: {
     brandName: 'ডাঃ ইব্রাহিম হোসেন',
-    brandTagline: 'Skin, Veneral disease and integrative medicine Specialist',
+    brandTagline: 'Skin, Venereal disease & Integrative Medicine Specialist',
     brandFull: 'ডাঃ ইব্রাহিম হোসেন ক্লিনিক',
     doctorName: 'ডাঃ ইব্রাহিম হোসেন',
     doctorCredentials: 'এম.এস.সি · Skin & VD Integrative Medicine কনসালটেন্ট',

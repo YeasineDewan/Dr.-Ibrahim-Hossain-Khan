@@ -5,7 +5,7 @@ import { serviceDetailsCopy, useLanguage, t as tT, common } from '../lib/transla
 import { ScrollReveal } from './scroll-reveal';
 import { FaqSection } from './faq-section';
 
-type ServiceKey = 'prp' | 'psoriasis' | 'vitiligo' | 'ibs' | 'integrative' | 'preventive';
+type ServiceKey = 'infertility-care' | 'skin-hair-care' | 'prp' | 'psoriasis' | 'vitiligo' | 'ibs' | 'integrative' | 'preventive';
 
 const details: Record<
   ServiceKey,
@@ -16,6 +16,32 @@ const details: Record<
     points: { en: string; bn: string }[];
   }
 > = {
+  'infertility-care': {
+    title: { en: 'Infertility Care', bn: 'ইনফার্টিলিটি কেয়ার' },
+    label: { en: 'Fertility support', bn: 'ফার্টিলিটি সহায়তা' },
+    intro: {
+      en: 'A calm, confidential fertility journey with thoughtful assessment, practical guidance, and care designed around both partners.',
+      bn: 'দুই সঙ্গীকে ঘিরে পরিকল্পিত মূল্যায়ন, বাস্তবসম্মত নির্দেশনা এবং যত্নের মাধ্যমে একটি শান্ত ও গোপনীয় ফার্টিলিটি যাত্রা।',
+    },
+    points: [
+      { en: 'Private fertility history and lifestyle review', bn: 'ব্যক্তিগত ফার্টিলিটি ইতিহাস ও জীবনযাত্রা পর্যালোচনা' },
+      { en: 'Evidence-informed investigation planning', bn: 'প্রমাণ-ভিত্তিক পরীক্ষা পরিকল্পনা' },
+      { en: 'Clear next steps for both partners', bn: 'উভয় সঙ্গীর জন্য স্পষ্ট পরবর্তী ধাপ' },
+    ],
+  },
+  'skin-hair-care': {
+    title: { en: 'Skin & Hair Care', bn: 'ত্বক ও চুলের যত্ন' },
+    label: { en: 'Dermatology & aesthetics', bn: 'চর্মরোগ ও নান্দনিক যত্ন' },
+    intro: {
+      en: 'Personalised skin and hair plans that pair careful diagnosis with gentle, measurable progress and everyday confidence.',
+      bn: 'সতর্ক রোগ নির্ণয়, কোমল চিকিৎসা এবং পরিমাপযোগ্য অগ্রগতির মাধ্যমে ব্যক্তিগত ত্বক ও চুলের যত্ন পরিকল্পনা।',
+    },
+    points: [
+      { en: 'Skin, scalp, and hair health assessment', bn: 'ত্বক, স্ক্যাল্প ও চুলের স্বাস্থ্য মূল্যায়ন' },
+      { en: 'Targeted plans for tone, texture, and growth', bn: 'টোন, টেক্সচার ও বৃদ্ধির জন্য নির্দিষ্ট পরিকল্পনা' },
+      { en: 'Simple routines with thoughtful follow-up', bn: 'সহজ রুটিন ও যত্নশীল ফলো-আপ' },
+    ],
+  },
   prp: {
     title: { en: 'PRP Therapy', bn: 'PRP থেরাপি' },
     label: { en: 'Regenerative care', bn: 'রিজেনারেটিভ কেয়ার' },
@@ -259,7 +285,7 @@ export function ServiceDetailPage({
           {
             question: lang === 'bn' ? 'ফলাফল কতদিনে দেখা যাবে?' : 'How long before I see results?',
             answer: lang === 'bn'
-              ? 'ফলাফলের সময় পরিকল্পনার উপর নির্ভর করে। কিছু চিকিৎসায় 2-4 সপ্তাহে improvement দেখা যায়, অন্যদের জন্য দীর্ঘ সময় লাগতে পারে।'
+              ? 'ফলাফলের সময় পরিকল্পনার উপর নির্ভর করে। কিছু চিকিৎসায় 2-4 সপ্তাহে improvement দেখা ���ায়, অন্যদের জন্য দীর্ঘ সময় লাগতে পারে।'
               : 'Results timelines vary by treatment plan. Some improvements may be visible in 2-4 weeks, while others may take longer. Dr. Ibrahim will set realistic expectations.',
           },
           {

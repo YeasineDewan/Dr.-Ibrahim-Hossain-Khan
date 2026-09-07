@@ -10,11 +10,11 @@ const bangla = Noto_Sans_Bengali({ subsets: ['bengali'], variable: '--font-bangl
 export const metadata: Metadata = {
   metadataBase: new URL('https://dribrahimhossain.com'),
   title: {
-    default: 'Dr. Ibrahim Hossain | Skin, Veneral disease and integrative medicine Specialist',
+    default: 'Dr. Ibrahim Hossain | Skin, Venereal disease & Integrative Medicine Specialist',
     template: '%s | Dr. Ibrahim Hossain',
   },
   description:
-    'Dr. Ibrahim Hossain — Skin, Veneral disease and integrative medicine Specialist. Dermatology, veneral medicine and integrative care in Dhaka, Bangladesh. PRP therapy, psoriasis, vitiligo, IBS, hormonal optimization, infertility support and family medicine. Book your consultation today.',
+    'Dr. Ibrahim Hossain — Skin, Venereal disease & Integrative Medicine Specialist. Dermatology, veneral medicine and integrative care in Dhaka, Bangladesh. PRP therapy, psoriasis, vitiligo, IBS, hormonal optimization, infertility support and family medicine. Book your consultation today.',
   keywords: [
     'Dr. Ibrahim Hossain',
     'Dr. Ibrahim Hossain Khan',
@@ -66,9 +66,9 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://dribrahimhossain.com',
     siteName: 'Dr. Ibrahim Hossain',
-    title: 'Dr. Ibrahim Hossain | Skin, Veneral disease and integrative medicine Specialist',
+    title: 'Dr. Ibrahim Hossain | Skin, Venereal disease & Integrative Medicine Specialist',
     description:
-      'Dr. Ibrahim Hossain — Skin, Veneral disease and integrative medicine Specialist. PRP therapy, psoriasis, vitiligo, IBS, family medicine and personalized wellness in Dhaka, Bangladesh.',
+      'Dr. Ibrahim Hossain — Skin, Venereal disease & Integrative Medicine Specialist. PRP therapy, psoriasis, vitiligo, IBS, family medicine and personalized wellness in Dhaka, Bangladesh.',
     images: [
       {
         url: '/logo-256.png',
@@ -86,9 +86,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Dr. Ibrahim Hossain | Skin, Veneral disease and integrative medicine Specialist',
+    title: 'Dr. Ibrahim Hossain | Skin, Venereal disease & Integrative Medicine Specialist',
     description:
-      'Dr. Ibrahim Hossain — Skin, Veneral disease and integrative medicine Specialist. PRP therapy, psoriasis, vitiligo, IBS and family medicine in Dhaka, Bangladesh.',
+      'Dr. Ibrahim Hossain — Skin, Venereal disease & Integrative Medicine Specialist. PRP therapy, psoriasis, vitiligo, IBS and family medicine in Dhaka, Bangladesh.',
     images: ['/logo-256.png'],
     creator: '@dribrahimhossain',
   },
@@ -127,7 +127,7 @@ const jsonLd = {
       '@type': 'MedicalBusiness',
       '@id': 'https://dribrahimhossain.com/#organization',
       name: 'Dr. Ibrahim Hossain',
-      description: 'Skin, Veneral disease and integrative medicine Specialist.',
+      description: 'Skin, Venereal disease & Integrative Medicine Specialist.',
       url: 'https://dribrahimhossain.com',
       telephone: '+8801719395553',
       email: 'hello@dribrahim.clinic',
