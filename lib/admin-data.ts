@@ -62,6 +62,7 @@ export type Chamber = {
   address: string;
   hours: string;
   phone: string;
+  email?: string;
   status: 'Active' | 'Closed';
   capacity: number;
 };
@@ -651,22 +652,13 @@ const sampleFollowUps: FollowUp[] = [
 
 const sampleChambers: Chamber[] = [
   {
-    id: 'CH-1',
-    name: 'Dhanmondi',
-    place: 'American Wellness Center',
-    address: 'House 45, Road 22, Dhanmondi, Dhaka 1209',
-    hours: '9:00 AM – 2:00 PM',
-    phone: '+880 1719 395 553',
-    status: 'Active',
-    capacity: 25,
-  },
-  {
     id: 'CH-2',
     name: 'Banglamotor',
-    place: 'Medigo Health Care',
-    address: 'Rupayan Trade Center, 14 Kazi Nazrul Islam Ave',
+    place: 'Medigo Healthcare',
+    address: 'Rupayan Trade Center, 3rd Floor, 114 Kazi Nazrul Islam Ave, Dhaka 1100',
     hours: '4:00 PM – 9:00 PM',
-    phone: '+880 1811 224 557',
+    phone: '01886-643626',
+    email: 'info@medigohealthcares.com',
     status: 'Active',
     capacity: 20,
   },

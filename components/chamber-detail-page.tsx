@@ -8,42 +8,10 @@ import { Tilt3D } from './motion-3d';
 import { chamberDetailSeo } from '../lib/seo-data';
 import { SeoUpdater, type PageKey } from './seo-updater';
 
-const slugs = ['dhanmondi', 'banglamotor', 'uttara'] as const;
+const slugs = ['banglamotor', 'uttara'] as const;
 type ChamberSlug = typeof slugs[number];
 
 const chamberContent: Record<ChamberSlug, { en: any; bn: any }> = {
-  dhanmondi: {
-    en: {
-      eyebrow: 'PRIMARY CHAMBER',
-      title1: 'Dhanmondi',
-      titleEm: 'Clinic.',
-      lead: 'Our flagship chamber in the heart of Dhaka. A calm, modern space designed for thoughtful consultations and continuous care.',
-      features: [
-        'Prime Dhanmondi location with easy parking access',
-        'Full-service dermatology and integrative medicine',
-        'Private consultation rooms',
-        'On-site pharmacy for prescribed medications',
-        'Flexible morning and afternoon appointments',
-      ],
-      nearby: 'Near Dhanmondi Lake, Bangladesh Road',
-      mapQuery: 'House+45+Road+22+Dhanmondi+Dhaka+Bangladesh',
-    },
-    bn: {
-      eyebrow: 'প্রধান চেম্বার',
-      title1: 'ধানমন্ডি',
-      titleEm: 'ক্লিনিক।',
-      lead: 'ঢাকার হৃদয়ে আমাদের প্রধান চেম্বার। বিবেচনামূলক কনসালটেশন এবং ধারাবাহিক যত্নের জন্য একটি শান্ত, আধুনিক স্থান।',
-      features: [
-        'ধানমন্ডি লেকের কাছে ಪ್ರIMO অবস্থান, সহজ পার্কিং',
-        'সম্পূর্ণ সেবামূলক ডার্মাটোলজি ও ইন্টিগ্রেটিভ মেডিসিন',
-        'ব্যক্তিগত কনসালটেশন রুম',
-        'প্রেসক্রাইবড ওষুধের জন্য অনসাইট ফার্মেসি',
-        'নমনীয় সকাল ও দুপুরের অ্যাপয়েন্টমেন্ট',
-      ],
-      nearby: 'ধানমন্ডি লেকের কাছে, বাংলাদেশ রোড',
-      mapQuery: 'House+45+Road+22+Dhanmondi+Dhaka+Bangladesh',
-    },
-  },
   banglamotor: {
     en: {
       eyebrow: 'EVENING CHAMBER',
@@ -52,28 +20,32 @@ const chamberContent: Record<ChamberSlug, { en: any; bn: any }> = {
       lead: 'Convenient evening and late-afternoon care at our Banglamotor location. Perfect for professionals and families who need after-hours attention.',
       features: [
         'Extended evening hours until 9:00 PM',
-        'Located at Rupayan Trade Center',
+        'Located at Rupayan Trade Center, 3rd Floor',
         'Full dermatology services available',
         'Easy access from all Dhaka areas',
         'Same-day appointments often available',
       ],
       nearby: 'Near Kazi Nazrul Islam Ave, Banglamotor',
-      mapQuery: 'Rupayan+Trade+Center+14+Kazi+Nazrul+Islam+Ave+Banglamotor+Dhaka',
+      mapQuery: 'Rupayan+Trade+Center+3rd+Floor+114+Kazi+Nazrul+Islam+Ave+Banglamotor+Dhaka+1100',
+      phone: '01886-643626',
+      email: 'info@medigohealthcares.com',
     },
     bn: {
       eyebrow: 'সন্ধ্যার চেম্বার',
       title1: 'বাংলামোটর',
       titleEm: 'ক্লিনিক।',
-      lead: 'আমাদের বাংলামোটর অবস্থানে সুবিধাজনক সন্ধ্যা ও দীর্ঘ-dupurের যত্ন। জরুরीinnon-hours atención চাই冒昧 profesionales এবং পরিবারদের জন্য নিখুঁত।',
+      lead: 'আমাদের বাংলামোটর অবস্থানে সুবিধাজনক সন্ধ্যা ও দীর্ঘ-dupurের যত্ন। জরুরীinnon-hours atención চাই冒昧 professionals এবং পরিবারদের জন্য নিখুঁত।',
       features: [
         'রাত ৯:০০ পর্যন্ত দীর্ঘ সন্ধ্যা সময়',
-        'রূপায়ন ট্রেড সেন্টরে অবস্থিত',
+        'রূপায়ন ট্রেড সেন্টার, ৩য় তলে অবস্থিত',
         'সম্পূর্ণ ডার্মাটোলজি সেবা উপলব্ধ',
         'সব ঢাকা এলাকা থেকে সহজ অ্যাক্সেস',
         'প্রায়শই একই দিনের অ্যাপয়েন্টমেন্ট উপলব্ধ',
       ],
       nearby: 'কাজী নজরুল ইসলাম অ্যাভিনিউর কাছে, বাংলামোটর',
-      mapQuery: 'Rupayan+Trade+Center+14+Kazi+Nazrul+Islam+Ave+Banglamotor+Dhaka',
+      mapQuery: 'Rupayan+Trade+Center+3rd+Floor+114+Kazi+Nazrul+Islam+Ave+Banglamotor+Dhaka+1100',
+      phone: '০১৮৮৬-৬৪৩৬২৬',
+      email: 'info@medigohealthcares.com',
     },
   },
   uttara: {
@@ -118,7 +90,7 @@ export function ChamberDetailPage({
   onNavigate: (p: string) => void;
 }) {
   const { lang } = useLanguage();
-  const content = chamberContent[slug as ChamberSlug] || chamberContent.dhanmondi;
+  const content = chamberContent[slug as ChamberSlug] || chamberContent.banglamotor;
   const data = content[lang];
   const seo = chamberDetailSeo[slug];
 
@@ -215,14 +187,14 @@ export function ChamberDetailPage({
                     <Phone size={18} style={{ color: '#14b8a6', marginTop: 2, flexShrink: 0 }} />
                     <div>
                       <strong style={{ fontSize: 13 }}>{lang === 'bn' ? 'ফোন' : 'Phone'}</strong>
-                      <p style={{ margin: '4px 0 0', fontSize: 13, color: '#647985' }}>+880 1719-939553</p>
+                      <p style={{ margin: '4px 0 0', fontSize: 13, color: '#647985' }}>{data.phone}</p>
                     </div>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                     <Mail size={18} style={{ color: '#14b8a6', marginTop: 2, flexShrink: 0 }} />
                     <div>
                       <strong style={{ fontSize: 13 }}>Email</strong>
-                      <p style={{ margin: '4px 0 0', fontSize: 13, color: '#647985' }}>hello@dribrahim.clinic</p>
+                      <p style={{ margin: '4px 0 0', fontSize: 13, color: '#647985' }}>{data.email}</p>
                     </div>
                   </div>
                   <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
@@ -259,7 +231,11 @@ export function ChamberDetailPage({
                 }}>
                 <iframe
                   title="Clinic location on Google Maps"
-                  src={`https://maps.google.com/maps?q=${data.mapQuery}&output=embed`}
+                  src={
+                    slug === 'banglamotor'
+                      ? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.0504414247616!2d90.39536509999999!3d23.7455806!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b90033178451%3A0x3a30eeb7d453498f!2sMedigo%20Healthcare!5e0!3m2!1sen!2sbd!4v1788817173079!5m2!1sen!2sbd'
+                      : `https://maps.google.com/maps?q=${data.mapQuery}&output=embed`
+                  }
                   width="100%"
                   height="320"
                   style={{ border: 0, display: 'block' }}

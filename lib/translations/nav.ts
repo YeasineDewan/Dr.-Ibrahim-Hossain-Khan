@@ -1,7 +1,7 @@
 // Navigation, header, footer, home page
 export const navCopy = {
   en: {
-    navItems: ['Home', 'About', 'Services', 'Gallery', 'Chambers', 'Contact'],
+    navItems: ['Home', 'About', 'Services', 'Gallery', 'Chambers'],
     utility: { phoneLabel: 'Call us', follow: 'Follow us' },
     youtubeLabel: 'YouTube channel',
     notice: [
@@ -160,7 +160,7 @@ export const navCopy = {
     patientPreview: 'Patient portal',
   },
   bn: {
-    navItems: ['হোম', 'পরিচিতি', 'সেবাসমূহ', 'গ্যালারি', 'চেম্বার', 'যোগাযোগ'],
+    navItems: ['হোম', 'পরিচিতি', 'সেবাসমূহ', 'গ্যালারি', 'চেম্বার'],
     utility: { phoneLabel: 'আমাদের কল করুন', follow: 'আমাদের অনুসরণ করুন' },
     youtubeLabel: 'ইউটিউব চ্যানেল',
     notice: [

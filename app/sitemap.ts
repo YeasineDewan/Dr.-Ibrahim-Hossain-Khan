@@ -74,12 +74,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/chambers/dhanmondi`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as ChangeFrequency,
-      priority: 0.7,
-    },
-    {
       url: `${baseUrl}/chambers/banglamotor`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as ChangeFrequency,

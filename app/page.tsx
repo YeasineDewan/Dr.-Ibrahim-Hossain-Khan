@@ -471,9 +471,12 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
                               <span className="nav-dd-cat-icon" aria-hidden="true">
                                 {cat.icon === 'skin' ? <Sparkles size={18} /> : <HeartPulse size={18} />}
                               </span>
-                              <span>
-                                <div className="nav-dd-cat-name">{cat.name}</div>
-                                <div className="nav-dd-cat-desc">{cat.desc}</div>
+                              <span className="nav-dd-cat-body">
+                                <span className="nav-dd-cat-name">{cat.name}</span>
+                                <span className="nav-dd-cat-desc">{cat.desc}</span>
+                              </span>
+                              <span className="nav-dd-cat-arrow" aria-hidden="true">
+                                <ArrowRight size={14} />
                               </span>
                             </button>
                           ))}
@@ -779,15 +782,14 @@ const Footer = memo(function Footer({
         <div className="footer-col">
           <h4>{n.exploreHeading}</h4>
           <ul className="footer-link-list">
-            {(
-              [
-                { view: 'About', idx: 1 },
-                { view: 'Services', idx: 2 },
-                { view: 'Chambers', idx: 4 },
-                { view: 'Gallery', idx: 3 },
-                { view: 'Contact', idx: 5 },
-              ] as const
-            ).map(({ view, idx }, i) => (
+             {(
+               [
+                 { view: 'About', idx: 1 },
+                 { view: 'Services', idx: 2 },
+                 { view: 'Chambers', idx: 4 },
+                 { view: 'Gallery', idx: 3 },
+               ] as const
+             ).map(({ view, idx }, i) => (
               <li key={view} style={{ animationDelay: `${0.05 + i * 0.05}s` }}>
                 <button onClick={() => onNavigate(view)} className="footer-link link-underline">
                   {n.navItems[idx] || view}
@@ -976,9 +978,7 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
         </section>
 
         {/* ============ STATS — compact horizontal strip ============ */}
-        <section
-          className="stats-strip"
-          style={{ position: 'relative', overflow: 'hidden', padding: '28px 0' }}>
+        <section className="stats-strip">
           <div
             className="light-leak"
             style={{ width: 300, height: 300, top: -100, left: '20%', opacity: 0.2 }}
@@ -1003,6 +1003,66 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
                 );
               })}
             </div>
+          </div>
+        </section>
+
+        {/* ============ CARE PRINCIPLES — post-hero bridge ============ */}
+        <section
+          className="section care-principles"
+          style={{ position: 'relative', overflow: 'hidden' }}>
+          <div
+            className="hero-glow"
+            style={{ width: 340, height: 340, top: -120, left: '10%', opacity: 0.18 }}
+          />
+          <div className="container" style={{ position: 'relative' }}>
+            <ScrollReveal>
+              <div style={{ textAlign: 'center', marginBottom: 48 }}>
+                <span className="section-eyebrow" style={{ color: '#3b9b91' }}>
+                  {lang === 'bn' ? 'আমাদের যত্নের পদ্ধতি' : 'How we care'}
+                </span>
+                <h2 className="gradient-text" style={{ marginTop: 12 }}>
+                  {lang === 'bn' ? 'আপনাকে কেন্দ্র করে' : 'Care designed around'} <em>{lang === 'bn' ? 'যত্ন।' : 'you.'}</em>
+                </h2>
+                <p className="muted" style={{ maxWidth: 560, margin: '12px auto 0', fontSize: 15 }}>
+                  {lang === 'bn'
+                    ? 'প্রতিটি পরিকল্পনা শুরু হয় শোনার মাধ্যমে। আমরা আপনার অপশনগুলো স্পষ্টভাবে ব্যাখ্যা করি, বাস্তবসম্মত লক্ষ্য নির্ধারণ করি এবং আপনার প্রয়োজন পরিবর্তনের সাথে সাথে সংযুক্ত থাকি।'
+                    : 'Every plan begins with listening. We explain your options clearly, set realistic goals, and stay connected as your needs change.'}
+                </p>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal className="grid-cards principles-grid">
+              {[
+                {
+                  Art: HeartbeatArt,
+                  title: lang === 'bn' ? 'প্রথমে শোনা' : 'Listen first',
+                  body: lang === 'bn'
+                    ? 'পরামর্শের আগে আমরা আপনার গল্প বুঝতে সময় নিই, তারপর পরবর্তী ধাপ সুপারিশ করি।'
+                    : 'We take the time to understand your story before recommending next steps.',
+                },
+                {
+                  Art: StethoArt,
+                  title: lang === 'bn' ? 'স্পষ্ট পরিকল্পনা' : 'Clear plans',
+                  body: lang === 'bn'
+                    ? 'প্রতিটি সুপারিশ স্বাভাবিক ভাষায় ব্যাখ্যা করা হয়, আপনার দৈনন্দিন রুটিনের সাথে মানানসই।'
+                    : 'Every recommendation is explained in plain language, with a plan that fits your routine.',
+                },
+                {
+                  Art: ShieldArt,
+                  title: lang === 'bn' ? 'চলমান সহায়তা' : 'Ongoing support',
+                  body: lang === 'bn'
+                    ? 'আপনার অগ্রগতি ট্র্যাক রাখার ফলো-আপ যত্ন এবং প্রয়োজনের পরিবর্তনে পরিকল্পনা সংযোজন।'
+                    : 'Follow-up care that keeps your progress on track and adjusts as your needs change.',
+                },
+              ].map((item, i) => (
+                <article key={i} className="principle-card">
+                  <div className="principle-art">
+                    <item.Art style={{ width: '100%', height: '100%' }} />
+                  </div>
+                  <h3>{item.title}</h3>
+                  <p>{item.body}</p>
+                </article>
+              ))}
+            </ScrollReveal>
           </div>
         </section>
 
@@ -1320,20 +1380,13 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
         </section>
 
         {/* ============ TESTIMONIAL / STARS BAND ============ */}
-        <section className="section" style={{ position: 'relative', overflow: 'hidden' }}>
+        <section className="section">
           <div
             className="hero-glow"
             style={{ width: 500, height: 500, top: -100, right: -100, opacity: 0.2 }}
           />
           <div className="container">
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 40,
-                alignItems: 'center',
-              }}
-              className="split-grid">
+            <div className="split-grid testimonial-split">
               <div>
                 <span className="section-eyebrow">
                   {lang === 'bn' ? 'রোগীদের অভিজ্ঞতা' : 'Patient stories'}
@@ -1347,9 +1400,7 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
                     : 'Every visit is a small moment of care that adds up to long-term wellbeing. Hear what makes our clinic different.'}
                 </p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginTop: 24 }}>
-                  <div className="stat-num" style={{ fontSize: 56, lineHeight: 1 }}>
-                    4.9
-                  </div>
+                  <div className="stat-num testimonial-stat-num">{lang === 'bn' ? '৪.৯' : '4.9'}</div>
                   <div>
                     <StarsArt style={{ width: 120, height: 30 }} />
                     <small className="muted" style={{ display: 'block', marginTop: 4 }}>
@@ -1396,9 +1447,7 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
         </section>
 
         {/* ============ CTA ============ */}
-        <section
-          className="cta-section aurora-bg"
-          style={{ position: 'relative', overflow: 'hidden' }}>
+        <section className="cta-section aurora-bg">
           <div className="blob blob-4" style={{ width: 300, height: 300, top: -100, right: -50 }} />
           <div className="blob blob-5" style={{ width: 260, height: 260, bottom: -80, left: 80 }} />
           <div className="container cta-inner">

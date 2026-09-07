@@ -207,6 +207,9 @@ export const serviceDetailsCopy = {
     ctaBody:
       'Begin with a confidential consultation. We’ll listen, assess and recommend the most appropriate next step for you.',
     ctaBtn: 'Book this service',
+    treatmentsPill: 'Available treatments',
+    treatmentsTitle: 'Services offered at this clinic',
+    treatmentsIntro: 'Choose the treatment that fits your needs. Each card opens a dedicated page with full details, preparation guidance and booking options.',
   },
   bn: {
     back: 'সেবাসমূহে ফিরে যান',
@@ -232,6 +235,9 @@ export const serviceDetailsCopy = {
     ctaBody:
       'একটি গোপনীয় কনসালটেশন দিয়ে শুরু করুন। আমরা শুনব, মূল্যায়ন করব এবং আপনার জন্য সবচেয়ে উপযুক্ত পরবর্তী ধাপ সুপারিশ করব।',
     ctaBtn: 'এই সেবাটি বুক করুন',
+    treatmentsPill: 'উপলব্ধ চিকিৎসাসমূহ',
+    treatmentsTitle: 'এই ক্লিনিকে প্রদত্ত সেবাসমূহ',
+    treatmentsIntro: 'আপনার প্রয়োজনের সাথে মানানসই চিকিৎসা বেছে নিন। প্রতিটি কার্ড সম্পূর্ণ বিবরণ, প্রস্তুতি নির্দেশনা এবং বুকিং বিকল্প সহ একটি বিশেষ পৃষ্ঠায় খুলবে।',
   },
 } as const;
 
@@ -247,16 +253,12 @@ export const chambersCopy = {
     mapLabel: 'Google Maps location',
     chambers: [
       {
-        name: 'Dhanmondi',
-        place: 'American Wellness Center',
-        address: 'House 45, Road 22, Dhanmondi, Dhaka 1209.',
-        hours: '9:00 AM – 2:00 PM',
-      },
-      {
         name: 'Banglamotor',
-        place: 'Medigo Health Care',
-        address: 'Rupayan Trade Center, 14 Kazi Nazrul Islam Ave.',
+        place: 'Medigo Healthcare',
+        address: 'Rupayan Trade Center, 3rd Floor, 114 Kazi Nazrul Islam Ave, Dhaka 1100.',
         hours: '4:00 PM – 9:00 PM',
+        phone: '01886-643626',
+        email: 'info@medigohealthcares.com',
       },
       {
         name: 'Uttara',
@@ -277,16 +279,12 @@ export const chambersCopy = {
     mapLabel: 'গুগল ম্যাপ লোকেশন',
     chambers: [
       {
-        name: 'ধানমন্ডি',
-        place: 'আমেরিকান ওয়েলনেস সেন্টার',
-        address: 'বাড়ি ৪৫, রোড ২২, ধানমন্ডি, ঢাকা ১২০৯।',
-        hours: 'সকাল ৯:০০ – দুপুর ২:০০',
-      },
-      {
         name: 'বাংলামোটর',
-        place: 'মেডিগো হেলথ কেয়ার',
-        address: 'রূপায়ন ট্রেড সেন্টার, ১৪ কাজী নজরুল ইসলাম অ্যাভিনিউ।',
+        place: 'মেডিগো হেলথকেয়ার',
+        address: 'রূপায়ন ট্রেড সেন্টার, ৩য় তলা, ১১৪ কাজী নজরুল ইসলাম অ্যাভিনিউ, ঢাকা ১১০০।',
         hours: 'বিকাল ৪:০০ – রাত ৯:০০',
+        phone: '০১৮৮৬-৬৪৩৬২৬',
+        email: 'info@medigohealthcares.com',
       },
       {
         name: 'উত্তরা',

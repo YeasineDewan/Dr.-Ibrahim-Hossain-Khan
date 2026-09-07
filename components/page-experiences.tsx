@@ -234,7 +234,7 @@ export function ChambersPage({ onNavigate }: { onNavigate: (p: string) => void }
         </ScrollReveal>
         <div className="chamber-grid grid-cards">
           {ch.chambers.map((c, i) => {
-            const slug = ['dhanmondi', 'banglamotor', 'uttara'][i];
+            const slug = ['banglamotor', 'uttara'][i];
             return (
               <Tilt3D
                 key={c.name}
@@ -260,8 +260,18 @@ export function ChambersPage({ onNavigate }: { onNavigate: (p: string) => void }
                         color: '#0d6e63',
                         display: 'grid',
                         placeItems: 'center',
+                        overflow: 'hidden',
+                        padding: 0,
                       }}>
-                      <MapPin size={18} />
+                      {slug === 'banglamotor' && c.name === 'Banglamotor' ? (
+                        <img
+                          src="/medigo_logo.png"
+                          alt="Medigo Healthcare"
+                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                        />
+                      ) : (
+                        <MapPin size={18} />
+                      )}
                     </span>
                   </div>
                   <h2>{c.name}</h2>

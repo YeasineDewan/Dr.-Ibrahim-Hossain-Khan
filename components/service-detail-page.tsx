@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft, ArrowRight, CheckCircle2, Clock3, HeartPulse, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, Clock3, HeartPulse, ShieldCheck, Stethoscope, Activity, Heart, Apple, CalendarCheck } from 'lucide-react';
 import { serviceDetailsCopy, useLanguage, t as tT, common } from '../lib/translations';
 import { ScrollReveal } from './scroll-reveal';
 import { FaqSection } from './faq-section';
@@ -122,6 +122,92 @@ const details: Record<
   },
 };
 
+const skinHairTreatments = [
+  {
+    key: 'prp-hair-restore',
+    icon: <Activity size={22} />,
+    tag: { en: 'Regenerative', bn: 'রিজেনারেটিভ' },
+    title: { en: 'PRP Hair Restoration', bn: 'PRP চুল পুনরূদ্ধার' },
+    desc: {
+      en: 'Platelet-rich plasma therapy to stimulate hair follicles and improve density.',
+      bn: 'চুলের ফলিকুল стимулиট করে এবং ঘনত্ব উন্নত করতে প্লেটলেট-রিচ প্লাজমা থেরাপি।',
+    },
+  },
+  {
+    key: 'acne-scar-revision',
+    icon: <ShieldCheck size={22} />,
+    tag: { en: 'Dermatology', bn: 'চর্মরোগ' },
+    title: { en: 'Acne & Scar Revision', bn: 'অ্যাকন ও দাগ সংশোধন' },
+    desc: {
+      en: 'Advanced protocols to reduce active breakouts and improve skin texture.',
+      bn: 'সক্রিয় ব্রেকআউট কমাতে এবং ত্বকের টেক্সচার উন্নত করার জন্য উন্নত প্রোটোকল।',
+    },
+  },
+  {
+    key: 'psoriasis-management',
+    icon: <ShieldCheck size={22} />,
+    tag: { en: 'Dermatology', bn: 'চর্মরোগ' },
+    title: { en: 'Psoriasis Management', bn: 'সোরিয়াসিস ম্যানেজমেন্ট' },
+    desc: {
+      en: 'Long-term flare control with topical, systemic and phototherapy options.',
+      bn: 'টপিকাল, সিস্টেমিক এবং ফটোথেরাপি অপশন সহ দীর্ঘমেয়াদি ফ্লেয়ার কন্ট্রোল।',
+    },
+  },
+  {
+    key: 'hair-loss-evaluation',
+    icon: <Stethoscope size={22} />,
+    tag: { en: 'Assessment', bn: 'মূল্যায়ন' },
+    title: { en: 'Hair Loss Evaluation', bn: 'চুলের ঝড় মূল্যায়ন' },
+    desc: {
+      en: 'Comprehensive assessment of pattern, hormonal and nutritional causes.',
+      bn: 'প্যাটার্ন, হার্মোনাল এবং পুষ্টিকর কারণগুলোর জন্য সমগ্র মূল্যায়ন।',
+    },
+  },
+];
+
+const infertilityTreatments = [
+  {
+    key: 'fertility-assessment',
+    icon: <Heart size={22} />,
+    tag: { en: 'Evaluation', bn: 'মূল্যায়ন' },
+    title: { en: 'Fertility Assessment', bn: 'প্রজননশীলতা মূল্যায়ন' },
+    desc: {
+      en: 'Full evaluation for individuals and couples planning conception.',
+      bn: 'কনসেপশন পরিকল্পনার জন্য ব্যক্তি এবং দম্পতিদের জন্য সম্পূর্ণ মূল্যায়ন।',
+    },
+  },
+  {
+    key: 'hormonal-optimization',
+    icon: <Activity size={22} />,
+    tag: { en: 'Hormonal', bn: 'হার্মোনাল' },
+    title: { en: 'Hormonal Optimization', bn: 'হার্মোন অপ্টিমাইজেশন' },
+    desc: {
+      en: 'Balancing cycles, thyroid, prolactin and metabolic markers.',
+      bn: 'চক্র, থাইরয়েড, প্রোল্যাক্টিন এবং মেটাবোলিক মার্কার সামঞ্জস্যতা তৈরি করা।',
+    },
+  },
+  {
+    key: 'lifestyle-nutrition-plan',
+    icon: <Apple size={22} />,
+    tag: { en: 'Wellness', bn: 'ওয়েলনেস' },
+    title: { en: 'Lifestyle & Nutrition Plan', bn: 'জীবনযাত্রা ও পুষ্টি পরিকল্পনা' },
+    desc: {
+      en: 'Diet, stress and exercise guidance tailored to reproductive goals.',
+      bn: 'প্রজনন লক্ষ্যের জন্য ডায়েট, স্ট্রেস এবং ব্যায়াম নির্দেশনা।',
+    },
+  },
+  {
+    key: 'follow-up-monitoring',
+    icon: <CalendarCheck size={22} />,
+    tag: { en: 'Monitoring', bn: 'মনিটরিং' },
+    title: { en: 'Follow-up & Monitoring', bn: 'ফলো-আপ ও মনিটরিং' },
+    desc: {
+      en: 'Ongoing tracking of progress with adjusted treatment plans.',
+      bn: 'অনুকূলিত চিকিৎসা পরিকল্পনার সাথে অগ্রগতি ট্র্যাকিং।',
+    },
+  },
+];
+
 export const serviceDetails = details;
 
 export function ServiceDetailPage({
@@ -140,6 +226,12 @@ export function ServiceDetailPage({
   const label = service.label[lang];
   const intro = service.intro[lang];
   const points = service.points.map(p => p[lang]);
+  const treatments =
+    slug === 'skin-hair-care'
+      ? skinHairTreatments
+      : slug === 'infertility-care'
+        ? infertilityTreatments
+        : [];
   return (
     <main className="service-detail-page" aria-labelledby="service-detail-title">
       <section
@@ -239,6 +331,42 @@ export function ServiceDetailPage({
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </ScrollReveal>
+      <ScrollReveal className="section" variant="up">
+        <div className="container">
+          <div className="section-heading">
+            <div>
+              <span className="pill pill-teal">{c.treatmentsPill}</span>
+              <h2>{c.treatmentsTitle}</h2>
+            </div>
+            <p className="muted">{c.treatmentsIntro}</p>
+          </div>
+          <div className="service-cards-grid">
+              {treatments.map(t => (
+                <article
+                  key={t.key}
+                  className="service-card"
+                  onClick={() => onNavigate('Appointment')}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${t.title[lang]} — ${t.tag[lang]}`}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onNavigate('Appointment');
+                    }
+                  }}>
+                  <div className="service-icon" aria-hidden="true">{t.icon}</div>
+                  <span className="service-tag">{t.tag[lang]}</span>
+                  <h3>{t.title[lang]}</h3>
+                  <p>{t.desc[lang]}</p>
+                  <div className="service-card-foot">
+                    <span>Learn more →</span>
+                  </div>
+                </article>
+              ))}
           </div>
         </div>
       </ScrollReveal>

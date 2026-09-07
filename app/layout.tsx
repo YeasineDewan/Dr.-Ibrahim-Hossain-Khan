@@ -180,10 +180,6 @@ const jsonLd = {
           '@type': 'City',
           name: 'Dhaka',
         },
-        {
-          '@type': 'City',
-          name: 'Dhanmondi',
-        },
       ],
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
