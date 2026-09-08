@@ -1,4 +1,4 @@
-// About, Services, Service details, and the new Sexual Medicine & Infertility content.
+// About, Services, Service details, and the new Sexual Medicine & fertility content.
 export const aboutCopy = {
   en: {
     heroPill: 'Meet your doctor',
@@ -382,10 +382,10 @@ export const sexualMedicineCopy = {
         body: 'Evaluation of concerns related to sexual capability and performance.',
       },
     ],
-    maleHeading: 'Male Infertility',
+    maleHeading: 'Male fertility',
     male: [
       {
-        title: 'Male Infertility Evaluation',
+        title: 'Male fertility Evaluation',
         body: 'Identification and management of possible causes of male infertility.',
       },
       {
@@ -398,10 +398,10 @@ export const sexualMedicineCopy = {
         body: 'Evaluation of sperm movement and structural abnormalities.',
       },
     ],
-    femaleHeading: 'Female Infertility',
+    femaleHeading: 'Female fertility',
     female: [
       {
-        title: 'Female Infertility Evaluation',
+        title: 'Female fertility Evaluation',
         body: 'Comprehensive assessment of possible causes of female infertility.',
       },
       {

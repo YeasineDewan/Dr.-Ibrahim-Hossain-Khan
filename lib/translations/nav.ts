@@ -22,7 +22,7 @@ export const navCopy = {
     servicesCat1Name: 'Skin and Hair Care',
     servicesCat1Desc: 'Dermatology, trichology and aesthetic treatments.',
     servicesCat1To: 'Services',
-    servicesCat2Name: 'Infertility Care',
+    servicesCat2Name: 'Fertility Care',
     servicesCat2Desc: 'Integrative fertility support and family medicine.',
     servicesCat2To: 'Services',
     bookCta: 'Book appointment',
