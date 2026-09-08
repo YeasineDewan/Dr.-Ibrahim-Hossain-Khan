@@ -17,6 +17,9 @@ importers:
       '@dnd-kit/sortable':
         specifier: ^10.0.0
         version: 10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
+      '@supabase/server':
+        specifier: ^1.5.3
+        version: 1.5.3(@supabase/supabase-js@2.116.0)(typescript@5.7.3)
       '@supabase/ssr':
         specifier: ^0.12.7
         version: 0.12.7(@supabase/supabase-js@2.116.0)
@@ -803,6 +806,15 @@ packages:
     resolution: {integrity: sha512-E+VOc2QDcni/fySqkBFiZhnoB3SGydEdZgFI6/dEAGAHx6yEhB46TN9qb2wXs+E+RSzOBV0R6dasiSlw4xlZAA==}
     engines: {node: '>=22.0.0'}
 
+  '@supabase/middleware@0.4.0':
+    resolution: {integrity: sha512-iGDAzSQVKRzaKkcbap4G9C20NWc6MYXNht2Mgg7dkY1E8H3Y4bsR7UlWiaL1sbMkgVO/qS0GnrEEXPnzzBXd0A==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      typescript: '>=5.4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   '@supabase/phoenix@0.4.5':
     resolution: {integrity: sha512-aAn9H9ovVyeApKy11OWOrrOGq8DV68yWeH4ud2lN9fzn4aO8Zb5GLL9m1pUg9nLqIcT+ZDfAcsZe0E/nqdv2lw==}
 
@@ -813,6 +825,28 @@ packages:
   '@supabase/realtime-js@2.116.0':
     resolution: {integrity: sha512-MHAnlXxi2s6yiJsZsQMfs2B3RFxeVfQWxerqYhIMqcCQV/FuY3LIeouPEkXw/ah7wUWMLYwempF9MOCUScyddg==}
     engines: {node: '>=22.0.0'}
+
+  '@supabase/server@1.5.3':
+    resolution: {integrity: sha512-quSVKzNbL6BBI4xGy8g70wdtDCBux7PGB+R8YgRGpZCbliudOyzqW8051oxo7pd5pE2t0ImgaBZmdYcZkgKrsQ==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      '@nestjs/common': ^10.0.0 || ^11.0.0
+      '@supabase/supabase-js': ^2.0.0
+      elysia: ^1.4.0
+      h3: ^2.0.0
+      hono: ^4.0.0
+      pg: ^8.0.0
+    peerDependenciesMeta:
+      '@nestjs/common':
+        optional: true
+      elysia:
+        optional: true
+      h3:
+        optional: true
+      hono:
+        optional: true
+      pg:
+        optional: true
 
   '@supabase/ssr@0.12.7':
     resolution: {integrity: sha512-wiBtEie1KkRJi9RrZWY3R2imRhX1JY7qMyUCH2z9AUk15gQebNEplM+urbCKamdxaTJLXUU6LlpkJsaxhojCEg==}
@@ -1475,6 +1509,9 @@ packages:
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
+  jose@6.2.12:
+    resolution: {integrity: sha512-9NiFmJEex0sy2Dk58j2UGBSHgUs2ypF9eZSu4L6vjOX3Dp96Sw1F3uL+H+D1sx02jZZdzUT0HgvCy59CuvXcWw==}
+
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -1834,6 +1871,9 @@ packages:
 
   std-env@3.10.0:
     resolution: {integrity: sha512-5GS12FdOZNliM5mAOxFRg7Ir0pWz8MdpYm6AY6VPkGpbA7ZzmbzNcBJQ0GPvvyWgcY7QAhCgf9Uy89I03faLkg==}
+
+  std-env@4.2.0:
+    resolution: {integrity: sha512-oCUKSupKTHX53EyjDtuZQ64pjLJ6yYCtpmEw0goYxtjG9KpbRe8KAsl2tBUGU9DyMcJ0RwJ8GqJAFzMXcXW1Rw==}
 
   string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
@@ -2590,6 +2630,12 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@supabase/middleware@0.4.0(typescript@5.7.3)':
+    dependencies:
+      std-env: 4.2.0
+    optionalDependencies:
+      typescript: 5.7.3
+
   '@supabase/phoenix@0.4.5': {}
 
   '@supabase/postgrest-js@2.116.0':
@@ -2600,6 +2646,14 @@ snapshots:
     dependencies:
       '@supabase/phoenix': 0.4.5
       tslib: 2.8.1
+
+  '@supabase/server@1.5.3(@supabase/supabase-js@2.116.0)(typescript@5.7.3)':
+    dependencies:
+      '@supabase/middleware': 0.4.0(typescript@5.7.3)
+      '@supabase/supabase-js': 2.116.0
+      jose: 6.2.12
+    transitivePeerDependencies:
+      - typescript
 
   '@supabase/ssr@0.12.7(@supabase/supabase-js@2.116.0)':
     dependencies:
@@ -3307,6 +3361,8 @@ snapshots:
 
   isexe@2.0.0: {}
 
+  jose@6.2.12: {}
+
   js-tokens@4.0.0: {}
 
   js-tokens@9.0.1: {}
@@ -3708,6 +3764,8 @@ snapshots:
     optional: true
 
   std-env@3.10.0: {}
+
+  std-env@4.2.0: {}
 
   string-width@4.2.3:
     dependencies:
