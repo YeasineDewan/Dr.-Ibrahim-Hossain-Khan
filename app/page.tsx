@@ -913,7 +913,7 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
     <ScrollReveal className="home-reveal">
       <>
         {/* ============ HERO ============ */}
-        <section className="about-hero">
+        <section className="about-hero home-hero">
           <div
             style={{
               position: 'absolute',
@@ -951,6 +951,7 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
               <div className="portrait-frame">
                 <div className="portrait-glow" />
                 <img
+                  className="home-hero-image"
                   src="/Hero_img.png"
                   alt="Dr. Ibrahim, family physician"
                   loading="eager"
