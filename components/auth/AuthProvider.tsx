@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, createContext, useContext, useCallback, useEffect } from 'react';
+import React, { useState, createContext, useContext, useCallback, useEffect, useMemo } from 'react';
 import type { UserProfile, AuthTokens } from '@/lib/auth/types';
+import { createClient } from '@/utils/supabase/client';
 
 interface AuthContextValue {
   user: UserProfile | null;
@@ -16,102 +17,75 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+function profileFromUser(user: { id: string; email?: string | undefined; user_metadata?: Record<string, unknown>; app_metadata?: Record<string, unknown> }): UserProfile {
+  const metadata = user.user_metadata ?? {};
+  const appMetadata = user.app_metadata ?? {};
+  const role = typeof appMetadata.role === 'string' ? appMetadata.role : 'patient';
+  const roles = Array.isArray(appMetadata.roles) ? appMetadata.roles.filter((item): item is string => typeof item === 'string') : [role];
+  return {
+    id: user.id,
+    email: user.email ?? '',
+    name: typeof metadata.full_name === 'string' ? metadata.full_name : user.email?.split('@')[0] ?? 'Patient',
+    roles,
+    permissions: roles.some(item => item === 'admin' || item === 'doctor') ? [{ resource: '*', action: 'admin' }] : [{ resource: 'appointments', action: 'read' }],
+    mfaEnabled: false,
+    status: 'active',
+    lastLogin: new Date().toISOString(),
+    failedAttempts: 0,
+  };
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const supabase = useMemo(() => createClient(), []);
   const [user, setUser] = useState<UserProfile | null>(null);
   const [tokens, setTokens] = useState<AuthTokens | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const reinitialize = useCallback(() => {
-    setLoading(true);
-    try {
-      const storedUser = localStorage.getItem('auth_user');
-      const storedTokens = localStorage.getItem('auth_tokens');
-      if (storedUser && storedTokens) {
-        setUser(JSON.parse(storedUser));
-        setTokens(JSON.parse(storedTokens));
-      } else {
-        setUser(null);
-        setTokens(null);
-      }
-    } catch {
+  const applySession = useCallback((session: { access_token: string; refresh_token: string; expires_in?: number; user: Parameters<typeof profileFromUser>[0] } | null) => {
+    if (!session) {
       setUser(null);
       setTokens(null);
-    } finally {
-      setLoading(false);
+      return;
     }
+    setUser(profileFromUser(session.user));
+    setTokens({ accessToken: session.access_token, refreshToken: session.refresh_token, expiresIn: session.expires_in ?? 3600, tokenType: 'Bearer' });
   }, []);
+
+  const reinitialize = useCallback(() => {
+    setLoading(true);
+    void supabase.auth.getSession().then(({ data }) => applySession(data.session as Parameters<typeof applySession>[0])).finally(() => setLoading(false));
+  }, [applySession, supabase]);
 
   useEffect(() => {
     reinitialize();
-  }, [reinitialize]);
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => applySession(session as Parameters<typeof applySession>[0]));
+    return () => data.subscription.unsubscribe();
+  }, [applySession, reinitialize, supabase]);
 
-  const login = useCallback(async (email: string, password: string, rememberMe = false) => {
-    const response = await fetch('/api/auth/[...route]', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'login', email, password, rememberMe }),
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.error || 'Login failed');
-    }
-
-    if (data.requiresMfa) {
-      return { requiresMfa: true };
-    }
-
-    setUser(data.user);
-    setTokens(data.tokens);
-    localStorage.setItem('auth_user', JSON.stringify(data.user));
-    localStorage.setItem('auth_tokens', JSON.stringify(data.tokens));
+  const login = useCallback(async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+    if (error) throw new Error(error.message.toLowerCase().includes('invalid') ? 'Invalid email or password' : error.message);
+    applySession(data.session as Parameters<typeof applySession>[0]);
     return { success: true };
-  }, []);
+  }, [applySession, supabase]);
 
   const logout = useCallback(async () => {
-    if (tokens?.accessToken) {
-      await fetch('/api/auth/[...route]', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${tokens.accessToken}`,
-        },
-        body: JSON.stringify({ action: 'logout' }),
-      });
-    }
+    await supabase.auth.signOut();
     setUser(null);
     setTokens(null);
-    localStorage.removeItem('auth_user');
-    localStorage.removeItem('auth_tokens');
-  }, [tokens]);
+  }, [supabase]);
 
   const refreshTokens = useCallback(async () => {
-    if (!tokens?.refreshToken) return false;
-    try {
-      const response = await fetch('/api/auth/[...route]', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-refresh-token': tokens.refreshToken,
-        },
-        body: JSON.stringify({ action: 'refresh' }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error);
-      setTokens(data.tokens);
-      localStorage.setItem('auth_tokens', JSON.stringify(data.tokens));
-      return true;
-    } catch {
-      logout();
+    const { data, error } = await supabase.auth.refreshSession();
+    if (error || !data.session) {
+      await logout();
       return false;
     }
-  }, [tokens, logout]);
+    applySession(data.session as Parameters<typeof applySession>[0]);
+    return true;
+  }, [applySession, logout, supabase]);
 
-  return (
-    <AuthContext.Provider value={{ user, tokens, isAuthenticated: !!user && !!tokens, loading, login, logout, refreshTokens, reinitialize }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, tokens, isAuthenticated: !!user && !!tokens, loading, login, logout, refreshTokens, reinitialize }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
