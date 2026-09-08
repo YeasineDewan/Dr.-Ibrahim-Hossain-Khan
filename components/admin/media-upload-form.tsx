@@ -23,11 +23,11 @@ export type MediaUploadValues = {
   id: string;
   title: string;
   description: string;
-  sourceType: 'file' | 'youtube';
+  sourceType: 'file' | 'drive' | 'external';
   file: File | null;
   filePreviewUrl: string | null;
-  youtubeUrl: string;
-  youtubeId: string | null;
+  sourceUrl: string;
+  sourceId: string | null;
   thumbnailFile: File | null;
   thumbnailPreviewUrl: string | null;
   category: string;
@@ -50,8 +50,8 @@ const empty = (): MediaUploadValues => ({
   sourceType: 'file',
   file: null,
   filePreviewUrl: null,
-  youtubeUrl: '',
-  youtubeId: null,
+  sourceUrl: '',
+  sourceId: null,
   thumbnailFile: null,
   thumbnailPreviewUrl: null,
   category: '',
@@ -79,6 +79,8 @@ const CATEGORIES = [
 ];
 
 const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'];
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const ALLOWED_UPLOAD_TYPES = [...ALLOWED_VIDEO_TYPES, ...ALLOWED_IMAGE_TYPES];
 const MAX_FILE_SIZE_MB = 500;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 const YOUTUBE_URL_PATTERN = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})(\S+)?$/;
@@ -127,11 +129,11 @@ export function MediaUploadForm({ onSaved }: { onSaved?: (v: MediaUploadValues) 
 
     if (values.sourceType === 'file') {
       if (!values.file) errs.file = 'Please select a video file';
-      else if (!ALLOWED_VIDEO_TYPES.includes(values.file.type)) errs.file = 'Unsupported video format';
+      else if (!ALLOWED_UPLOAD_TYPES.includes(values.file.type)) errs.file = 'Unsupported image or video format';
       else if (values.file.size > MAX_FILE_SIZE_BYTES) errs.file = `File must be under ${MAX_FILE_SIZE_MB}MB`;
     } else {
-      if (!values.youtubeUrl.trim()) errs.youtubeUrl = 'YouTube URL is required';
-      else if (!extractYouTubeId(values.youtubeUrl)) errs.youtubeUrl = 'Please enter a valid YouTube URL';
+      if (!values.sourceUrl.trim()) errs.sourceUrl = 'A source URL is required';
+      else if (!/^https?:\/\//i.test(values.sourceUrl)) errs.sourceUrl = 'Use a complete http or https URL';
     }
 
     if (values.status === 'scheduled' && !values.scheduledAt) {
@@ -161,8 +163,8 @@ export function MediaUploadForm({ onSaved }: { onSaved?: (v: MediaUploadValues) 
 
   const handleFileSelect = useCallback(
     (file: File) => {
-      if (!ALLOWED_VIDEO_TYPES.includes(file.type)) {
-        setErrors(prev => ({ ...prev, file: 'Unsupported video format' }));
+      if (!ALLOWED_UPLOAD_TYPES.includes(file.type)) {
+        setErrors(prev => ({ ...prev, file: 'Unsupported image or video format' }));
         return;
       }
       if (file.size > MAX_FILE_SIZE_BYTES) {
@@ -199,17 +201,14 @@ export function MediaUploadForm({ onSaved }: { onSaved?: (v: MediaUploadValues) 
     []
   );
 
-  const handleYoutubeChange = useCallback(
+  const handleSourceChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      const url = e.target.value;
-      update('youtubeUrl', url);
-      const id = extractYouTubeId(url);
-      update('youtubeId', id);
-      if (id && !values.thumbnailPreviewUrl) {
-        update(
-          'thumbnailPreviewUrl',
-          `https://img.youtube.com/vi/${id}/maxresdefault.jpg`
-        );
+      const url = e.target.value.trim();
+      update('sourceUrl', url);
+      const youtubeId = extractYouTubeId(url);
+      update('sourceId', youtubeId);
+      if (youtubeId && !values.thumbnailPreviewUrl) {
+        update('thumbnailPreviewUrl', `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`);
       }
     },
     [update, values.thumbnailPreviewUrl]
@@ -371,89 +370,45 @@ export function MediaUploadForm({ onSaved }: { onSaved?: (v: MediaUploadValues) 
             </Field>
           )}
 
-          <Field label="Video source">
+          <Field label="Media source">
             <div className="adm-segmented mb-4">
-              <button
-                type="button"
-                className={values.sourceType === 'file' ? 'on' : ''}
-                onClick={() => update('sourceType', 'file')}>
-                <Upload size={14} /> File
-              </button>
-              <button
-                type="button"
-                className={values.sourceType === 'youtube' ? 'on' : ''}
-                onClick={() => update('sourceType', 'youtube')}>
-                <Link2 size={14} /> YouTube
-              </button>
+              {[
+                { value: 'file', label: 'Upload', icon: Upload },
+                { value: 'drive', label: 'Google Drive', icon: Link2 },
+                { value: 'external', label: 'Web link', icon: Globe },
+              ].map(option => {
+                const Icon = option.icon;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={values.sourceType === option.value ? 'on' : ''}
+                    onClick={() => update('sourceType', option.value as MediaUploadValues['sourceType'])}>
+                    <Icon size={14} /> {option.label}
+                  </button>
+                );
+              })}
             </div>
 
             {values.sourceType === 'file' ? (
               <div
-                onDragOver={e => {
-                  e.preventDefault();
-                  setDragOver(true);
-                }}
+                onDragOver={e => { e.preventDefault(); setDragOver(true); }}
                 onDragLeave={() => setDragOver(false)}
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
-                className={`relative cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition ${
-                  dragOver
-                    ? 'border-[var(--accent)] bg-[var(--accent)]/5'
-                    : 'border-[var(--border)] hover:border-[var(--accent)]/60'
-                }`}>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="video/*"
-                  className="hidden"
-                  onChange={e => {
-                    const f = e.target.files?.[0];
-                    if (f) handleFileSelect(f);
-                  }}
-                />
-                <Film className="mx-auto mb-3 text-[var(--muted-foreground)]" size={32} />
-                <p className="text-sm font-semibold text-[var(--foreground)]">
-                  Drag & drop a video here, or click to browse
-                </p>
-                <p className="mt-1 text-xs text-[var(--muted-foreground)]">
-                  MP4, WebM, OGG or QuickTime — up to {MAX_FILE_SIZE_MB}MB
-                </p>
-                {submitted && errors.file && (
-                  <span className="mt-2 flex items-center justify-center gap-1 text-xs text-red-600">
-                    <AlertTriangle size={12} /> {errors.file}
-                  </span>
-                )}
+                className={`relative cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition ${dragOver ? 'border-[var(--accent)] bg-[var(--accent)]/5' : 'border-[var(--border)] hover:border-[var(--accent)]/60'}`}>
+                <input ref={fileInputRef} type="file" accept="image/*,video/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) handleFileSelect(f); }} />
+                <Upload className="mx-auto mb-3 text-[var(--muted-foreground)]" size={32} />
+                <p className="text-sm font-semibold text-[var(--foreground)]">Drag and drop an image or video, or click to browse</p>
+                <p className="mt-1 text-xs text-[var(--muted-foreground)]">Images and MP4/WebM/OGG files up to {MAX_FILE_SIZE_MB}MB</p>
+                {submitted && errors.file && <span className="mt-2 flex items-center justify-center gap-1 text-xs text-red-600"><AlertTriangle size={12} /> {errors.file}</span>}
               </div>
             ) : (
               <div>
-                <Input
-                  value={values.youtubeUrl}
-                  onChange={handleYoutubeChange}
-                  placeholder="https://www.youtube.com/watch?v=..."
-                  className={errors.youtubeUrl ? errorBase : inputBase}
-                />
-                {submitted && errors.youtubeUrl && (
-                  <span className="mt-1 flex items-center gap-1 text-xs text-red-600">
-                    <AlertTriangle size={12} /> {errors.youtubeUrl}
-                  </span>
-                )}
-                {values.youtubeId && (
-                  <div className="mt-3 overflow-hidden rounded-2xl border border-[var(--border)]">
-                    <div
-                      className="relative aspect-video w-full bg-black/5"
-                      style={{
-                        backgroundImage: `url(https://img.youtube.com/vi/${values.youtubeId}/hqdefault.jpg)`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                      }}>
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                        <span className="flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-xs font-bold shadow-lg">
-                          <Play size={16} /> YouTube preview
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                <Input value={values.sourceUrl} onChange={handleSourceChange} placeholder={values.sourceType === 'drive' ? 'https://drive.google.com/file/d/...' : 'https://any-website.com/media'} className={errors.sourceUrl ? errorBase : inputBase} />
+                <p className="mt-2 text-xs text-[var(--muted-foreground)]">Store a Google Drive share link or any publicly reachable web media URL. The link is normalized and preserved as the source.</p>
+                {submitted && errors.sourceUrl && <span className="mt-1 flex items-center gap-1 text-xs text-red-600"><AlertTriangle size={12} /> {errors.sourceUrl}</span>}
+                {values.sourceId && <div className="mt-3 overflow-hidden rounded-2xl border border-[var(--border)]"><div className="relative aspect-video w-full bg-black/5" style={{ backgroundImage: `url(https://img.youtube.com/vi/${values.sourceId}/hqdefault.jpg)`, backgroundSize: 'cover', backgroundPosition: 'center' }}><div className="absolute inset-0 flex items-center justify-center bg-black/20"><span className="flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-xs font-bold shadow-lg"><Play size={16} /> Link preview</span></div></div></div>}
               </div>
             )}
           </Field>
