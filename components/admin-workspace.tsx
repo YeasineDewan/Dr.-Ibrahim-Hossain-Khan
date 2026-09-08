@@ -34,7 +34,7 @@ import {
   CalendarCheck,
 } from 'lucide-react';
 import { adminCopy, useLanguage, t as tT } from '../lib/translations';
-import { useAdminData } from '../lib/admin-data';
+import { useAdminData } from '../lib/admin-data-supabase';
 import { TODAY } from '../lib/utils';
 import { useAuth } from '../components/auth/AuthProvider';
 import { type PermissionCheck, createDemoUser, isSuperUser, type Resource, NAV_RESOURCE_MAP, getUserPermissions } from '../lib/auth/rbac';

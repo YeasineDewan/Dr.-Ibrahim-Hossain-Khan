@@ -57,7 +57,9 @@ function getCsrfStore(): Map<string, { createdAt: number }> {
 function generateCsrfToken(): string {
   const bytes = new Uint8Array(32);
   crypto.getRandomValues(bytes);
-  return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+  const token = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+  getCsrfStore().set(token, { createdAt: Date.now() });
+  return token;
 }
 
 function validateCsrfToken(token: string | null | undefined): boolean {

@@ -25,7 +25,7 @@ import {
   useLanguage,
   t as tT,
 } from '../lib/translations';
-import { useAdminData } from '../lib/admin-data';
+import { useAdminData } from '../lib/admin-data-supabase';
 import { TODAY } from '../lib/utils';
 import { ScrollReveal } from './scroll-reveal';
 import { Tilt3D, Magnetic, Particles } from './motion-3d';
