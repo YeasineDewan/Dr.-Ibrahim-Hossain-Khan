@@ -70,7 +70,7 @@ export const servicesCopy = {
       },
       infertility: {
         eyebrow: 'SECTION II',
-        title1: 'Infertility Care',
+        title1: 'Fertility Care',
         titleEm: 'Holistic Fertility Support',
         lead:
           'Holistic fertility support combining medical evaluation, lifestyle optimization and reproductive wellness planning.',

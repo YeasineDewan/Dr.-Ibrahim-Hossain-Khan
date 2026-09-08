@@ -11,6 +11,7 @@ interface AuthContextValue {
   login: (email: string, password: string, rememberMe?: boolean) => Promise<{ success?: boolean; requiresMfa?: boolean }>;
   logout: () => Promise<void>;
   refreshTokens: () => Promise<boolean>;
+  reinitialize: () => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -20,20 +21,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [tokens, setTokens] = useState<AuthTokens | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const reinitialize = useCallback(() => {
+    setLoading(true);
     try {
       const storedUser = localStorage.getItem('auth_user');
       const storedTokens = localStorage.getItem('auth_tokens');
       if (storedUser && storedTokens) {
         setUser(JSON.parse(storedUser));
         setTokens(JSON.parse(storedTokens));
+      } else {
+        setUser(null);
+        setTokens(null);
       }
     } catch {
-      // ignore
+      setUser(null);
+      setTokens(null);
     } finally {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    reinitialize();
+  }, [reinitialize]);
 
   const login = useCallback(async (email: string, password: string, rememberMe = false) => {
     const response = await fetch('/api/auth/[...route]', {
@@ -98,7 +108,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [tokens, logout]);
 
   return (
-    <AuthContext.Provider value={{ user, tokens, isAuthenticated: !!user && !!tokens, loading, login, logout, refreshTokens }}>
+    <AuthContext.Provider value={{ user, tokens, isAuthenticated: !!user && !!tokens, loading, login, logout, refreshTokens, reinitialize }}>
       {children}
     </AuthContext.Provider>
   );

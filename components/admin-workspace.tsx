@@ -292,7 +292,21 @@ export function ProtectedAdminWorkspace({ onExit }: { onExit: () => void }) {
     () => createDemoUser('admin', 'admin@clinic.demo', 'Dr. Ibrahim'),
     []
   );
-  return (
-    <AdminWorkspace onExit={onExit} />
-  );
+  const { reinitialize } = useAuth();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('auth_user');
+    const storedTokens = localStorage.getItem('auth_tokens');
+    if (!storedUser || !storedTokens) {
+      localStorage.setItem('auth_user', JSON.stringify(demoUser));
+      localStorage.setItem('auth_tokens', JSON.stringify({
+        accessToken: 'demo-token',
+        refreshToken: 'demo-refresh-token',
+        expiresAt: Date.now() + 86400000,
+      }));
+      reinitialize();
+    }
+  }, [demoUser, reinitialize]);
+
+  return <AdminWorkspace onExit={onExit} />;
 }

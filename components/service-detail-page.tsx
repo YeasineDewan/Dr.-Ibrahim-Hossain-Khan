@@ -17,7 +17,7 @@ const details: Record<
   }
 > = {
   'infertility-care': {
-    title: { en: 'Infertility Care', bn: 'ইনফার্টিলিটি কেয়ার' },
+    title: { en: 'Fertility Care', bn: 'ইনফার্টিলিটি কেয়ার' },
     label: { en: 'Fertility support', bn: 'ফার্টিলিটি সহায়তা' },
     intro: {
       en: 'A calm, confidential fertility journey with thoughtful assessment, practical guidance, and care designed around both partners.',
