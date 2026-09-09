@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, useCallback, memo } from 'react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import {
   ArrowRight,
   CalendarDays,
@@ -111,7 +112,7 @@ const MotionShell = dynamic(() => import('../components/motion-shell').then(m =>
 });
 
 // Home-page-only helpers — keep their static imports so they ship with the home bundle
-import { Tilt3D, Magnetic } from '../components/motion-3d';
+import { Tilt3D, Magnetic, Particles } from '../components/motion-3d';
 import { ScrollReveal } from '../components/scroll-reveal';
 import {
   HeartbeatArt,
@@ -576,13 +577,6 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
             </button>
             <button
               className="icon-btn press"
-              aria-label={n.locationAria || 'Our location'}
-              onClick={() => onNavigate('Chambers')}>
-              <MapPinIcon size={18} />
-              <span className="icon-glow" aria-hidden="true" />
-            </button>
-            <button
-              className="icon-btn press"
               aria-label={n.patientDashboardAria}
               onClick={() => onNavigate('Patient')}>
               <UserRound size={18} />
@@ -931,17 +925,6 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
       <>
         {/* ============ HERO ============ */}
         <section className="about-hero home-hero">
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background:
-                "url('/Hero_img.png') center center / cover no-repeat",
-              opacity: 0.32,
-              mixBlendMode: 'screen',
-              zIndex: 0,
-            }}
-          />
           <div className="about-hero-accent" />
           <div className="container about-hero-grid">
             <div className="appear-up">
@@ -967,11 +950,13 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
             <div className="about-portrait">
               <div className="portrait-frame">
                 <div className="portrait-glow" />
-                <img
+                <Image
                   className="home-hero-image"
                   src="/Hero_img.png"
                   alt="Dr. Ibrahim, family physician"
-                  loading="eager"
+                  fill
+                  priority
+                  sizes="(max-width: 700px) 88vw, (max-width: 1100px) 48vw, 560px"
                 />
                 <div className="portrait-corner-badge">
                   <Stethoscope size={16} />
@@ -1263,6 +1248,31 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
                   border: '1px solid rgba(255,255,255,0.8)',
                 }}
               />
+            </div>
+            <div className="split-content">
+              <div className="split-content-card">
+                <span className="section-eyebrow" style={{ color: '#174b78' }}>
+                  {lang === 'bn' ? 'আমাদের দৃষ্টিভঙ্গি' : 'Our approach'}
+                </span>
+                <h2 style={{ marginTop: 14 }}>
+                  {doctorBio[lang].integrativeTitle}
+                </h2>
+                <p className="muted" style={{ marginTop: 14, lineHeight: 1.8 }}>
+                  {doctorBio[lang].integrativeBody}
+                </p>
+                <p className="muted" style={{ marginTop: 10, lineHeight: 1.8 }}>
+                  {doctorBio[lang].integrativeGoal}
+                </p>
+                <button
+                  onClick={() => onNavigate('Services')}
+                  className="btn-primary"
+                  style={{ marginTop: 24, display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 12, fontWeight: 600, fontSize: 14, border: 'none', cursor: 'pointer', background: '#174b78', color: '#fff', transition: 'background 0.3s ease, transform 0.3s ease' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = '#0f355c'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = '#174b78'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+                  {n.viewAllServices}
+                  <ArrowRight size={16} className="float-x" />
+                </button>
+              </div>
             </div>
           </div>
         </section>
@@ -1600,7 +1610,7 @@ const SimplePage = memo(function SimplePage({ title, onNavigate }: { title: stri
     lang === 'bn'
       ? {
           Services: {
-            title1: 'প্রতিটি অধ্যায়ের জন্য',
+            title1: 'প্রতিটি অধ্যায��ের জন্য',
             em: 'যত্ন।',
             lead: 'আধুনিক স্বাস্থ্যসেবার একটি বিবেচিত, মানবিক দৃষ্টিভঙ্গি। আমাদের ক্লিনিক ঘুরে দেখুন এবং আপনার জীবনের জন্য তৈরি যত্ন আবিষ্কার করুন।',
           },
@@ -1671,9 +1681,24 @@ const SimplePage = memo(function SimplePage({ title, onNavigate }: { title: stri
 
 export default function Page() {
   const [page, setPage] = useState('Home');
+  const [locationOpen, setLocationOpen] = useState(false);
   const { lang, setLang } = useLanguage();
   const c = common[lang];
   const n = navCopy[lang];
+
+  useEffect(() => {
+    if (!locationOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLocationOpen(false);
+    };
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [locationOpen]);
 
   const render =
     page === 'Home' ? (
@@ -1731,6 +1756,14 @@ export default function Page() {
           </a>
           <div className="utility-socials">
             <span>{n.utility.follow}</span>
+            <button
+              className="utility-location-btn"
+              onClick={() => setLocationOpen(true)}
+              aria-label={n.locationAria || 'Our location'}
+              aria-haspopup="dialog"
+              aria-controls="location-modal">
+              <MapPinIcon size={15} aria-hidden="true" />
+            </button>
             <a href={n.socials.facebook} target="_blank" rel="noreferrer" aria-label="Facebook">
               f
             </a>
@@ -1743,6 +1776,45 @@ export default function Page() {
           </div>
         </div>
       </div>
+      {locationOpen && (
+        <div className="location-modal-backdrop" role="presentation" onClick={() => setLocationOpen(false)}>
+          <div
+            id="location-modal"
+            className="location-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="location-modal-title"
+            onClick={e => e.stopPropagation()}>
+            <button
+              className="location-modal-close"
+              onClick={() => setLocationOpen(false)}
+              aria-label={lang === 'bn' ? 'মানচিত্র বন্ধ করুন' : 'Close map'}>
+              <X size={18} aria-hidden="true" />
+            </button>
+            <div className="location-modal-heading">
+              <span className="location-modal-icon">
+                <MapPinIcon size={20} aria-hidden="true" />
+              </span>
+              <div>
+                <span className="location-modal-eyebrow">{lang === 'bn' ? 'আমাদের চেম্বার' : 'Our chamber'}</span>
+                <h2 id="location-modal-title">{n.locationAria || 'Our location'}</h2>
+              </div>
+            </div>
+            <div className="location-map-frame">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.0504414247616!2d90.39536509999999!3d23.7455806!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b90033178451%3A0x3a30eeb7d453498f!2sMedigo%20Healthcare!5e0!3m2!1sen!2sbd!4v1788987765345!5m2!1sen!2sbd"
+                width="600"
+                height="450"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+                title="Medigo Healthcare location"
+              />
+            </div>
+          </div>
+        </div>
+      )}
       <div className="language-fixed">
         <LanguageControl lang={lang} onChange={setLang} />
       </div>
