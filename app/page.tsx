@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, useCallback, memo } from 'react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import {
   ArrowRight,
   CalendarDays,
@@ -924,17 +925,6 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
       <>
         {/* ============ HERO ============ */}
         <section className="about-hero home-hero">
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background:
-                "url('/Hero_img.png') center center / cover no-repeat",
-              opacity: 0.32,
-              mixBlendMode: 'screen',
-              zIndex: 0,
-            }}
-          />
           <div className="about-hero-accent" />
           <div className="container about-hero-grid">
             <div className="appear-up">
@@ -960,11 +950,13 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
             <div className="about-portrait">
               <div className="portrait-frame">
                 <div className="portrait-glow" />
-                <img
+                <Image
                   className="home-hero-image"
                   src="/Hero_img.png"
                   alt="Dr. Ibrahim, family physician"
-                  loading="eager"
+                  fill
+                  priority
+                  sizes="(max-width: 700px) 88vw, (max-width: 1100px) 48vw, 560px"
                 />
                 <div className="portrait-corner-badge">
                   <Stethoscope size={16} />
@@ -1618,7 +1610,7 @@ const SimplePage = memo(function SimplePage({ title, onNavigate }: { title: stri
     lang === 'bn'
       ? {
           Services: {
-            title1: 'প্রতিটি অধ্যায়ের জন্য',
+            title1: 'প্রতিটি অধ্যায��ের জন্য',
             em: 'যত্ন।',
             lead: 'আধুনিক স্বাস্থ্যসেবার একটি বিবেচিত, মানবিক দৃষ্টিভঙ্গি। আমাদের ক্লিনিক ঘুরে দেখুন এবং আপনার জীবনের জন্য তৈরি যত্ন আবিষ্কার করুন।',
           },

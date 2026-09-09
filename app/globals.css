@@ -4559,9 +4559,10 @@ th {
   position: relative;
   width: fit-content;
 }
-.portrait-frame {
+  .portrait-frame {
   position: relative;
   width: min(100%, 680px);
+  aspect-ratio: 4 / 5;
   border-radius: 30px;
   overflow: hidden;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(227, 157, 94, 0.28);
