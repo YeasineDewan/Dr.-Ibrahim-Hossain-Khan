@@ -40,6 +40,40 @@ export function AboutPage({ onNavigate }: { onNavigate: (page: string) => void }
               {a.heroTitle1} <em>{a.heroTitleEm}</em>
             </h1>
             <p className="lead">{a.heroLead}</p>
+            <div className="doctor-intro-card">
+              <div className="doctor-intro-heading">
+                <span className="doctor-intro-icon" aria-hidden="true">
+                  <Stethoscope size={18} />
+                </span>
+                <div>
+                  <span className="doctor-intro-eyebrow">{a.heroQualificationHeading}</span>
+                  <h2>{a.heroDoctorName}</h2>
+                </div>
+              </div>
+              <ul className="doctor-qualification-list">
+                {a.heroQualifications.map((qualification, index) => (
+                  <li key={qualification}>
+                    <span className="qualification-number">0{index + 1}</span>
+                    <span>{qualification}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="doctor-registration">
+                <ShieldCheck size={15} aria-hidden="true" />
+                <strong>{a.heroRegistration}</strong>
+              </div>
+            </div>
+            <div className="doctor-services-card">
+              <div className="doctor-services-heading">
+                <HeartHandshake size={17} aria-hidden="true" />
+                <h2>{a.heroServicesHeading}</h2>
+              </div>
+              <div className="doctor-service-tags">
+                {a.heroServices.map(service => (
+                  <span key={service}>{service}</span>
+                ))}
+              </div>
+            </div>
             <div className="about-credentials">
               {a.credentials.map((c, i) => (
                 <div key={i} className="lift">

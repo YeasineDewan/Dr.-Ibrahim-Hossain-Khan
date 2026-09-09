@@ -6,6 +6,26 @@ export const aboutCopy = {
     heroTitleEm: 'conviction.',
     heroLead:
       'Dr. Ibrahim is a family physician and wellness advocate who believes excellent medicine is equal parts expertise, empathy and consistency.',
+    heroDoctorName: 'Dr. Ibrahim Hossain',
+    heroQualificationHeading: 'Qualifications & Training',
+    heroQualifications: [
+      'B.U.M.S. (Bachelor of Unani Medicine and Surgery)',
+      'M.Sc. (Microbiology), CDV (Dermatology and Venereal Diseases)',
+      'Advanced Training in Aesthetic Medicine',
+      'Advanced Training in Cupping Therapy and Acupuncture (Chinese Medicine)',
+      'Advanced Training in Naturopathy and Functional Medicine',
+    ],
+    heroRegistration: 'Government Registration No. 2822',
+    heroServicesHeading: 'Treatments & Services',
+    heroServices: [
+      'Dermatology & Venereal Diseases',
+      'Allergy',
+      'Eczema',
+      'Psoriasis',
+      'Vitiligo',
+      'PRP Therapy',
+      'P-Shot Therapy',
+    ],
     credentials: [
       { strong: '15+', label: 'Years in practice' },
       { strong: '2,000+', label: 'Patients supported' },
@@ -102,6 +122,26 @@ export const aboutCopy = {
     heroTitleEm: 'যত্ন।',
     heroLead:
       'ডাঃ ইব্রাহিম একজন পারিবারিক চিকিৎসক ও ওয়েলনেস অ্যাডভোকেট, যিনি বিশ্বাস করেন চমৎকার চিকিৎসা হলো দক্ষতা, সহানুভূতি ও ধারাবাহিকতার সমন্বয়।',
+    heroDoctorName: 'ডাঃ ইব্রাহিম হোসেন',
+    heroQualificationHeading: 'যোগ্যতা ও প্রশিক্ষণ',
+    heroQualifications: [
+      'বিইউএমএস (ব্যাচেলর অব ইউনানি মেডিসিন এন্ড সার্জারী)',
+      'এম.এস.সি. (মাইক্রোবায়োলজি), সিডিভি (চর্ম ও যৌনরোগ)',
+      'এডভান্সড ট্রেনিং ইন এস্থেটিক মেডিসিন',
+      'এডভান্সড ট্রেনিং ইন কাপিং থেরাপি এন্ড আকুপাংচার (চায়নিজ মেডিসিন)',
+      'উচ্চতর প্রশিক্ষণ প্রাপ্ত ন্যাচারোপ্যাথি ও ফাংশনাল মেডিসিন',
+    ],
+    heroRegistration: 'গভঃ রেজিস্ট্রেশন নং–২৮২২',
+    heroServicesHeading: 'চিকিৎসা/সেবাসমূহ',
+    heroServices: [
+      'চর্ম-যৌন',
+      'এলার্জি',
+      'একজিমা',
+      'সোরিয়াসিস',
+      'শ্বেতীরোগ',
+      'পিআরপি থেরাপি',
+      'পি-শট থেরাপি',
+    ],
     credentials: [
       { strong: '১৫+', label: 'বছরের অভিজ্ঞতা' },
       { strong: '২,০০০+', label: 'সেবাপ্রাপ্ত রোগী' },
