@@ -1,7 +1,13 @@
 import { createClient } from '@/utils/supabase/server';
 import { NextResponse } from 'next/server';
+import { requireAdminAuth } from '@/lib/admin-auth';
 
 export async function GET() {
+  const auth = await requireAdminAuth();
+  if (!auth.success) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   try {
     const cookieStore = await import('next/headers').then(m => m.cookies());
     const supabase = createClient(cookieStore);
@@ -14,6 +20,11 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const auth = await requireAdminAuth();
+  if (!auth.success) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   try {
     const body = await request.json();
     const cookieStore = await import('next/headers').then(m => m.cookies());
@@ -27,6 +38,11 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  const auth = await requireAdminAuth();
+  if (!auth.success) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   try {
     const body = await request.json();
     const cookieStore = await import('next/headers').then(m => m.cookies());
@@ -41,6 +57,11 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const auth = await requireAdminAuth();
+  if (!auth.success) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');

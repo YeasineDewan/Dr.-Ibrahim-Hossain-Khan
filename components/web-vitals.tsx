@@ -13,6 +13,7 @@ export function WebVitals() {
       window.dispatchEvent(event);
     };
 
+    // FCP — First Contentful Paint
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
         if (entry.name === 'first-contentful-paint') {
@@ -27,27 +28,41 @@ export function WebVitals() {
       // FCP not supported
     }
 
-    const onLoad = () => {
+    // LCP — Largest Contentful Paint (needs its own observer)
+    let lcpReported = false;
+    try {
+      const lcpObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        if (entries.length > 0) {
+          const entry = entries[entries.length - 1];
+          report('LCP', entry.startTime, entry.startTime);
+          lcpReported = true;
+        }
+      });
+      lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
+    } catch {
+      // LCP not supported
+    }
+
+    // TTFB — Time to First Byte (from navigation timing)
+    const reportNav = () => {
       const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
       if (nav) {
-        report('LCP', nav.loadEventEnd - nav.fetchStart, nav.loadEventEnd - nav.fetchStart);
         report('TTFB', nav.responseStart - nav.requestStart, nav.responseStart - nav.requestStart);
       }
     };
 
     if (document.readyState === 'complete') {
-      onLoad();
+      reportNav();
     } else {
-      window.addEventListener('load', onLoad);
+      window.addEventListener('load', reportNav);
     }
 
     return () => {
       observer.disconnect();
-      window.removeEventListener('load', onLoad);
+      window.removeEventListener('load', reportNav);
     };
   }, []);
 
   return null;
 }
-
-

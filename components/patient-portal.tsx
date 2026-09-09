@@ -46,7 +46,7 @@ import {
   Settings,
 } from 'lucide-react';
 import { patientCopy, common, useLanguage } from '../lib/translations';
-import { useAdminData } from '../lib/admin-data';
+import { useAdminData } from '../lib/admin-data-supabase';
 import { Avatar, Pill as PillUI, Sparkline, Donut, Stat } from './admin-ui';
 import {
   HeartbeatArt,

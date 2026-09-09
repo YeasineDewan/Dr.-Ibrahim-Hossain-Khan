@@ -1,5 +1,6 @@
 'use client';
-import { useMemo } from 'react';
+
+import { useEffect, useMemo, useState } from 'react';
 import {
   CalendarDays,
   Users,
@@ -30,20 +31,57 @@ import {
   InfinityArt,
 } from '../illust-svg';
 
-export function DashboardView({
-  data,
-  copy,
-  onNavigate,
-}: {
+interface DashboardViewProps {
   data: AdminData;
   copy: any;
   onNavigate: (s: string) => void;
-}) {
+}
+
+export function DashboardView({ data, copy, onNavigate }: DashboardViewProps) {
+  const [dashboardStats, setDashboardStats] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch('/api/admin/dashboard-stats');
+        const result = await res.json();
+        if (result.stats) {
+          setDashboardStats(result.stats);
+        }
+      } catch (error) {
+        console.error('Failed to fetch dashboard stats:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   const todays = useMemo(() => data.appointments
     .filter(a => a.date === TODAY)
     .sort((a, b) => a.time.localeCompare(b.time)), [data.appointments]);
   const overdue = useMemo(() => data.followUps.filter(f => f.status === 'Overdue').length, [data.followUps]);
   const unread = useMemo(() => data.notifications.filter(n => !n.read).length, [data.notifications]);
+
+  const stats = dashboardStats || {
+    totalPatients: data.patients.length,
+    totalAppointments: data.appointments.length,
+    totalPrescriptions: data.prescriptions.length,
+    overdueFollowUps: overdue,
+    totalReviews: data.reviews.length,
+    todayAppointments: todays.length,
+    pendingAppointments: data.appointments.filter(a => a.status === 'Pending').length,
+    monthlyRevenue: data.appointments
+      .filter(a => {
+        const aptDate = new Date(a.date);
+        const monthAgo = new Date();
+        monthAgo.setMonth(monthAgo.getMonth() - 1);
+        return aptDate >= monthAgo;
+      })
+      .reduce((sum, apt) => sum + apt.fee, 0),
+  };
 
   return (
     <>
@@ -124,6 +162,18 @@ export function DashboardView({
             'rgba(245,158,11,0.1)',
             'rgba(236,72,153,0.1)',
           ];
+          const values = [
+            stats.totalPatients,
+            stats.totalAppointments,
+            stats.monthlyRevenue ? `৳${(stats.monthlyRevenue / 1000).toFixed(1)}K` : '৳0',
+            stats.overdueFollowUps,
+          ];
+          const deltas = [
+            '+12%',
+            '+8%',
+            `+${stats.monthlyRevenue ? Math.round((stats.monthlyRevenue / 100000) * 100) : 0}%`,
+            '-3%',
+          ];
           return (
             <button
               key={i}
@@ -131,11 +181,11 @@ export function DashboardView({
               onClick={() =>
                 onNavigate(
                   i === 0
-                    ? 'Appointments'
+                    ? 'Patients'
                     : i === 1
-                      ? 'Patients'
+                      ? 'Appointments'
                       : i === 2
-                        ? 'Orders'
+                        ? 'Reports'
                         : 'Follow-ups'
                 )
               }>
@@ -166,12 +216,12 @@ export function DashboardView({
                   <strong
                     className="stat-num"
                     style={{ display: 'block', fontSize: 24, lineHeight: 1.1 }}>
-                    {k.value}
+                    {values[i]}
                   </strong>
                   <em
                     className={tones[i] === 'coral' ? 'warning' : ''}
                     style={{ fontSize: 11, color: tones[i] === 'coral' ? '#e77761' : '#0d9488' }}>
-                    {k.delta}
+                    {deltas[i]}
                   </em>
                 </div>
                 <ArrowUpRight

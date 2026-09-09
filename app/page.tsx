@@ -17,6 +17,7 @@ import {
   X,
   Phone,
   MapPin,
+  MapPin as MapPinIcon,
   Star,
   LayoutDashboard,
   ClipboardList,
@@ -34,6 +35,7 @@ import {
   ExternalLink,
   Gamepad2,
   PlaySquare,
+  Quote,
 } from 'lucide-react';
 import { AboutPage } from '../components/about-page';
 import { ServiceDetailPage, serviceDetails } from '../components/service-detail-page';
@@ -42,6 +44,7 @@ import { WebVitals } from '../components/web-vitals';
 import { common, doctorBio, navCopy, t as tT, useLanguage, type Lang } from '../lib/translations';
 import { SeoUpdater, type PageKey } from '../components/seo-updater';
 import { AuthProvider, useAuth } from '../components/auth/AuthProvider';
+import { Avatar } from '../components/admin-ui';
 
 // Lazy-load heavy route components — they only ship when the user navigates
 const PatientPortal = dynamic(
@@ -573,6 +576,13 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
             </button>
             <button
               className="icon-btn press"
+              aria-label={n.locationAria || 'Our location'}
+              onClick={() => onNavigate('Chambers')}>
+              <MapPinIcon size={18} />
+              <span className="icon-glow" aria-hidden="true" />
+            </button>
+            <button
+              className="icon-btn press"
               aria-label={n.patientDashboardAria}
               onClick={() => onNavigate('Patient')}>
               <UserRound size={18} />
@@ -764,18 +774,25 @@ const Footer = memo(function Footer({
             <span>{n.responseTime}</span>
           </div>
 
-           <div className="footer-socials" aria-label={n.socialLabel}>
-             {[
-               { k: 'f', label: 'Facebook', href: n.socials.facebook },
-               { k: '◎', label: 'Instagram', href: n.socials.instagram },
-               { k: 'youtube', label: n.youtubeLabel, href: n.socials.youtube },
-             ].map((s, i) => (
-               <a key={s.k + i} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label} className="press ripple social-btn">
-                 {s.k === 'youtube' ? <PlaySquare size={18} aria-hidden="true" /> : s.k}
-                 <span className="social-glow" aria-hidden="true" />
-               </a>
-             ))}
-           </div>
+<div className="footer-socials" aria-label={n.socialLabel}>
+              {[
+                { k: 'f', label: 'Facebook', href: n.socials.facebook },
+                { k: '◎', label: 'Instagram', href: n.socials.instagram },
+                { k: 'youtube', label: n.youtubeLabel, href: n.socials.youtube },
+              ].map((s, i) => (
+                <a key={s.k + i} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label} className="press ripple social-btn">
+                  {s.k === 'youtube' ? <PlaySquare size={18} aria-hidden="true" /> : s.k}
+                  <span className="social-glow" aria-hidden="true" />
+                </a>
+              ))}
+              <button
+                className="press ripple social-btn"
+                onClick={() => onNavigate('Chambers')}
+                aria-label={n.locationAria || 'Our location'}>
+                <MapPinIcon size={18} aria-hidden="true" />
+                <span className="social-glow" aria-hidden="true" />
+              </button>
+            </div>
         </div>
 
         {/* Explore */}
@@ -1019,50 +1036,58 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
             <ScrollReveal>
               <div style={{ textAlign: 'center', marginBottom: 48 }}>
                 <span className="section-eyebrow" style={{ color: '#3b9b91' }}>
-                  {lang === 'bn' ? 'আমাদের যত্নের পদ্ধতি' : 'How we care'}
+                  {n.carePrinciplesEyebrow}
                 </span>
-                <h2 className="gradient-text" style={{ marginTop: 12 }}>
-                  {lang === 'bn' ? 'আপনাকে কেন্দ্র করে' : 'Care designed around'} <em>{lang === 'bn' ? 'যত্ন।' : 'you.'}</em>
+                <h2 style={{ marginTop: 12 }}>
+                  {n.carePrinciplesTitle1} <em>{n.carePrinciplesTitleEm}</em>
                 </h2>
                 <p className="muted" style={{ maxWidth: 560, margin: '12px auto 0', fontSize: 15 }}>
-                  {lang === 'bn'
-                    ? 'প্রতিটি পরিকল্পনা শুরু হয় শোনার মাধ্যমে। আমরা আপনার অপশনগুলো স্পষ্টভাবে ব্যাখ্যা করি, বাস্তবসম্মত লক্ষ্য নির্ধারণ করি এবং আপনার প্রয়োজন পরিবর্তনের সাথে সাথে সংযুক্ত থাকি।'
-                    : 'Every plan begins with listening. We explain your options clearly, set realistic goals, and stay connected as your needs change.'}
+                  {n.carePrinciplesLead}
                 </p>
+                <div className="principle-step-connector" aria-hidden="true">
+                  <span className="principle-step">01</span>
+                  <span className="principle-step-line" />
+                  <span className="principle-step">02</span>
+                  <span className="principle-step-line" />
+                  <span className="principle-step">03</span>
+                </div>
               </div>
             </ScrollReveal>
             <ScrollReveal className="grid-cards principles-grid">
-              {[
-                {
-                  Art: HeartbeatArt,
-                  title: lang === 'bn' ? 'প্রথমে শোনা' : 'Listen first',
-                  body: lang === 'bn'
-                    ? 'পরামর্শের আগে আমরা আপনার গল্প বুঝতে সময় নিই, তারপর পরবর্তী ধাপ সুপারিশ করি।'
-                    : 'We take the time to understand your story before recommending next steps.',
-                },
-                {
-                  Art: StethoArt,
-                  title: lang === 'bn' ? 'স্পষ্ট পরিকল্পনা' : 'Clear plans',
-                  body: lang === 'bn'
-                    ? 'প্রতিটি সুপারিশ স্বাভাবিক ভাষায় ব্যাখ্যা করা হয়, আপনার দৈনন্দিন রুটিনের সাথে মানানসই।'
-                    : 'Every recommendation is explained in plain language, with a plan that fits your routine.',
-                },
-                {
-                  Art: ShieldArt,
-                  title: lang === 'bn' ? 'চলমান সহায়তা' : 'Ongoing support',
-                  body: lang === 'bn'
-                    ? 'আপনার অগ্রগতি ট্র্যাক রাখার ফলো-আপ যত্ন এবং প্রয়োজনের পরিবর্তনে পরিকল্পনা সংযোজন।'
-                    : 'Follow-up care that keeps your progress on track and adjusts as your needs change.',
-                },
-              ].map((item, i) => (
-                <article key={i} className="principle-card">
-                  <div className="principle-art">
-                    <item.Art style={{ width: '100%', height: '100%' }} />
-                  </div>
-                  <h3>{item.title}</h3>
-                  <p>{item.body}</p>
-                </article>
-              ))}
+              {n.carePrinciples.map((item: any, i: number) => {
+                const ICONS = [HeartbeatArt, StethoArt, ShieldArt];
+                const Art = ICONS[i % ICONS.length];
+                const halos = [
+                  'rgba(20,184,166,0.14)',
+                  'rgba(99,102,241,0.14)',
+                  'rgba(245,158,11,0.14)',
+                ];
+                return (
+                  <article key={i} className="principle-card">
+                    <div
+                      className="principle-art-halo"
+                      style={{ background: halos[i % halos.length] }}>
+                      <div className="principle-art">
+                        <Art style={{ width: '100%', height: '100%' }} />
+                      </div>
+                    </div>
+                    <h3>{item.title}</h3>
+                    <p>{item.body}</p>
+                    <a
+                      className="principle-cta"
+                      href="#services"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        onNavigate('Services');
+                      }}>
+                      {item.cta} <ArrowRight size={13} className="float-x" />
+                    </a>
+                  </article>
+                );
+              })}
+            </ScrollReveal>
+            <ScrollReveal>
+              <p className="principle-footnote">{n.carePrinciplesFootnote}</p>
             </ScrollReveal>
           </div>
         </section>
@@ -1183,127 +1208,61 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
           </div>
         </section>
 
-        {/* ============ WHY US / APPROACH SPLIT ============ */}
-        <section className="split-section" style={{ position: 'relative', overflow: 'hidden' }}>
+        {/* ============ VISITING CARD BANNER ============ */}
+        <section className="section home-banner">
+          <div className="container" style={{ textAlign: 'center' }}>
+            <ScrollReveal>
+              <div
+                className="section-eyebrow-wrap"
+                style={{
+                  marginBottom: 16,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}>
+                <span className="section-eyebrow" style={{ color: '#174b78' }}>
+                  {lang === 'bn' ? 'ভিসিটিং কার্ড' : 'Visiting card'}
+                </span>
+                <h2 className="gradient-text" style={{ marginTop: 12 }}>
+                  {lang === 'bn' ? 'ডাক্টর ইব্রাহিম হোসাইন' : 'Dr. Ibrahim Hossain'}
+                </h2>
+                <p className="muted" style={{ maxWidth: 560, margin: '10px auto 0', fontSize: 15 }}>
+                  {lang === 'bn'
+                    ? 'আপনার স্বাস্থ্য আমাদের অগ্রাধিকার। এই ভিসিটিং কার্ডটি আপনার চেম্বর ঠিকানা ও সংযোগের তথ্য ধরে।'
+                    : 'Your health is our priority. This visiting card holds the chamber address and contact details for your care journey.'}
+                </p>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal className="banner-media" delay={150}>
+              <img
+                src="/visiting_card.jpg"
+                alt={lang === 'bn' ? 'ডাক্টর ইব্রাহিমের ভিসিটিং কার্ড' : "Dr. Ibrahim's visiting card"}
+                className="banner-image"
+                loading="lazy"
+                decoding="async"
+              />
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* ============ OUR APPROACH ============ */}
+        <section className="section split-section" style={{ position: 'relative', overflow: 'hidden' }}>
           <div className="container split-grid">
             <div className="split-image perspective" style={{ perspective: 1500 }}>
-              <Tilt3D max={5} className="depth-shadow hero-main-card">
-                <div
-                  className="hero-main-bg"
-                  style={{
-                    borderRadius: 22,
-                    overflow: 'hidden',
-                    position: 'relative',
-                    background: 'linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%)',
-                    aspectRatio: '1.1/1',
-                    boxShadow: '0 30px 60px -16px rgba(15,42,68,0.25)',
-                    border: '1px solid rgba(255,255,255,0.8)',
-                  }}>
-                  <DoctorArt style={{ position: 'absolute', inset: 0 }} />
-                  {/* Floating badges */}
-                  <div
-                    className="float-soft"
-                    style={{
-                      position: 'absolute',
-                      top: 20,
-                      right: 20,
-                      background: 'rgba(255,255,255,0.95)',
-                      padding: '8px 14px',
-                      borderRadius: 12,
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: '#0d9488',
-                      boxShadow: '0 8px 20px -4px rgba(15,42,68,0.2)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 6,
-                    }}>
-                    <span className="status-dot pulse" /> Available today
-                  </div>
-                  <div
-                    className="float-soft"
-                    style={{
-                      position: 'absolute',
-                      bottom: 20,
-                      left: 20,
-                      background: 'rgba(255,255,255,0.95)',
-                      padding: '10px 14px',
-                      borderRadius: 12,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      boxShadow: '0 8px 20px -4px rgba(15,42,68,0.2)',
-                    }}>
-                    <StarsArt style={{ width: 60, height: 30 }} />
-                    <div>
-                      <strong style={{ display: 'block', fontSize: 12, color: '#0f172a' }}>
-                        4.9/5
-                      </strong>
-                      <small style={{ fontSize: 10, color: '#647985' }}>2k+ reviews</small>
-                    </div>
-                  </div>
-                </div>
-              </Tilt3D>
-              <div
-                className="quote-card lift glass-panel shine-card"
-                style={{ border: 0, borderRadius: 16, marginTop: 16 }}>
-                <span className="quote-mark gradient-text" style={{ fontSize: 56, lineHeight: 1 }}>
-                  "
-                </span>
-                <p style={{ fontSize: 16, lineHeight: 1.6 }}>{n.quoteBody}</p>
-                <small
-                  style={{ display: 'block', marginTop: 8, fontWeight: 700, color: '#0f172a' }}>
-                  {n.quoteBy}
-                </small>
-              </div>
-            </div>
-            <div className="split-copy">
-              <span className="section-eyebrow">{n.ourApproach}</span>
-              <h2 style={{ marginTop: 14 }}>
-                {n.approachTitle1} <em>{n.approachTitleEm}</em>
-              </h2>
-              <p className="lead">{n.approachLead}</p>
-              <div className="check-list grid-cards">
-                {n.checkList.map((c, i) => {
-                  const checkArts = [StethoArt, ChatArt, HeartbeatArt];
-                  const CheckArt = checkArts[i % checkArts.length];
-                  return (
-                    <div
-                      key={i}
-                      className="lift shine-card"
-                      style={{
-                        padding: '14px 16px',
-                        background: '#fff',
-                        borderRadius: 14,
-                        border: '1px solid rgba(20,184,166,0.1)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 14,
-                      }}>
-                      <div
-                        style={{
-                          width: 48,
-                          height: 48,
-                          flexShrink: 0,
-                          background:
-                            'linear-gradient(135deg, rgba(20,184,166,0.1), rgba(99,102,241,0.1))',
-                          borderRadius: 12,
-                          padding: 6,
-                        }}>
-                        <CheckArt style={{ width: '100%', height: '100%' }} />
-                      </div>
-                      <span style={{ flex: 1, fontSize: 14, fontWeight: 600, color: '#0f172a' }}>
-                        {c}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-              <Button
-                onClick={() => onNavigate('About')}
-                className="btn-pro shadow-glow-teal btn-tilt">
-                {n.meetDrBtn} <ArrowRight size={16} className="float-x" />
-              </Button>
+              <img
+                src="/Our_approach.jpg"
+                alt={lang === 'bn' ? 'আমাদের দৃষ্টিভঙ্গি' : 'Our approach'}
+                className="approach-image"
+                loading="lazy"
+                decoding="async"
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  borderRadius: 22,
+                  boxShadow: '0 30px 60px -16px rgba(15,42,68,0.25)',
+                  border: '1px solid rgba(255,255,255,0.8)',
+                }}
+              />
             </div>
           </div>
         </section>
@@ -1380,35 +1339,72 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
           </div>
         </section>
 
-        {/* ============ TESTIMONIAL / STARS BAND ============ */}
+        {/* ============ PATIENT STORIES / TESTIMONIALS ============ */}
         <section className="section">
           <div
             className="hero-glow"
             style={{ width: 500, height: 500, top: -100, right: -100, opacity: 0.2 }}
           />
-          <div className="container">
+          <div className="container" style={{ position: 'relative' }}>
             <div className="split-grid testimonial-split">
-              <div>
-                <span className="section-eyebrow">
-                  {lang === 'bn' ? 'রোগীদের অভিজ্ঞতা' : 'Patient stories'}
-                </span>
-                <h2 style={{ marginTop: 14 }}>
-                  {lang === 'bn' ? 'আমাদের রোগীরা যা বলেন' : 'Words from those we care for'}
-                </h2>
-                <p className="lead">
-                  {lang === 'bn'
-                    ? 'আমাদের লক্ষ্য প্রতিটি রোগীর অভিজ্ঞতাকে উন্নত করা — ছোট ছোট মুহূর্ত থেকে দীর্ঘমেয়াদি সুস্থতা পর্যন্ত।'
-                    : 'Every visit is a small moment of care that adds up to long-term wellbeing. Hear what makes our clinic different.'}
-                </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginTop: 24 }}>
-                  <div className="stat-num testimonial-stat-num">{lang === 'bn' ? '৪.৯' : '4.9'}</div>
-                  <div>
-                    <StarsArt style={{ width: 120, height: 30 }} />
-                    <small className="muted" style={{ display: 'block', marginTop: 4 }}>
-                      {lang === 'bn' ? '২,০০০+ রোগীর রিভিউ' : 'Based on 2,000+ reviews'}
-                    </small>
+              <div className="testimonial-copy">
+                <ScrollReveal>
+                  <span className="section-eyebrow">{n.storiesEyebrow}</span>
+                  <h2 style={{ marginTop: 14 }}>
+                    {n.storiesTitle1} <em>{n.storiesTitleEm}</em>
+                  </h2>
+                  <p className="lead">{n.storiesLead}</p>
+                </ScrollReveal>
+                <ScrollReveal>
+                  <div className="testimonial-rating">
+                    <div className="testimonial-rating-num">{n.storiesRating}</div>
+                    <div className="testimonial-rating-stars">
+                      <StarsArt style={{ width: 132, height: 34 }} />
+                      <span>{n.storiesStarsLabel}</span>
+                    </div>
+                    <small className="muted">{n.storiesBased}</small>
                   </div>
-                </div>
+                </ScrollReveal>
+                <ScrollReveal>
+                  <div className="testimonial-trust">
+                    <span className="trust-badge">
+                      <ShieldCheck size={14} /> {n.storiesTrust}
+                    </span>
+                    <span className="trust-badge">
+                      <Stethoscope size={14} /> {n.storiesGmc}
+                    </span>
+                    <span className="trust-badge">
+                      <ShieldCheck size={14} /> {n.storiesEncrypted}
+                    </span>
+                  </div>
+                </ScrollReveal>
+                <ScrollReveal>
+                  <div className="testimonial-quote-card">
+                    <Quote size={28} className="quote-mark" />
+                    <p>{n.storiesQuote1}</p>
+                    <div className="testimonial-author">
+                      <Avatar name={n.storiesName1} size={38} />
+                      <div>
+                        <strong>{n.storiesName1}</strong>
+                        <small>{n.storiesRole1}</small>
+                      </div>
+                    </div>
+                  </div>
+                </ScrollReveal>
+                <ScrollReveal style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                  <Button
+                    variant="outline"
+                    onClick={() => onNavigate('Appointment')}
+                    className="btn-pro">
+                    {n.storiesMoreCta} <ArrowRight size={16} className="float-x" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => onNavigate('Contact')}
+                    className="btn-pro">
+                    {n.storiesShareCta}
+                  </Button>
+                </ScrollReveal>
               </div>
               <div className="perspective" style={{ perspective: 1200 }}>
                 <Tilt3D
