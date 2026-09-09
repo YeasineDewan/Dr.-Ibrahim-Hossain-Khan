@@ -11,7 +11,7 @@ export async function GET() {
   try {
     const cookieStore = await import('next/headers').then(m => m.cookies());
     const supabase = createClient(cookieStore);
-    const { data, error } = await supabase.from('activity_log').select('*').order('created_at', { ascending: false }).limit(100);
+    const { data, error } = await supabase.from('settings').select('*').single();
     if (error) throw new Error(error.message);
     return NextResponse.json({ data });
   } catch (error: any) {
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const cookieStore = await import('next/headers').then(m => m.cookies());
     const supabase = createClient(cookieStore);
-    const { data, error } = await supabase.from('activity_log').insert(body).select().single();
+    const { data, error } = await supabase.from('settings').upsert(body).select().single();
     if (error) throw new Error(error.message);
     return NextResponse.json({ data });
   } catch (error: any) {

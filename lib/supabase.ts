@@ -361,6 +361,58 @@ export interface Database {
           status?: string;
         };
       };
+      settings: {
+        Row: {
+          id: string;
+          clinic_name: string;
+          clinic_phone: string | null;
+          clinic_email: string | null;
+          clinic_address: string | null;
+          clinic_hours: string | null;
+          appointment_fee: number;
+          currency: string;
+          enable_mfa: boolean;
+          enable_booking: boolean;
+          smtp_host: string | null;
+          smtp_port: number | null;
+          smtp_user: string | null;
+          smtp_password: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          clinic_name?: string;
+          clinic_phone?: string | null;
+          clinic_email?: string | null;
+          clinic_address?: string | null;
+          clinic_hours?: string | null;
+          appointment_fee?: number;
+          currency?: string;
+          enable_mfa?: boolean;
+          enable_booking?: boolean;
+          smtp_host?: string | null;
+          smtp_port?: number | null;
+          smtp_user?: string | null;
+          smtp_password?: string | null;
+        };
+        Update: {
+          id?: string;
+          clinic_name?: string;
+          clinic_phone?: string | null;
+          clinic_email?: string | null;
+          clinic_address?: string | null;
+          clinic_hours?: string | null;
+          appointment_fee?: number;
+          currency?: string;
+          enable_mfa?: boolean;
+          enable_booking?: boolean;
+          smtp_host?: string | null;
+          smtp_port?: number | null;
+          smtp_user?: string | null;
+          smtp_password?: string | null;
+          updated_at?: string;
+        };
+      };
     };
   };
 }

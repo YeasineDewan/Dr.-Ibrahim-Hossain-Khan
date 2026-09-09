@@ -1,5 +1,6 @@
 'use client';
-import { useEffect, useMemo, useState } from 'react';
+
+import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import {
   Activity,
   LayoutDashboard,
@@ -17,27 +18,20 @@ import {
   ShieldCheck,
   Search,
   ChevronDown,
-  ChevronRight,
-  Plus,
-  MoreHorizontal,
   Menu,
   X,
   LogOut,
-  ArrowUpRight,
   ListChecks,
   Stethoscope,
   UserCog,
-  History,
-  LineChart,
-  Globe,
   HeartPulse,
   CalendarCheck,
 } from 'lucide-react';
 import { adminCopy, useLanguage, t as tT } from '../lib/translations';
-import { useAdminData } from '../lib/admin-data-supabase';
+import { useAdminData } from '../lib/admin-data';
 import { TODAY } from '../lib/utils';
-import { useAuth } from '../components/auth/AuthProvider';
-import { type PermissionCheck, createDemoUser, isSuperUser, type Resource, NAV_RESOURCE_MAP, getUserPermissions } from '../lib/auth/rbac';
+import { useAdminAuth } from '@/hooks/use-admin-auth';
+import { type PermissionCheck, isSuperUser, NAV_RESOURCE_MAP, getUserPermissions } from '../lib/auth/rbac';
 import { Avatar, Pill, useToast } from './admin-ui';
 import { DashboardView } from './admin/dashboard';
 import { AnalyticsView, ActivityLogView } from './admin/analytics';
@@ -71,56 +65,58 @@ const iconFor = (x: string) =>
 export function AdminWorkspace({ onExit }: { onExit: () => void }) {
   const { lang } = useLanguage();
   const a = adminCopy[lang];
-  const { user, logout } = useAuth();
-  const isSuper = user ? isSuperUser(user) : false;
-  const navPermissions = user ? getUserPermissions(user) : [];
-  const canAccessItem = (item: string): boolean => {
-    const nav = NAV_RESOURCE_MAP[item];
-    if (!nav) return true;
-    if (isSuper) return true;
-    return navPermissions.some(
-      (p: PermissionCheck) => p.resource === '*' || (p.resource === nav.resource && p.action === nav.action)
-    );
-  };
+  const { user, loading, isAdmin, signIn, signOut } = useAdminAuth();
+  const toast = useToast();
+
   const [active, setActive] = useState('Dashboard');
   const [open, setOpen] = useState(true);
   const [expanded, setExpanded] = useState<string[]>(adminCopy.en.groups.map(g => g.label));
-  const toggle = (g: string) =>
+  const [loginLoading, setLoginLoading] = useState(false);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  const toggle = useCallback((g: string) => {
     setExpanded(e => (e.includes(g) ? e.filter(x => x !== g) : [...e, g]));
+  }, []);
 
-  useEffect(() => {
-    if (!open) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [open]);
-
-  const selectItem = (item: string) => {
+  const selectItem = useCallback((item: string) => {
     setActive(item);
     setOpen(false);
-  };
+  }, []);
+
+  const data = useAdminData();
+
+  const navPermissions = useMemo(
+    () => (user ? getUserPermissions(user) : []),
+    [user]
+  );
+
+  const canAccessItem = useCallback((item: string): boolean => {
+    const nav = NAV_RESOURCE_MAP[item];
+    if (!nav) return true;
+    if (isAdmin) return true;
+    return navPermissions.some(
+      (p: PermissionCheck) => p.resource === '*' || (p.resource === nav.resource && p.action === nav.action)
+    );
+  }, [navPermissions, isAdmin]);
 
   const groups = adminCopy.en.groups as unknown as { label: string; items: string[] }[];
   const localizedGroups = a.groups as unknown as { label: string; items: string[] }[];
-  const labelFor = (value: string) => {
+  const labelFor = useCallback((value: string) => {
     for (let i = 0; i < groups.length; i++) {
       const itemIndex = groups[i].items.indexOf(value);
       if (itemIndex >= 0) return localizedGroups[i]?.items[itemIndex] || value;
       if (groups[i].label === value) return localizedGroups[i]?.label || value;
     }
     return value;
-  };
-  const data = useAdminData();
-  const toast = useToast();
+  }, [groups, localizedGroups]);
 
-  // find the index of a given item in its group for the badge (e.g. "4" on appointments)
   const flatItems = useMemo(
     () => groups.flatMap(g => g.items.map(it => ({ group: g.label, item: it }))),
     [groups]
   );
-  const badgeFor = (item: string) => {
+
+  const badgeFor = useCallback((item: string) => {
     if (item === 'Appointments')
       return data.appointments.filter(
         x => x.date === TODAY && (x.status === 'Pending' || x.status === 'Confirmed')
@@ -128,7 +124,7 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
     if (item === 'Notifications') return data.notifications.filter(n => !n.read).length;
     if (item === 'Follow-ups') return data.followUps.filter(f => f.status === 'Overdue').length;
     return 0;
-  };
+  }, [data.appointments, data.notifications, data.followUps]);
 
   const visibleGroups = useMemo(
     () =>
@@ -136,11 +132,16 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
         .map((g: { label: string; items: string[] }, groupIndex: number) => ({
           ...g,
           items: g.items.filter((item) => canAccessItem(item)),
-          groupIndex: groups.indexOf(g),
+          groupIndex,
         }))
         .filter((g: { label: string; items: string[] }) => g.items.length > 0),
-    [groups, navPermissions, isSuper]
+    [groups, canAccessItem]
   );
+
+  const handleLogout = async () => {
+    await signOut();
+    onExit();
+  };
 
   const renderModule = () => {
     switch (active) {
@@ -186,6 +187,115 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
   const currentItem = flatItems.find(f => f.item === active)?.item || active;
   const unread = data.notifications.filter(n => !n.read).length;
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="admin-workspace" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <div style={{ textAlign: 'center' }}>
+          <Activity size={48} className="heartbeat" style={{ color: '#3b9b91' }} />
+          <p style={{ marginTop: '1rem', color: '#647985' }}>Loading admin workspace...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login screen if not authenticated
+  if (!user || !isAdmin) {
+    return (
+      <div className="admin-workspace" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
+        <div style={{ background: 'white', padding: '2.5rem', borderRadius: '16px', boxShadow: '0 20px 60px rgba(0,0,0,0.1)', width: '100%', maxWidth: '420px', margin: '0 1rem' }}>
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <Activity size={48} style={{ color: '#3b9b91', marginBottom: '1rem' }} />
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 700, margin: 0, color: '#1a2b3c' }}>
+              {lang === 'bn' ? 'অ্যাডমিন লগইন' : 'Admin Login'}
+            </h1>
+            <p style={{ color: '#647985', marginTop: '0.5rem', fontSize: '0.9rem' }}>
+              {lang === 'bn' ? 'অ্যাডমিন প্যানেল অ্যাক্সেস করতে লগইন করুন' : 'Sign in to access the admin panel'}
+            </p>
+          </div>
+
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            setLoginLoading(true);
+            const email = emailRef.current?.value || '';
+            const password = passwordRef.current?.value || '';
+            const { error } = await signIn(email, password);
+            setLoginLoading(false);
+            if (error) {
+              toast.show(error.message || 'Invalid credentials', 'error');
+            }
+          }} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#374151', marginBottom: '0.5rem' }}>
+                {lang === 'bn' ? 'ইমেইল' : 'Email'}
+              </label>
+              <input
+                ref={emailRef}
+                type="email"
+                placeholder="admin@clinic.demo"
+                required
+                style={{
+                  width: '100%',
+                  padding: '0.75rem 1rem',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '1rem',
+                  outline: 'none',
+                }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#374151', marginBottom: '0.5rem' }}>
+                {lang === 'bn' ? 'পাসওয়ার্ড' : 'Password'}
+              </label>
+              <input
+                ref={passwordRef}
+                type="password"
+                placeholder="••••••••"
+                required
+                style={{
+                  width: '100%',
+                  padding: '0.75rem 1rem',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '1rem',
+                  outline: 'none',
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loginLoading}
+              style={{
+                width: '100%',
+                padding: '0.75rem 1rem',
+                background: loginLoading ? '#9ca3af' : '#3b9b91',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontWeight: 600,
+                cursor: loginLoading ? 'not-allowed' : 'pointer',
+                transition: 'background 0.2s',
+              }}
+              onMouseEnter={(e) => { if (!loginLoading) e.currentTarget.style.background = '#2f7a6e'; }}
+              onMouseLeave={(e) => { if (!loginLoading) e.currentTarget.style.background = '#3b9b91'; }}
+            >
+              {loginLoading ? (lang === 'bn' ? 'লগইন হচ্ছে...' : 'Signing in...') : (lang === 'bn' ? 'লগইন করুন' : 'Sign In')}
+            </button>
+
+            <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.8rem', color: '#9ca3af' }}>
+              {lang === 'bn' ? 'অ্যাক্সেসের জন্য অনুমোদিত অ্যাডমিনের সাথে যোগাযোগ করুন' : 'Contact an authorized admin for access'}
+            </p>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // Admin is authenticated, show the full admin workspace
   return (
     <div className="admin-workspace">
       <aside className={`pro-admin-sidebar ${open ? 'open' : ''}`}>
@@ -202,10 +312,10 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
           <span
             className="clinic-avatar avatar-ring"
             style={{ display: 'grid', placeItems: 'center' }}>
-            DI
+            {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
           </span>
           <span>
-            <strong>{lang === 'bn' ? 'ডাঃ ইব্রাহিম' : 'Dr. Ibrahim'}</strong>
+            <strong>{user.name}</strong>
             <small>{a.leadPhysician}</small>
           </span>
           <ChevronDown size={14} className="float-x" />
@@ -245,7 +355,7 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
             </div>
           ))}
         </nav>
-        <button className="admin-exit press btn-pro" onClick={onExit}>
+        <button className="admin-exit press btn-pro" onClick={handleLogout}>
           <LogOut size={15} /> {a.backToWebsite}
         </button>
       </aside>
@@ -272,8 +382,8 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
               {unread > 0 && <i className="pulse" />}
             </button>
             <button className="pro-profile press" onClick={() => setActive('Users & roles')}>
-              <Avatar name="Dr. Ibrahim" size={32} />
-              <strong>{lang === 'bn' ? 'ডাঃ ইব্রাহিম' : 'Dr. Ibrahim'}</strong>
+              <Avatar name={user.name} size={32} />
+              <strong>{user.name}</strong>
               <ChevronDown size={14} />
             </button>
           </div>
@@ -287,26 +397,7 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
   );
 }
 
+// Legacy component for backward compatibility - now just renders AdminWorkspace
 export function ProtectedAdminWorkspace({ onExit }: { onExit: () => void }) {
-  const demoUser = useMemo(
-    () => createDemoUser('admin', 'admin@clinic.demo', 'Dr. Ibrahim'),
-    []
-  );
-  const { reinitialize } = useAuth();
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('auth_user');
-    const storedTokens = localStorage.getItem('auth_tokens');
-    if (!storedUser || !storedTokens) {
-      localStorage.setItem('auth_user', JSON.stringify(demoUser));
-      localStorage.setItem('auth_tokens', JSON.stringify({
-        accessToken: 'demo-token',
-        refreshToken: 'demo-refresh-token',
-        expiresAt: Date.now() + 86400000,
-      }));
-      reinitialize();
-    }
-  }, [demoUser, reinitialize]);
-
   return <AdminWorkspace onExit={onExit} />;
 }

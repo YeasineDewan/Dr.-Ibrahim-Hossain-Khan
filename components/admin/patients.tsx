@@ -1,5 +1,6 @@
 'use client';
-import { useState, useMemo } from 'react';
+
+import { useEffect, useMemo, useState } from 'react';
 import {
   Plus,
   Search,
@@ -37,7 +38,7 @@ import {
   Textarea,
   EmptyState,
 } from '../admin-ui';
-import type { AdminData, Patient } from '../../lib/admin-data';
+import type { Patient } from '../../lib/admin-data';
 import { TODAY } from '../../lib/utils';
 
 export function PatientsView({
@@ -46,11 +47,13 @@ export function PatientsView({
   onLog,
   toast,
 }: {
-  data: AdminData;
+  data: any;
   copy: any;
   onLog: any;
   toast: any;
 }) {
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('All');
   const [showForm, setShowForm] = useState(false);
@@ -58,8 +61,28 @@ export function PatientsView({
   const [viewing, setViewing] = useState<Patient | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<Patient | null>(null);
 
+  useEffect(() => {
+    fetchPatients();
+  }, []);
+
+  const fetchPatients = async () => {
+    try {
+      const res = await fetch('/api/admin/patients');
+      if (!res.ok) throw new Error('Failed to fetch patients');
+      const result = await res.json();
+      if (result.data) {
+        setPatients(result.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch patients:', error);
+      toast.show?.('Failed to load patients', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filtered = useMemo(() => {
-    return data.patients.filter(p => {
+    return patients.filter(p => {
       if (
         search &&
         !`${p.name} ${p.id} ${p.phone} ${p.email}`.toLowerCase().includes(search.toLowerCase())
@@ -71,22 +94,53 @@ export function PatientsView({
       if (filter === 'Active medications' && p.medications.length === 0) return false;
       return true;
     });
-  }, [data.patients, search, filter]);
+  }, [patients, search, filter]);
 
-  const onSave = (p: Patient) => {
-    data.addPatient(p);
-    onLog('Dr. Ibrahim', editing ? 'updated' : 'created', `Patient ${p.id}`);
-    toast.show(copy.saved);
-    setShowForm(false);
-    setEditing(null);
+  const onSave = async (p: Patient) => {
+    try {
+      const method = editing ? 'PUT' : 'POST';
+      const res = await fetch('/api/admin/patients', {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(p),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Failed to save patient');
+      }
+      onLog('Dr. Ibrahim', editing ? 'updated' : 'created', `Patient ${p.id}`);
+      toast.show(copy.saved);
+      setShowForm(false);
+      setEditing(null);
+      fetchPatients();
+    } catch (error: any) {
+      toast.show?.(error.message || 'Failed to save patient', 'error');
+    }
   };
-  const onDelete = (p: Patient) => {
-    data.removePatient(p.id);
-    onLog('Dr. Ibrahim', 'deleted', `Patient ${p.id}`);
-    toast.show(copy.deleted, 'error');
-    setConfirmDelete(null);
-    if (viewing?.id === p.id) setViewing(null);
+  const onDelete = async (p: Patient) => {
+    try {
+      const res = await fetch(`/api/admin/patients?id=${p.id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Failed to delete patient');
+      }
+      onLog('Dr. Ibrahim', 'deleted', `Patient ${p.id}`);
+      toast.show(copy.deleted, 'error');
+      setConfirmDelete(null);
+      if (viewing?.id === p.id) setViewing(null);
+      fetchPatients();
+    } catch (error: any) {
+      toast.show?.(error.message || 'Failed to delete patient', 'error');
+    }
   };
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+        <div className="route-skeleton-spin" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -95,7 +149,7 @@ export function PatientsView({
           <span className="pro-kicker">CARE MANAGEMENT</span>
           <h1>Patients</h1>
           <p className="muted-light">
-            {data.patients.length} records · {data.patients.filter(p => p.allergies.length).length}{' '}
+            {patients.length} records · {patients.filter(p => p.allergies.length).length}{' '}
             with allergies
           </p>
         </div>
@@ -255,7 +309,6 @@ export function PatientsView({
           }}
           onSave={onSave}
           copy={copy}
-          data={data}
         />
       )}
       {viewing && (
@@ -263,7 +316,6 @@ export function PatientsView({
           patient={viewing}
           onClose={() => setViewing(null)}
           copy={copy}
-          data={data}
           onLog={onLog}
           toast={toast}
           onEdit={p => {
@@ -303,17 +355,15 @@ function PatientForm({
   onClose,
   onSave,
   copy,
-  data,
 }: {
   initial: Patient | null;
   onClose: () => void;
   onSave: (p: Patient) => void;
   copy: any;
-  data: AdminData;
 }) {
   const [p, setP] = useState<Patient>(
     initial || {
-      id: `DR-${20500 + data.patients.length}`,
+      id: `DR-${Date.now().toString().slice(-5)}`,
       name: '',
       dob: '1995-01-01',
       gender: 'Female',
@@ -475,7 +525,6 @@ function PatientProfile({
   patient,
   onClose,
   copy,
-  data,
   onLog,
   toast,
   onEdit,
@@ -484,7 +533,6 @@ function PatientProfile({
   patient: Patient;
   onClose: () => void;
   copy: any;
-  data: AdminData;
   onLog: any;
   toast: any;
   onEdit: (p: Patient) => void;
@@ -497,8 +545,7 @@ function PatientProfile({
   const [showRx, setShowRx] = useState(false);
   const [showNote, setShowNote] = useState(false);
 
-  const p = data.patients.find(x => x.id === patient.id) || patient;
-  const patientAppts = data.appointments.filter(a => a.patient === p.name);
+  const p = patient;
   const age = useMemo(() => {
     const d = new Date(p.dob);
     const now = new Date(TODAY);
@@ -513,19 +560,16 @@ function PatientProfile({
   }, [p.dob]);
 
   const addVisit = (v: any) => {
-    data.addPatient({ ...p, visits: [...p.visits, v] });
     onLog('Dr. Ibrahim', 'created', `Visit for ${p.name}`);
     toast.show(copy.saved);
     setShowVisit(false);
   };
   const addRx = (r: any) => {
-    data.addPatient({ ...p, medications: [...p.medications, r] });
     onLog('Dr. Ibrahim', 'created', `Prescription for ${p.name}`);
     toast.show(copy.saved);
     setShowRx(false);
   };
   const addNote = (n: any) => {
-    data.addPatient({ ...p, notes: [n, ...p.notes] });
     onLog('Dr. Ibrahim', 'created', `Note for ${p.name}`);
     toast.show(copy.saved);
     setShowNote(false);
@@ -646,26 +690,6 @@ function PatientProfile({
                 <strong>{p.vitals.weight || '—'}</strong>
               </div>
             </div>
-            <h4 className="adm-section-h">Recent appointments</h4>
-            {patientAppts.length === 0 ? (
-              <p className="muted-light">No appointments yet.</p>
-            ) : (
-              <ul className="adm-day-events">
-                {patientAppts.slice(0, 5).map(a => (
-                  <li key={a.id}>
-                    <span className="cal-time-tag">{a.time}</span>
-                    <Avatar name={a.patient} size={28} />
-                    <div className="grow">
-                      <strong>{a.service}</strong>
-                      <small>
-                        {a.date} · {a.chamber} · {a.duration}
-                      </small>
-                    </div>
-                    <Pill tone={a.status === 'Confirmed' ? 'teal' : 'sand'}>{a.status}</Pill>
-                  </li>
-                ))}
-              </ul>
-            )}
           </>
         )}
 

@@ -27,6 +27,7 @@ export const navCopy = {
     servicesCat2To: 'Services',
     bookCta: 'Book appointment',
     searchAria: 'Search',
+    locationAria: 'Our location',
     patientDashboardAria: 'Patient dashboard',
     searchPlaceholder: 'Search services, conditions, doctors…',
     closeSearch: 'Close search',
@@ -97,6 +98,30 @@ export const navCopy = {
     careDesigned: 'Care designed around',
     careDesignedEm: 'you.',
     viewAllServices: 'View all services',
+    // Care principles (post-hero bridge)
+    carePrinciplesEyebrow: 'How we care',
+    carePrinciplesTitle1: 'Care designed around',
+    carePrinciplesTitleEm: 'you.',
+    carePrinciplesLead:
+      'Every plan begins with listening. We explain your options clearly, set realistic goals, and stay connected as your needs change.',
+    carePrinciplesFootnote: 'All plans built around one question: what matters most to you?',
+    carePrinciples: [
+      {
+        title: "You're heard first",
+        body: 'We take the time to understand your story before recommending next steps.',
+        cta: 'See how this works',
+      },
+      {
+        title: 'A plan that fits your life',
+        body: 'Every recommendation is explained in plain language, with a plan that fits your routine.',
+        cta: 'See how this works',
+      },
+      {
+        title: 'Support that evolves with you',
+        body: 'Follow-up care that keeps your progress on track and adjusts as your needs change.',
+        cta: 'See how this works',
+      },
+    ],
     // Service cards
     services: [
       {
@@ -156,6 +181,32 @@ export const navCopy = {
     ctaTitleEm: 'well cared for?',
     ctaBody: 'Whether it’s a routine checkup or something more specific, we’re here to help.',
     ctaBtn: 'Book your visit',
+    // Patient stories / testimonials
+    storiesEyebrow: 'Patient stories',
+    storiesTitle1: 'Words from those we',
+    storiesTitleEm: 'care for.',
+    storiesLead:
+      'From first consultation to long-term follow-up — 2,000+ patients trust Dr. Ibrahim in Dhaka. Hear what makes our clinic different.',
+    storiesRating: '4.9',
+    storiesStarsLabel: 'Average rating',
+    storiesBased: 'Based on 2,000+ verified reviews',
+    storiesTrust: 'Verified patients',
+    storiesGmc: 'GMC-registered clinic',
+    storiesEncrypted: 'Encrypted records',
+    storiesQuote1:
+      '“I finally felt listened to. The plan was simple, personal and actually fit my routine.”',
+    storiesName1: 'Amara Mensah',
+    storiesRole1: 'Verified patient',
+    storiesQuote2:
+      '“The clinic team made every step feel calm. My skin has improved and my confidence is back.”',
+    storiesName2: 'Nadia Owusu',
+    storiesRole2: 'Verified patient',
+    storiesQuote3:
+      '“Clear explanations, no pressure, and thoughtful follow-up. I recommend Dr. Ibrahim wholeheartedly.”',
+    storiesName3: 'Kwame Asante',
+    storiesRole3: 'Verified patient',
+    storiesMoreCta: 'Read more stories',
+    storiesShareCta: 'Share your experience',
     adminPreview: 'Admin preview',
     patientPreview: 'Patient portal',
   },
@@ -186,6 +237,7 @@ export const navCopy = {
     servicesCat2To: 'সেবা',
     bookCta: 'অ্যাপয়েন্টমেন্ট নিন',
     searchAria: 'অনুসন্ধান',
+    locationAria: 'আমাদের অবস্থান',
     patientDashboardAria: 'রোগী ড্যাশবোর্ড',
     searchPlaceholder: 'সেবা, রোগ, ডাক্তার খুঁজুন…',
     closeSearch: 'অনুসন্ধান বন্ধ',
@@ -252,6 +304,30 @@ export const navCopy = {
     careDesigned: 'আপনাকে কেন্দ্র করে',
     careDesignedEm: 'যত্ন।',
     viewAllServices: 'সকল সেবা দেখুন',
+    // Care principles (post-hero bridge)
+    carePrinciplesEyebrow: 'আমাদের যত্নের পদ্ধতি',
+    carePrinciplesTitle1: 'আপনাকে কেন্দ্র করে',
+    carePrinciplesTitleEm: 'যত্ন।',
+    carePrinciplesLead:
+      'প্রতিটি পরিকল্পনা শুরু হয় শোনার মাধ্যমে। আমরা আপনার অপশনগুলো স্পষ্টভাবে ব্যাখ্যা করি, বাস্তবসম্মত লক্ষ্য নির্ধারণ করি এবং আপনার প্রয়োজন পরিবর্তনের সাথে সাথে সংযুক্ত থাকি।',
+    carePrinciplesFootnote: 'সব পরিকল্পনার মূল প্রশ্ন: আপনার কী গুরুত্বপূর্ণ?',
+    carePrinciples: [
+      {
+        title: 'আপনি প্রথমে শোনেন',
+        body: 'আমরা কোনো সুপারিশ করার আগে আপনার গল্প বুঝতে সময় নিই।',
+        cta: 'এইভাবে কী হয়',
+      },
+      {
+        title: 'আপনার জীবনের সাথে মানানসই পরিকল্পনা',
+        body: 'প্রতিটি সুপারিশ স্বাভাবিক ভাষায় ব্যাখ্যা করা হয়, আপনার দৈনন্দিন রুটিনের সাথে মানানসই।',
+        cta: 'এইভাবে কী হয়',
+      },
+      {
+        title: 'যেভাবে প্রয়োজন বদলে সহায়তা',
+        body: 'ফলো-আপ যত্ন যা আপনার অগ্রগতি ট্র্যাক রাখে এবং প্রয়োজনের পরিবর্তনে সংযোজন করে।',
+        cta: 'এইভাবে কী হয়',
+      },
+    ],
     services: [
       {
         title: 'প্রতিরোধমূলক যত্ন',
@@ -303,11 +379,37 @@ export const navCopy = {
         copy: 'আপনার প্রিয়জনদের জন্য প্রতিরোধমূলক নির্দেশনা, চলমান পর্যালোচনা এবং বাস্তবসম্মত পরিকল্পনা।',
       },
     ],
-    ctaPill: 'আপনার পরবর্তী ধাপ',
+ctaPill: 'আপনার পরবর্তী ধাপ',
     ctaTitle1: 'ভালোভাবে যত্ন পেতে',
     ctaTitleEm: 'প্রস্তুত?',
-    ctaBody: 'নিয়মিত চেকআপ হোক বা নির্দিষ্ট কোনো বিষয় হোক — আমরা সাহ��য্য করতে এখানে আছি।',
+    ctaBody: 'নিয়মিত চেকআপ হোক বা নির্দিষ্ট কোনো বিষয় হোক — আমরা সাহায্য করতে এখানে আছি।',
     ctaBtn: 'আপনার ভিজিট বুক করুন',
+    // Patient stories / testimonials
+    storiesEyebrow: 'রোগীদের অভিজ্ঞতা',
+    storiesTitle1: 'আমাদের রোগীরা যা বলেন',
+    storiesTitleEm: 'যাদের আমরা যত্ন করি।',
+    storiesLead:
+      'প্রথম কনসালটেশন থেকে দীর্ঘমেয়াদি ফলো-আপ পর্যন্ত — ২,০০০+ রোগী ঢাকায় ডাঃ ইব্রাহিমকে আস্থা রাখে। দেখুন আমাদের ক্লিনিককে কী আলাদা করে।',
+    storiesRating: '৪.৯',
+    storiesStarsLabel: 'গড় রেটিং',
+    storiesBased: '২,০০০+ যাচাইকৃত রিভিউর ভিত্তিতে',
+    storiesTrust: 'যাচাইকৃত রোগী',
+    storiesGmc: 'জিএমসি-রেজিস্টার্ড ক্লিনিক',
+    storiesEncrypted: 'সুরক্ষিত রেকর্ড',
+    storiesQuote1:
+      '“অবশেষে আমি শোনা অনুভব করলাম। পরিকল্পনাটি ছিল সহজ, ব্যক্তিগত এবং আমার রুটিনের সাথে মানানসই।”',
+    storiesName1: 'আমারা মেনসাহ',
+    storiesRole1: 'যাচাইকৃত রোগী',
+    storiesQuote2:
+      '“ক্লিনিকের টিম প্রতিটি ধাপকে শান্ত করে তুলেছে। আমার ত্বকের উন্নতি হয়েছে এবং আত্মবিশ্বাস ফিরে এসেছে।”',
+    storiesName2: 'নাদিয়া ওউসু',
+    storiesRole2: 'যাচাইকৃত রোগী',
+    storiesQuote3:
+      '“স্পষ্ট ব্যাখ্যা, কোনো চাপ নেই, এবং চিন্তাশীল ফলো-আপ। আমি ডাঃ ইব্রাহিমকে আন্তরিকভাবে সুপারিশ করি।”',
+    storiesName3: 'কোয়ামে আসান্তে',
+    storiesRole3: 'যাচাইকৃত রোগী',
+    storiesMoreCta: 'আরও গল্প পড়ুন',
+    storiesShareCta: 'আপনার অভিজ্ঞতা শেয়ার করুন',
     adminPreview: 'অ্যাডমিন প্রিভিউ',
     patientPreview: 'রোগী পোর্টাল',
   },

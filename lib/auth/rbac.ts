@@ -128,13 +128,13 @@ export const ROLE_BY_LEGACY_NAME: Record<string, string> = {
 
 const SUPER_ROLES = new Set(['admin', 'super-admin']);
 
-export function isSuperUser(user: UserProfile | string[]): boolean {
+export function isSuperUser(user: UserProfile | string[] | { roles: string[] }): boolean {
   if (typeof user === 'string') return SUPER_ROLES.has(user);
   if (Array.isArray(user)) return user.some((r) => SUPER_ROLES.has(r));
   return user.roles.some((r) => SUPER_ROLES.has(r));
 }
 
-export function getUserPermissions(user: UserProfile | string[]): Permission[] {
+export function getUserPermissions(user: UserProfile | string[] | { roles: string[] }): Permission[] {
   const roles: string[] = Array.isArray(user) ? user : user.roles;
   const resolved = new Map<string, Permission>();
   const seen = new Set<string>();
@@ -166,7 +166,7 @@ export function getUserPermissions(user: UserProfile | string[]): Permission[] {
 }
 
 export function hasPermission(
-  user: UserProfile | string[],
+  user: UserProfile | string[] | { roles: string[] },
   resource: string,
   action: PermissionAction
 ): boolean {
@@ -178,7 +178,7 @@ export function hasPermission(
 }
 
 export function hasAnyPermission(
-  user: UserProfile | string[],
+  user: UserProfile | string[] | { roles: string[] },
   checks: Permission[]
 ): boolean {
   if (isSuperUser(user)) return true;
