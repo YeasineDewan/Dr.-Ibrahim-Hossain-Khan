@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { createClient } from '@/utils/supabase/client';
+import { extractYouTubeId, youtubeThumbnail } from './utils';
 
 export type Appointment = {
   id: string;
@@ -108,6 +109,7 @@ export type Video = {
   views: number;
   status: string;
   date: string;
+  url?: string;
 };
 
 export type Category = {
@@ -345,6 +347,7 @@ function mapVideoFromDb(v: any): Video {
     views: v.views,
     status: v.status,
     date: v.date,
+    url: v.url,
   };
 }
 
@@ -372,6 +375,44 @@ function mapUserFromDb(u: any): User {
 
 const uid = () => Math.random().toString(36).slice(2, 9);
 
+/**
+ * Default YouTube videos shown on the public gallery while the Supabase
+ * `videos` table is empty (e.g. in development or a fresh project). When the
+ * database returns published rows, those take precedence. Thumbnails are sourced
+ * from YouTube's public image CDN so every card renders before the first fetch.
+ */
+const youtubeSeedVideos = [
+  { url: 'https://youtu.be/dlKA6LTj3Zw', title: 'The art of a good consultation', duration: '04:12', date: '2026-06-01' },
+  { url: 'https://youtu.be/dlKA6LTj3Zw', title: 'Consultation essentials', duration: '03:45', date: '2026-06-08' },
+  { url: 'https://youtu.be/5RXPd1XdVJc', title: 'Understanding vitiligo', duration: '06:20', date: '2026-06-15' },
+  { url: 'https://youtu.be/LUGH57vV38s', title: 'Skin care for sensitive skin', duration: '05:10', date: '2026-06-22' },
+];
+
+const defaultVideos: Video[] = youtubeSeedVideos.map((v, i) => {
+  const ytId = extractYouTubeId(v.url);
+  return {
+    id: `V-YT-${i + 1}`,
+    title: v.title,
+    thumbnail: ytId ? youtubeThumbnail(ytId) : '',
+    duration: v.duration,
+    views: 0,
+    status: 'Published',
+    date: v.date,
+    url: v.url,
+  };
+});
+
+/**
+ * Ensures the featured YouTube video fixtures are always available on the public
+ * gallery, even when the Supabase `videos` table is empty or contains only
+ * legacy rows without a `url`. Rows coming from the database are preferred: a
+ * seed whose `url` already exists in the database is dropped to avoid duplicates.
+ */
+function mergeVideos(dbVideos: Video[]): Video[] {
+  const dbUrls = new Set(dbVideos.filter(v => v.url).map(v => v.url as string));
+  return [...defaultVideos.filter(v => !v.url || !dbUrls.has(v.url)), ...dbVideos];
+}
+
 export function useAdminData() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -381,7 +422,7 @@ export function useAdminData() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [activity, setActivity] = useState<ActivityItem[]>([]);
   const [gallery, setGallery] = useState<any[]>([]);
-  const [videos, setVideos] = useState<Video[]>([]);
+  const [videos, setVideos] = useState<Video[]>(defaultVideos);
   const [categories, setCategories] = useState<Category[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
@@ -425,7 +466,7 @@ export function useAdminData() {
       if (notificationsData) setNotifications(notificationsData.map(mapNotificationFromDb));
       if (activityData) setActivity(activityData.map(mapActivityFromDb));
       if (galleryData) setGallery(galleryData);
-      if (videosData) setVideos(videosData.map(mapVideoFromDb));
+      if (videosData) setVideos(mergeVideos(videosData.map(mapVideoFromDb)));
       if (categoriesData) setCategories(categoriesData.map(mapCategoryFromDb));
       if (usersData) setUsers(usersData.map(mapUserFromDb));
       if (prescriptionsData) setPrescriptions(prescriptionsData.map(mapPrescriptionFromDb));

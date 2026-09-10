@@ -26,29 +26,20 @@ import {
   t as tT,
 } from '../lib/translations';
 import { useAdminData } from '../lib/admin-data-supabase';
-import { TODAY } from '../lib/utils';
+import { TODAY, youtubeEmbedUrl } from '../lib/utils';
 import { ScrollReveal } from './scroll-reveal';
 import { Tilt3D, Magnetic, Particles } from './motion-3d';
 
-const imgs = [
-  'photo-1559757175-0eb30cd8c063',
-  'photo-1576091160399-112ba8d25d1d',
-  'photo-1579684385127-1ef15d508118',
-  'photo-1551076805-e1869033e561',
-  'photo-1584982751601-97dcc096659c',
-  'photo-1576091160550-2173dba999ef',
-  'photo-1538108149393-fbbd81895907',
-  'photo-1584515933487-779824d29309',
-  'photo-1638202993928-7d8e8c3d5c8b4a',
-  'photo-1576091160399-112ba8d25d1d',
-  'photo-1559757175-0eb30cd8c063',
-  'photo-1579684385127-1ef15d508118',
-  'photo-1584982751601-97dcc096659c',
-  'photo-1538108149393-fbbd81895907',
-  'photo-1584515933487-779824d29309',
-  'photo-1638202993928-7d8e8c3d5c8b4a',
-];
-const photo = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&q=80`;
+const galleryImages = [
+  { src: '/gallery/gal1.jpg', alt: 'Clinic reception and waiting area', w: 1445, h: 1088 },
+  { src: '/gallery/gal2.jpg', alt: 'Consultation room interior', w: 1088, h: 1445 },
+  { src: '/gallery/gal3.jpg', alt: 'Medical check-up station', w: 1448, h: 1086 },
+  { src: '/gallery/gal4.jpg', alt: 'Clinic treatment bay', w: 1448, h: 1086 },
+  { src: '/gallery/gal5.jpg', alt: 'Doctor consulting with a patient', w: 1448, h: 1086 },
+  { src: '/gallery/gal6.jpg', alt: 'Clinic hallway and signage', w: 1445, h: 1089 },
+  { src: '/gallery/gal7.jpg', alt: 'Patient consultation area', w: 909, h: 1226 },
+  { src: '/gallery/gal8.jpg', alt: 'Medical equipment and supplies', w: 1448, h: 1086 },
+] as const;
 
 export function GalleryPage() {
   const { lang } = useLanguage();
@@ -56,12 +47,15 @@ export function GalleryPage() {
   const { videos } = useAdminData();
   const [slide, setSlide] = useState(0);
   const [lightbox, setLightbox] = useState<number | null>(null);
+  const [videoModal, setVideoModal] = useState<number | null>(null);
   const videoSlides = videos
     .filter(video => video.status === 'Published')
     .map(video => ({
       title: lang === 'bn' && video.titleBn ? video.titleBn : video.title,
       meta: `${lang === 'bn' ? 'ক্লিনিক ভিডিও' : 'Clinic video'} • ${video.duration}`,
       image: video.thumbnail,
+      url: video.url ?? null,
+      embed: video.url ? youtubeEmbedUrl(video.url, true) : null,
     }));
   useEffect(() => {
     if (videoSlides.length < 2) return;
@@ -74,6 +68,7 @@ export function GalleryPage() {
   const videoImage =
     videoSlides[slide]?.image ||
     'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-VvLb8utyvJRSqBnQiP8yeuq4NcQ5fr.png';
+  const playingVideo = videoModal !== null ? videoSlides[videoModal] : null;
   return (
     <main className="page-section" style={{ position: 'relative', overflow: 'hidden' }}>
       <div
@@ -89,9 +84,9 @@ export function GalleryPage() {
           <p className="lead max-copy">{g.lead}</p>
         </ScrollReveal>
         <div className="gallery-grid grid-cards">
-          {imgs.slice(0, 9).map((x, i) => (
+          {galleryImages.map((img, i) => (
             <div
-              key={i}
+              key={img.src}
               className="img-zoom"
               style={{
                 borderRadius: 18,
@@ -101,9 +96,15 @@ export function GalleryPage() {
               }}
               onClick={() => setLightbox(i)}>
               <img
-                src={photo(x)}
-                alt={`Clinic gallery ${i + 1}`}
+                src={img.src}
+                srcSet={`${img.src} ${img.w}w`}
+                sizes="(max-width: 640px) 48vw, (max-width: 1024px) 33vw, 16vw"
+                width={img.w}
+                height={img.h}
+                alt={img.alt}
                 className="ken-burns"
+                loading="lazy"
+                decoding="async"
                 style={{ width: '100%', height: 220, objectFit: 'cover', display: 'block' }}
               />
             </div>
@@ -150,19 +151,23 @@ export function GalleryPage() {
           ) : (
             <div className="gallery-video-grid">
               {[0, 1].map(offset => {
-                const item = videoSlides[(slide + offset) % videoSlides.length];
+                const index = (slide + offset) % videoSlides.length;
+                const item = videoSlides[index];
                 return (
                   <article className="gallery-video-card" key={`${slide}-${offset}`}>
                     <div className="gallery-video-media">
-                       <img src={item.image || videoImage} alt={item.title} loading="lazy" width="800" height="500" decoding="async" />
+                      <img src={item.image || videoImage} alt={item.title} loading="lazy" width="800" height="500" decoding="async" />
                       <span className="gallery-video-wash" />
                       <button
                         className="gallery-video-play"
-                        aria-label={`${lang === 'bn' ? 'প্লে' : 'Play'} ${item.title}`}>
+                        aria-label={`${lang === 'bn' ? 'প্লে' : 'Play'} ${item.title}`}
+                        onClick={() => {
+                          if (item.url) setVideoModal(index);
+                        }}>
                         <span>▶</span>
                       </button>
                       <span className="gallery-video-index">
-                        0{((slide + offset) % videoSlides.length) + 1}
+                        0{index + 1}
                       </span>
                     </div>
                     <div className="gallery-video-meta">
@@ -189,6 +194,42 @@ export function GalleryPage() {
           </div>
         </section>
       </div>
+      {videoModal !== null && playingVideo && (
+        <div
+          className="admin-modal-backdrop"
+          style={{ zIndex: 200 }}
+          onClick={() => setVideoModal(null)}>
+          <div
+            className="admin-form-card"
+            style={{
+              position: 'relative',
+              width: 'min(960px, 95%)',
+              padding: 0,
+              background: '#000',
+              borderRadius: 14,
+              boxShadow: '0 25px 70px #123a5a33',
+              overflow: 'hidden',
+            }}
+            onClick={e => e.stopPropagation()}>
+            <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9' }}>
+              <iframe
+                src={playingVideo.embed ?? ''}
+                title={playingVideo.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
+                allowFullScreen
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0, display: 'block' }}
+              />
+            </div>
+            <button
+              className="modal-close"
+              style={{ color: '#fff', opacity: 0.85, top: 14, right: 14 }}
+              onClick={() => setVideoModal(null)}
+              aria-label={lang === 'bn' ? 'ভিডিও বন্ধ করুন' : 'Close video'}>
+              <X />
+            </button>
+          </div>
+        </div>
+      )}
       {lightbox !== null && (
         <div
           className="admin-modal-backdrop"
@@ -203,7 +244,17 @@ export function GalleryPage() {
               boxShadow: 'none',
             }}
             onClick={e => e.stopPropagation()}>
-            <img src={photo(imgs[lightbox])} alt="" width="1200" height="800" decoding="async" style={{ width: '100%', borderRadius: 16 }} />
+            <img
+              src={galleryImages[lightbox].src}
+              srcSet={`${galleryImages[lightbox].src} ${galleryImages[lightbox].w}w`}
+              sizes="900px"
+              width={galleryImages[lightbox].w}
+              height={galleryImages[lightbox].h}
+              alt={galleryImages[lightbox].alt}
+              loading="eager"
+              decoding="async"
+              style={{ width: '100%', borderRadius: 16 }}
+            />
             <button
               className="modal-close"
               style={{ color: '#fff', top: 12, right: 12 }}

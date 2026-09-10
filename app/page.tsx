@@ -43,6 +43,7 @@ import { ServiceDetailPage, serviceDetails } from '../components/service-detail-
 import { ChamberDetailPage } from '../components/chamber-detail-page';
 import { WebVitals } from '../components/web-vitals';
 import { common, doctorBio, navCopy, t as tT, useLanguage, type Lang } from '../lib/translations';
+import { youtubeEmbedUrl } from '../lib/utils';
 import { SeoUpdater, type PageKey } from '../components/seo-updater';
 import { AuthProvider, useAuth } from '../components/auth/AuthProvider';
 import { Avatar } from '../components/admin-ui';
@@ -925,7 +926,8 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
       <>
         {/* ============ HERO ============ */}
         <section className="about-hero home-hero">
-          <div className="about-hero-accent" />
+          <div className="home-hero-bg" aria-hidden="true" />
+          <div className="about-hero-accent" aria-hidden="true" />
           <div className="container about-hero-grid">
             <div className="appear-up">
               <span className="pill">{n.homePill}</span>
@@ -947,36 +949,55 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
                 {n.heroBookBtn} <ArrowRight size={16} />
               </button>
             </div>
-            <div className="about-portrait">
-              <div className="portrait-frame">
-                <div className="portrait-glow" />
-                <Image
-                  className="home-hero-image"
-                  src="/Hero_img.png"
-                  alt="Dr. Ibrahim, family physician"
-                  fill
-                  priority
-                  sizes="(max-width: 700px) 88vw, (max-width: 1100px) 48vw, 560px"
-                />
-                <div className="portrait-corner-badge">
-                  <Stethoscope size={16} />
-                  <span>GMC Reg. No. 2822</span>
+            <figure className="about-portrait home-hero-portrait">
+              <div className="home-hero-media">
+                <div className="home-hero-media-grid" aria-hidden="true" />
+                <div className="home-hero-media-glow" aria-hidden="true" />
+                <div className="home-hero-image-frame">
+                  <Image
+                    className="home-hero-image"
+                    src="/hero-doctor.png"
+                    alt="Dr. Ibrahim, family physician"
+                    width={274}
+                    height={444}
+                    priority
+                    sizes="(max-width: 700px) 82vw, (max-width: 1100px) 42vw, 480px"
+                    quality={90}
+                  />
                 </div>
-                <div className="portrait-floating-badge badge-1">
-                  <ShieldCheck size={14} />
-                  <span>B.U.M.S.</span>
+                <div className="home-hero-media-chip home-hero-availability">
+                  <span className="home-hero-chip-icon" aria-hidden="true">
+                    <HeartPulse size={16} />
+                  </span>
+                  <span>
+                    <strong>{n.availableToday}</strong>
+                    <small>{n.nextOpening}</small>
+                  </span>
                 </div>
-                <div className="portrait-floating-badge badge-2">
-                  <Sparkles size={14} />
-                  <span>15+ yrs</span>
+                <div className="home-hero-media-chip home-hero-rating-chip">
+                  <span className="home-hero-chip-icon" aria-hidden="true">
+                    <Star size={16} />
+                  </span>
+                  <span>
+                    <strong>{n.homeRating}</strong>
+                    <small>{n.homeRatingBody}</small>
+                  </span>
                 </div>
               </div>
-              <span className="portrait-caption">
-                {b.name}
-                <br />
-                <small>{b.role}</small>
-              </span>
-            </div>
+              <figcaption className="home-hero-caption">
+                <span className="home-hero-caption-icon" aria-hidden="true">
+                  <Stethoscope size={18} />
+                </span>
+                <span className="home-hero-caption-copy">
+                  <strong>{b.name}</strong>
+                  <small>{b.role}</small>
+                </span>
+                <span className="home-hero-caption-gmc">
+                  <ShieldCheck size={15} aria-hidden="true" />
+                  {n.storiesGmc}
+                </span>
+              </figcaption>
+            </figure>
           </div>
         </section>
 
@@ -1019,60 +1040,23 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
           />
           <div className="container" style={{ position: 'relative' }}>
             <ScrollReveal>
-              <div style={{ textAlign: 'center', marginBottom: 48 }}>
+              <div style={{ textAlign: 'center', marginBottom: 40 }}>
                 <span className="section-eyebrow" style={{ color: '#3b9b91' }}>
                   {n.carePrinciplesEyebrow}
                 </span>
-                <h2 style={{ marginTop: 12 }}>
-                  {n.carePrinciplesTitle1} <em>{n.carePrinciplesTitleEm}</em>
-                </h2>
-                <p className="muted" style={{ maxWidth: 560, margin: '12px auto 0', fontSize: 15 }}>
-                  {n.carePrinciplesLead}
-                </p>
-                <div className="principle-step-connector" aria-hidden="true">
-                  <span className="principle-step">01</span>
-                  <span className="principle-step-line" />
-                  <span className="principle-step">02</span>
-                  <span className="principle-step-line" />
-                  <span className="principle-step">03</span>
-                </div>
+                <h2 style={{ marginTop: 12 }}>What is Integrative medicine?</h2>
               </div>
             </ScrollReveal>
-            <ScrollReveal className="grid-cards principles-grid">
-              {n.carePrinciples.map((item: any, i: number) => {
-                const ICONS = [HeartbeatArt, StethoArt, ShieldArt];
-                const Art = ICONS[i % ICONS.length];
-                const halos = [
-                  'rgba(20,184,166,0.14)',
-                  'rgba(99,102,241,0.14)',
-                  'rgba(245,158,11,0.14)',
-                ];
-                return (
-                  <article key={i} className="principle-card">
-                    <div
-                      className="principle-art-halo"
-                      style={{ background: halos[i % halos.length] }}>
-                      <div className="principle-art">
-                        <Art style={{ width: '100%', height: '100%' }} />
-                      </div>
-                    </div>
-                    <h3>{item.title}</h3>
-                    <p>{item.body}</p>
-                    <a
-                      className="principle-cta"
-                      href="#services"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        onNavigate('Services');
-                      }}>
-                      {item.cta} <ArrowRight size={13} className="float-x" />
-                    </a>
-                  </article>
-                );
-              })}
-            </ScrollReveal>
-            <ScrollReveal>
-              <p className="principle-footnote">{n.carePrinciplesFootnote}</p>
+            <ScrollReveal className="video-embed-wrapper">
+              <div style={{ position: 'relative', width: '100%', maxWidth: 960, margin: '0 auto' }}>
+                <iframe
+                  src={youtubeEmbedUrl('https://youtu.be/NtCAaMERx9Q') ?? ''}
+                  title="What is Integrative medicine?"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
+                  allowFullScreen
+                  style={{ width: '100%', aspectRatio: '16 / 9', border: 0, borderRadius: 12, display: 'block' }}
+                />
+              </div>
             </ScrollReveal>
           </div>
         </section>

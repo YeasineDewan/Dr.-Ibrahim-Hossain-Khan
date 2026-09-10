@@ -18,6 +18,7 @@ import {
   GripVertical,
 } from 'lucide-react';
 import { Field, Input, Textarea, Select, Toggle, Pill } from '../admin-ui';
+import { extractYouTubeId } from '../../lib/utils';
 
 export type MediaUploadValues = {
   id: string;
@@ -83,12 +84,6 @@ const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif
 const ALLOWED_UPLOAD_TYPES = [...ALLOWED_VIDEO_TYPES, ...ALLOWED_IMAGE_TYPES];
 const MAX_FILE_SIZE_MB = 500;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
-const YOUTUBE_URL_PATTERN = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})(\S+)?$/;
-
-function extractYouTubeId(url: string): string | null {
-  const match = url.match(YOUTUBE_URL_PATTERN);
-  return match ? match[4] : null;
-}
 
 function formatBytes(bytes: number): string {
   if (bytes === 0) return '0 B';
