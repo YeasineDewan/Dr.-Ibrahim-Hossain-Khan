@@ -233,7 +233,7 @@ export function ServiceDetailPage({
         ? infertilityTreatments
         : [];
   return (
-    <main className="service-detail-page" aria-labelledby="service-detail-title">
+    <main className={`service-detail-page service-detail-${slug === 'skin-hair-care' ? 'skin' : slug === 'infertility-care' ? 'fertility' : 'general'}`} aria-labelledby="service-detail-title">
       <section
         className="service-detail-hero aurora-bg"
         style={{ position: 'relative', overflow: 'hidden' }}>
