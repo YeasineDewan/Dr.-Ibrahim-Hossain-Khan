@@ -1,7 +1,7 @@
 // Navigation, header, footer, home page
 export const navCopy = {
   en: {
-    navItems: ['Home', 'About', 'Services', 'Gallery', 'Chambers'],
+    navItems: ['Home', 'About', 'Skin & Hair Care', 'Fertility Care', 'Gallery', 'Chambers'],
     utility: { phoneLabel: 'Call us', follow: 'Follow us' },
     youtubeLabel: 'YouTube channel',
     notice: [
@@ -211,7 +211,7 @@ export const navCopy = {
     patientPreview: 'Patient portal',
   },
   bn: {
-    navItems: ['হোম', 'পরিচিতি', 'সেবাসমূহ', 'গ্যালারি', 'চেম্বার'],
+    navItems: ['হোম', 'পরিচিতি', 'ত্বক ও চুলের যত্ন', 'ফার্টিলিটি কেয়ার', 'গ্যালারি', 'চেম্বার'],
     utility: { phoneLabel: 'আমাদের কল করুন', follow: 'আমাদের অনুসরণ করুন' },
     youtubeLabel: 'ইউটিউব চ্যানেল',
     notice: [
