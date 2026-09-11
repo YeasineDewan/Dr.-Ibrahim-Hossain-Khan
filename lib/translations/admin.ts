@@ -927,7 +927,7 @@ export const adminCopy = {
     calDayAppts: 'টি অ্যাপয়েন্টমেন্ট',
 
     // Follow-ups
-    fuKicker: 'কেয়ার ম্���ানেজমেন্ট',
+    fuKicker: 'কেয়ার ম্যানেজমেন্ট',
     fuTitle: 'ফলো-আপ',
     fuLead: 'টি বিলম্বিত · টি আসন্ন',
     fuNew: 'ফলো-আপ যোগ করুন',
@@ -1236,7 +1236,7 @@ export const adminCopy = {
     userActive: 'সক্রিয়',
     userInactive: 'নিষ্ক্রিয়',
     userInvited: 'আমন্ত্রিত',
-    userRolesTitle: 'ভ���মিকা ও অনুমতি',
+    userRolesTitle: 'ভূমিকা ও অনুমতি',
     userPermissions: 'অনুমতি',
     rolesAdmin: 'অ্যাডমিনিস্ট্রেটর',
     rolesDoctor: 'ডাক্তার',
@@ -1650,7 +1650,7 @@ export const patientCopy = {
     goodMorning: 'শুভ সকাল, আমারা',
     goodAfternoon: 'শুভ দুপুর, আমারা',
     goodEvening: 'শুভ সন্ধ্যা, আমারা',
-    today: 'আ��',
+    today: 'আজ',
     todayBody: 'আপনার যত্নের যাত্রা সঠিক পথে আছে। আজ আপনার স্বাস্থ্যের একটি সারসংক্ষেপ এখানে।',
     bookBtn: 'ভিজিট বুক করুন',
     joinVideo: 'ভিডিও কলে যোগ দিন',

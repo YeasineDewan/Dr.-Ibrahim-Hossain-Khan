@@ -73,6 +73,10 @@ const GalleryPage = dynamic(
   () => import('../components/page-experiences').then(m => m.GalleryPage),
   { ssr: false, loading: () => <RouteSkeleton /> }
 );
+const ServicesPage = dynamic(
+  () => import('../components/expanded-pages').then(m => m.ServicesPage),
+  { ssr: false, loading: () => <RouteSkeleton /> }
+);
 const ChambersPage = dynamic(
   () => import('../components/page-experiences').then(m => m.ChambersPage),
   { ssr: false, loading: () => <RouteSkeleton /> }
@@ -242,8 +246,8 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
     const loc = navCopy[lang].navItems as readonly string[];
     const map = new Map<string, string>();
     en.forEach((view, i) => map.set(view, view).set(loc[i], view));
-    map.set('Skin & Hair Care', 'Service:skin-hair-care').set('Fertility Care', 'Service:infertility-care');
-    map.set('ত্বক ও চুলের যত্ন', 'Service:skin-hair-care').set('ফার্টিলিটি কেয়ার', 'Service:infertility-care');
+    map.set('Skin & Hair Care', 'Service:skin-hair-care').set('Infertility Care', 'Service:infertility-care');
+    map.set('ত্বক ও চুলের যত্ন', 'Service:skin-hair-care').set('বন্ধ্যত্ব যত্ন', 'Service:infertility-care');
     return map;
   }, [lang, n.servicesCat1To, n.servicesCat2To]);
   const handleNavClick = useCallback(
@@ -597,7 +601,12 @@ const Footer = memo(function Footer({
                 className="press ripple social-btn"
                 onClick={() => onNavigate('Chambers')}
                 aria-label={n.locationAria || 'Our location'}>
-                <MapPinIcon size={18} aria-hidden="true" />
+                <MapPinIcon
+                  size={16}
+                  strokeWidth={1.8}
+                  style={{ transform: 'translateY(-1px)' }}
+                  aria-hidden="true"
+                />
                 <span className="social-glow" aria-hidden="true" />
               </button>
             </div>
@@ -1497,6 +1506,10 @@ export default function Page() {
     };
   }, [locationOpen]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [page]);
+
   const render =
     page === 'Home' ? (
       <Home onNavigate={setPage} />
@@ -1508,8 +1521,10 @@ export default function Page() {
       <ContactPage onNavigate={setPage} />
     ) : page === 'Chambers' ? (
       <ChambersPage onNavigate={setPage} />
-    ) : page.startsWith('Chamber:') ? (
+    ) : page === 'Chamber:' ? (
       <ChamberDetailPage slug={page.slice(8)} onNavigate={setPage} />
+    ) : page === 'Services' ? (
+      <ServicesPage onNavigate={setPage} />
     ) : page === 'Appointment' ? (
       <AppointmentFlow onNavigate={setPage} />
     ) : page === 'Checkout' ? (
@@ -1532,7 +1547,7 @@ export default function Page() {
       <SeoUpdater
         page={(() => {
           if (page === 'Home') return 'Home';
-          if (['About', 'Gallery', 'Contact', 'Chambers', 'Appointment', 'Checkout', 'Success'].includes(page)) {
+          if (['About', 'Gallery', 'Contact', 'Chambers', 'Appointment', 'Checkout', 'Success', 'Services'].includes(page)) {
             return page as PageKey;
           }
           if (page.startsWith('Service:')) return 'ServiceDetail';

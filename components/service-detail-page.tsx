@@ -1,7 +1,7 @@
 'use client';
 
-import { ArrowLeft, ArrowRight, CheckCircle2, Clock3, HeartPulse, ShieldCheck, Stethoscope, Activity, Heart, Apple, CalendarCheck } from 'lucide-react';
-import { serviceDetailsCopy, useLanguage, t as tT, common } from '../lib/translations';
+import { ArrowLeft, ArrowRight, CheckCircle2, Clock3, HeartPulse, ShieldCheck, Stethoscope, Activity, Heart, CalendarCheck } from 'lucide-react';
+import { serviceDetailsCopy, useLanguage } from '../lib/translations';
 import { ScrollReveal } from './scroll-reveal';
 import { FaqSection } from './faq-section';
 
@@ -14,6 +14,11 @@ const details: Record<
     label: { en: string; bn: string };
     intro: { en: string; bn: string };
     points: { en: string; bn: string }[];
+    treatmentSection?: {
+      pill: { en: string; bn: string };
+      title: { en: string; bn: string };
+      intro: { en: string; bn: string };
+    };
   }
 > = {
   'infertility-care': {
@@ -28,6 +33,14 @@ const details: Record<
       { en: 'Evidence-informed investigation planning', bn: 'প্রমাণ-ভিত্তিক পরীক্ষা পরিকল্পনা' },
       { en: 'Clear next steps for both partners', bn: 'উভয় সঙ্গীর জন্য স্পষ্ট পরবর্তী ধাপ' },
     ],
+    treatmentSection: {
+      pill: { en: 'Available treatments', bn: 'উপলব্ধ চিকিৎসাসমূহ' },
+      title: { en: 'Fertility care, designed around you', bn: 'আপনার জন্য পরিকল্পিত ফার্টিলিটি যত্ন' },
+      intro: {
+        en: 'We begin by listening and understanding your history, goals and concerns. These services may be combined into a clear, step-by-step plan, with specialist referral arranged when needed.',
+        bn: 'আমরা আপনার ইতিহাস, লক্ষ্য ও উদ্বেগ মনোযোগ সহকারে শোনার মাধ্যমে শুরু করি। প্রয়োজনে বিশেষজ্ঞের পরামর্শের ব্যবস্থা করে এই সেবাগুলো একটি স্পষ্ট ও ধাপে ধাপে যত্ন পরিকল্পনায় সাজানো যেতে পারে।',
+      },
+    },
   },
   'skin-hair-care': {
     title: { en: 'Skin & Hair Care', bn: 'ত্বক ও চুলের যত্ন' },
@@ -41,6 +54,14 @@ const details: Record<
       { en: 'Targeted plans for tone, texture, and growth', bn: 'টোন, টেক্সচার ও বৃদ্ধির জন্য নির্দিষ্ট পরিকল্পনা' },
       { en: 'Simple routines with thoughtful follow-up', bn: 'সহজ রুটিন ও যত্নশীল ফলো-আপ' },
     ],
+    treatmentSection: {
+      pill: { en: 'Available treatments', bn: 'উপলব্ধ চিকিৎসাসমূহ' },
+      title: { en: 'Services offered at this clinic', bn: 'এই ক্লিনিকে প্রদত্ত সেবাসমূহ' },
+      intro: {
+        en: 'From scalp health to skin texture, every option begins with a careful assessment and a plan suited to your goals.',
+        bn: 'স্ক্যাল্পের স্বাস্থ্য থেকে ত্বকের টেক্সচার—প্রতিটি অপশন শুরু হয় সতর্ক মূল্যায়ন এবং আপনার লক্ষ্যের সাথে মানানসই পরিকল্পনা দিয়ে।',
+      },
+    },
   },
   prp: {
     title: { en: 'PRP Therapy', bn: 'PRP থেরাপি' },
@@ -130,7 +151,7 @@ const skinHairTreatments = [
     title: { en: 'PRP Hair Restoration', bn: 'PRP চুল পুনরূদ্ধার' },
     desc: {
       en: 'Platelet-rich plasma therapy to stimulate hair follicles and improve density.',
-      bn: 'চুলের ফলিকুল стимулиট করে এবং ঘনত্ব উন্নত করতে প্লেটলেট-রিচ প্লাজমা থেরাপি।',
+      bn: 'চুলের ফলিকুল স্টিমুলেট করে এবং ঘনত্ব উন্নত করতে প্লেটলেট-রিচ প্লাজমা থেরাপি।',
     },
   },
   {
@@ -167,43 +188,63 @@ const skinHairTreatments = [
 
 const infertilityTreatments = [
   {
-    key: 'fertility-assessment',
+    key: 'comprehensive-fertility-assessment',
     icon: <Heart size={22} />,
-    tag: { en: 'Evaluation', bn: 'মূল্যায়ন' },
-    title: { en: 'Fertility Assessment', bn: 'প্রজননশীলতা মূল্যায়ন' },
+    tag: { en: 'Assessment', bn: 'মূল্যায়ন' },
+    title: { en: 'Comprehensive Fertility Assessment', bn: 'সম্পূর্ণ ফার্টিলিটি মূল্যায়ন' },
     desc: {
-      en: 'Full evaluation for individuals and couples planning conception.',
-      bn: 'কনসেপশন পরিকল্পনার জন্য ব্যক্তি এবং দম্পতিদের জন্য সম্পূর্ণ মূল্যায়ন।',
+      en: 'A confidential review of reproductive, medical, sexual and lifestyle history for individuals or couples, with a practical plan for recommended tests and next steps.',
+      bn: 'ব্যক্তি বা দম্পতির প্রজনন, চিকিৎসা, যৌনস্বাস্থ্য ও জীবনযাত্রার ইতিহাসের গোপনীয় পর্যালোচনা এবং প্রয়োজনীয় পরীক্ষা ও পরবর্তী ধাপের বাস্তবসম্মত পরিকল্পনা।',
     },
   },
   {
-    key: 'hormonal-optimization',
+    key: 'female-fertility-evaluation',
     icon: <Activity size={22} />,
-    tag: { en: 'Hormonal', bn: 'হার্মোনাল' },
-    title: { en: 'Hormonal Optimization', bn: 'হার্মোন অপ্টিমাইজেশন' },
+    tag: { en: 'Ovulation & hormones', bn: 'ডিম্বক্ষেপ ও হার্মোন' },
+    title: { en: 'Female Fertility Evaluation', bn: 'নারী ফার্টিলিটি মূল্যায়ন' },
     desc: {
-      en: 'Balancing cycles, thyroid, prolactin and metabolic markers.',
-      bn: 'চক্র, থাইরয়েড, প্রোল্যাক্টিন এবং মেটাবোলিক মার্কার সামঞ্জস্যতা তৈরি করা।',
+      en: 'Assessment of menstrual regularity, ovulation, PCOS and hormonal or metabolic factors that may affect conception, with clear explanations at every step.',
+      bn: 'মাসিকের নিয়মিততা, ডিম্বক্ষেপ, PCOS এবং গর্ভধারণায় প্রভাব ফেলতে পারে এমন হার্মোনাল বা বিপাকীয় কারণের মূল্যায়ন—প্রতিটি ধাপে স্পষ্ট ব্যাখ্যা সহ।',
     },
   },
   {
-    key: 'lifestyle-nutrition-plan',
-    icon: <Apple size={22} />,
-    tag: { en: 'Wellness', bn: 'ওয়েলনেস' },
-    title: { en: 'Lifestyle & Nutrition Plan', bn: 'জীবনযাত্রা ও পুষ্টি পরিকল্পনা' },
+    key: 'male-fertility-evaluation',
+    icon: <Stethoscope size={22} />,
+    tag: { en: 'Semen analysis', bn: 'সিমেন বিশ্লেষণ' },
+    title: { en: 'Male Fertility Evaluation', bn: 'পুরুষ ফার্টিলিটি মূল্যায়ন' },
     desc: {
-      en: 'Diet, stress and exercise guidance tailored to reproductive goals.',
-      bn: 'প্রজনন লক্ষ্যের জন্য ডায়েট, স্ট্রেস এবং ব্যায়াম নির্দেশনা।',
+      en: 'Evaluation of semen parameters and possible causes of male-factor infertility, including low count, reduced motility, abnormal morphology or azoospermia, with appropriate follow-up or referral.',
+      bn: 'শুক্রাণুর সংখ্যা, চলনশীলতা, গঠনগত সমস্যা বা আজোস্পার্মিয়াসহ পুরুষ-কারণীয় বন্ধ্যাত্বের সম্ভাব্য কারণ ও সিমেন বিশ্লেষণের মূল্যায়ন; প্রয়োজনে যথাযথ ফলো-আপ বা রেফারেল।',
     },
   },
   {
-    key: 'follow-up-monitoring',
+    key: 'pcos-ovulation-care',
+    icon: <HeartPulse size={22} />,
+    tag: { en: 'Cycle support', bn: 'চক্রের সহায়তা' },
+    title: { en: 'PCOS & Ovulation Care', bn: 'PCOS ও ডিম্বক্ষেপ যত্ন' },
+    desc: {
+      en: 'Structured support for PCOS, irregular periods and ovulation concerns, combining clinical assessment, lifestyle guidance and monitored progress.',
+      bn: 'PCOS, অনিয়মিত মাসিক ও ডিম্বক্ষেপ সংক্রান্ত সমস্যায় ক্লিনিক্যাল মূল্যায়ন, জীবনযাত্রা নির্দেশনা ও পর্যবেক্ষিত অগ্রগতির সমন্বিত সহায়তা।',
+    },
+  },
+  {
+    key: 'hormonal-metabolic-optimization',
+    icon: <Activity size={22} />,
+    tag: { en: 'Personalized care', bn: 'ব্যক্তিগত যত্ন' },
+    title: { en: 'Hormonal & Metabolic Optimization', bn: 'হার্মোনাল ও বিপাকীয় ভারসাম্য' },
+    desc: {
+      en: 'Thoughtful assessment and management of thyroid, prolactin, insulin resistance, weight and other cycle-related factors that can influence reproductive health.',
+      bn: 'থাইরয়েড, প্রোল্যাক্টিন, ইনসুলিন রেজিস্ট্যান্স, ওজন এবং প্রজনন স্বাস্থ্যে প্রভাব ফেলতে পারে এমন চক্র-সম্পর্কিত অন্যান্য কারণের মূল্যায়ন ও ব্যক্তিগত যত্ন।',
+    },
+  },
+  {
+    key: 'preconception-lifestyle-monitoring',
     icon: <CalendarCheck size={22} />,
-    tag: { en: 'Monitoring', bn: 'মনিটরিং' },
-    title: { en: 'Follow-up & Monitoring', bn: 'ফলো-আপ ও মনিটরিং' },
+    tag: { en: 'Nutrition & follow-up', bn: 'পুষ্টি ও ফলো-আপ' },
+    title: { en: 'Preconception Lifestyle & Monitoring', bn: 'প্রি-কনসেপশন জীবনযাত্রা ও পর্যবেক্ষণ' },
     desc: {
-      en: 'Ongoing tracking of progress with adjusted treatment plans.',
-      bn: 'অনুকূলিত চিকিৎসা পরিকল্পনার সাথে অগ্রগতি ট্র্যাকিং।',
+      en: 'A practical plan covering nutrition, appropriate supplements, stress, sleep and exercise, with regular reviews and coordinated specialist referral when advanced care is needed.',
+      bn: 'পুষ্টি, প্রয়োজনীয় সাপ্লিমেন্ট, মানসিক চাপ, ঘুম ও ব্যায়াম নিয়ে বাস্তবসম্মত পরিকল্পনা; নিয়মিত পর্যালোচনা এবং উন্নত যত্ন প্রয়োজন হলে সমন্বিত বিশেষজ্ঞ রেফারেল।',
     },
   },
 ];
@@ -219,19 +260,100 @@ export function ServiceDetailPage({
 }) {
   const { lang } = useLanguage();
   const c = serviceDetailsCopy[lang];
-  const cm = common[lang];
   const service = serviceDetails[slug];
   if (!service) return null;
   const title = service.title[lang];
   const label = service.label[lang];
   const intro = service.intro[lang];
   const points = service.points.map(p => p[lang]);
+  const treatmentSection = service.treatmentSection;
+  const treatmentsPill = treatmentSection?.pill[lang] ?? c.treatmentsPill;
+  const treatmentsTitle = treatmentSection?.title[lang] ?? c.treatmentsTitle;
+  const treatmentsIntro = treatmentSection?.intro[lang] ?? c.treatmentsIntro;
   const treatments =
     slug === 'skin-hair-care'
       ? skinHairTreatments
       : slug === 'infertility-care'
         ? infertilityTreatments
         : [];
+  const isSkin = slug === 'skin-hair-care';
+  const isFertility = slug === 'infertility-care';
+  const treatmentSectionMarkup = (
+    <ScrollReveal className="section" variant="up">
+      <div className="container">
+        <div className="section-heading">
+          <div>
+            <span className="pill pill-teal">{treatmentsPill}</span>
+            <h2>{treatmentsTitle}</h2>
+          </div>
+          <p className="muted">{treatmentsIntro}</p>
+        </div>
+        <div className="service-cards-grid">
+          {treatments.map(t => (
+            <button
+              type="button"
+              key={t.key}
+              className="service-card"
+              onClick={() => onNavigate('Appointment')}
+              aria-label={`${t.title[lang]} — ${t.tag[lang]}`}>
+              <div className="service-icon" aria-hidden="true">{t.icon}</div>
+              <span className="service-tag">{t.tag[lang]}</span>
+              <h3>{t.title[lang]}</h3>
+              <p>{t.desc[lang]}</p>
+              <div className="service-card-foot">
+                <span>{c.viewService}</span>
+                <ArrowRight size={16} aria-hidden="true" />
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </ScrollReveal>
+  );
+  const isTreatmentShowcase = isSkin || isFertility;
+  const treatmentShowcaseModifier = isSkin ? 'skin' : 'fertility';
+  const treatmentShowcaseMarkup = (
+    <ScrollReveal className={`section service-treatment-showcase service-treatment-showcase-${treatmentShowcaseModifier}`} variant="up">
+      <div className="container">
+        <div className="service-treatment-showcase-heading">
+          <div>
+            <span className="pill pill-teal">{treatmentsPill}</span>
+            <h2 className="service-treatment-showcase-title">{treatmentsTitle}</h2>
+            <p className="service-treatment-showcase-intro">{treatmentsIntro}</p>
+          </div>
+          <div className="service-treatment-showcase-assurance" aria-hidden="true">
+            <ShieldCheck size={22} />
+            <div>
+              <strong>{lang === 'bn' ? 'যত্নের প্রতিশ্রুতি' : 'Care, tailored to you'}</strong>
+              <span>{lang === 'bn' ? 'সতর্ক মূল্যায়ন, স্পষ্ট পরিকল্পনা, যত্নশীল ফলো-আপ।' : 'Thoughtful assessment, clear options and considerate follow-up.'}</span>
+            </div>
+          </div>
+        </div>
+        <div className="service-treatment-showcase-grid">
+          {treatments.map((t, index) => (
+            <button
+              type="button"
+              key={t.key}
+              className={`service-treatment-card${isTreatmentShowcase && index === 0 ? ' service-treatment-card-featured' : ''}`}
+              onClick={() => onNavigate('Appointment')}
+              aria-label={`${t.title[lang]} — ${t.tag[lang]}`}>
+              <span className="service-treatment-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+              <span className="service-treatment-icon" aria-hidden="true">{t.icon}</span>
+              <span className="service-treatment-content">
+                <span className="service-treatment-tag">{t.tag[lang]}</span>
+                <h3>{t.title[lang]}</h3>
+                <p>{t.desc[lang]}</p>
+              </span>
+              <span className="service-treatment-action">
+                <span>{c.viewService}</span>
+                <ArrowRight size={16} aria-hidden="true" />
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </ScrollReveal>
+  );
   return (
     <main className={`service-detail-page service-detail-${slug === 'skin-hair-care' ? 'skin' : slug === 'infertility-care' ? 'fertility' : 'general'}`} aria-labelledby="service-detail-title">
       <section
@@ -246,7 +368,7 @@ export function ServiceDetailPage({
             </button>
             <span className="pill pill-teal float-soft">{label}</span>
             <h1 id="service-detail-title" className="gradient-text">
-              {title} {lang === 'bn' ? 'দীর্ঘস্থায়ী সুস্থতার জন্য' : 'for lasting wellbeing.'}
+              {title}
             </h1>
             <p className="lead">{intro}</p>
             <div className="detail-actions">
@@ -276,6 +398,7 @@ export function ServiceDetailPage({
           </div>
         </div>
       </section>
+      {isTreatmentShowcase && treatmentShowcaseMarkup}
       <ScrollReveal className="section service-detail-body" variant="up">
         <div className="container service-detail-columns">
           <div>
@@ -334,42 +457,7 @@ export function ServiceDetailPage({
           </div>
         </div>
       </ScrollReveal>
-      <ScrollReveal className="section" variant="up">
-        <div className="container">
-          <div className="section-heading">
-            <div>
-              <span className="pill pill-teal">{c.treatmentsPill}</span>
-              <h2>{c.treatmentsTitle}</h2>
-            </div>
-            <p className="muted">{c.treatmentsIntro}</p>
-          </div>
-          <div className="service-cards-grid">
-              {treatments.map(t => (
-                <article
-                  key={t.key}
-                  className="service-card"
-                  onClick={() => onNavigate('Appointment')}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`${t.title[lang]} — ${t.tag[lang]}`}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      onNavigate('Appointment');
-                    }
-                  }}>
-                  <div className="service-icon" aria-hidden="true">{t.icon}</div>
-                  <span className="service-tag">{t.tag[lang]}</span>
-                  <h3>{t.title[lang]}</h3>
-                  <p>{t.desc[lang]}</p>
-                  <div className="service-card-foot">
-                    <span>Learn more →</span>
-                  </div>
-                </article>
-              ))}
-          </div>
-        </div>
-      </ScrollReveal>
+      {!isSkin && !isFertility && treatmentSectionMarkup}
       <ScrollReveal className="cta-section" variant="scale">
         <div className="container cta-inner">
           <div>
