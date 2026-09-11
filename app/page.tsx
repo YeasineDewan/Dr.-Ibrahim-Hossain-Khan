@@ -477,9 +477,11 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
 const Footer = memo(function Footer({
   onNavigate,
   onLangChange,
+  onLocationOpen,
 }: {
   onNavigate: (p: string) => void;
   onLangChange?: (l: 'en' | 'bn') => void;
+  onLocationOpen: () => void;
 }) {
   const { lang } = useLanguage();
   const n = navCopy[lang];
@@ -598,9 +600,12 @@ const Footer = memo(function Footer({
                 </a>
               ))}
               <button
+                type="button"
                 className="press ripple social-btn footer-location-btn"
-                onClick={() => onNavigate('Chambers')}
-                aria-label={n.locationAria || 'Our location'}>
+                onClick={onLocationOpen}
+                aria-label={n.locationAria || 'Our location'}
+                aria-haspopup="dialog"
+                aria-controls="location-modal">
                 <MapPinIcon
                   size={18}
                   strokeWidth={1.8}
@@ -1083,7 +1088,7 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
           </div>
         </section>
 
-        {/* ============ FEATURE GRID — 3D illustrations ============ */}
+        {/* ============ FEATURE GRID — 3D illustrations ============  */}
         <section
           className="section home-details bg-grid-light"
           style={{ position: 'relative', overflow: 'hidden' }}>
@@ -1612,7 +1617,7 @@ export default function Page() {
             </div>
             <div className="location-map-frame">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.0504414247616!2d90.39536509999999!3d23.7455806!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b90033178451%3A0x3a30eeb7d453498f!2sMedigo%20Healthcare!5e0!3m2!1sen!2sbd!4v1788987765345!5m2!1sen!2sbd"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.0504414247616!2d90.39536509999999!3d23.7455806!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b90033178451%3A0x3a30eeb7d453498f!2sMedigo%20Healthcare!5e0!3m2!1sen!2sbd!4v1789156806853!5m2!1en!2sbd"
                 width="600"
                 height="450"
                 style={{ border: 0 }}
@@ -1631,7 +1636,11 @@ export default function Page() {
       {page !== 'Admin' && page !== 'Patient' && <PublicHeader onNavigate={setPage} />}
       {render}
       {page !== 'Admin' && page !== 'Patient' && (
-        <Footer onNavigate={setPage} onLangChange={setLang} />
+        <Footer
+          onNavigate={setPage}
+          onLangChange={setLang}
+          onLocationOpen={() => setLocationOpen(true)}
+        />
       )}
       {page !== 'Admin' && <SupportChat lang={lang} />}
       {(page === 'Appointment' || page === 'Checkout' || page === 'Success') && (
