@@ -598,11 +598,11 @@ const Footer = memo(function Footer({
                 </a>
               ))}
               <button
-                className="press ripple social-btn"
+                className="press ripple social-btn footer-location-btn"
                 onClick={() => onNavigate('Chambers')}
                 aria-label={n.locationAria || 'Our location'}>
                 <MapPinIcon
-                  size={16}
+                  size={18}
                   strokeWidth={1.8}
                   style={{ transform: 'translateY(-1px)' }}
                   aria-hidden="true"
@@ -1521,7 +1521,7 @@ export default function Page() {
       <ContactPage onNavigate={setPage} />
     ) : page === 'Chambers' ? (
       <ChambersPage onNavigate={setPage} />
-    ) : page === 'Chamber:' ? (
+    ) : page.startsWith('Chamber:') ? (
       <ChamberDetailPage slug={page.slice(8)} onNavigate={setPage} />
     ) : page === 'Services' ? (
       <ServicesPage onNavigate={setPage} />

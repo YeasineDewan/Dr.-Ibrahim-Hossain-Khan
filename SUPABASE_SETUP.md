@@ -62,7 +62,7 @@ import { createClient } from '@/utils/supabase/client';
 export function ClientComponent() {
   const supabase = createClient();
   
-  // use supabase client
+
 }
 ```
 

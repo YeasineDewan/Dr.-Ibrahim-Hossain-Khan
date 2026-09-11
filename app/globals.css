@@ -13179,6 +13179,28 @@ h2 em {
   transform: translateY(-3px) rotate(-4deg);
   box-shadow: 0 8px 20px -6px rgba(20, 184, 166, 0.5);
 }
+.footer-socials .footer-location-btn {
+  width: 40px;
+  height: 40px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+  border: 1px solid #9fe0d5;
+  background: #e8f7f4;
+  color: #174b78;
+  font-size: 12px;
+  font-weight: 700;
+}
+.footer-socials .footer-location-btn:hover,
+.footer-socials .footer-location-btn:focus-visible {
+  background: #3b9b91;
+  border-color: #3b9b91;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: none;
+  outline: 3px solid #ffffff66;
+  outline-offset: 3px;
+}
 .footer-socials .social-glow {
   position: absolute;
   inset: 0;
