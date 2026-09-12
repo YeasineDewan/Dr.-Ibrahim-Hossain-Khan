@@ -1,8 +1,6 @@
 'use client';
 
-import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
-
-const revealOptions: IntersectionObserverInit = { threshold: 0.14, rootMargin: '0px 0px -10% 0px' };
+import { useRef, type CSSProperties, type ReactNode } from 'react';
 
 const revealClasses = ['scroll-reveal', 'reveal-up', 'reveal-fade', 'reveal-left', 'reveal-scale'] as const;
 
@@ -22,34 +20,31 @@ export function ScrollReveal({
   style?: CSSProperties;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      node.classList.add('is-visible');
-      return;
-    }
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        node.classList.add('is-visible');
-        if (!repeat) observer.unobserve(node);
-      } else if (repeat) {
-        node.classList.remove('is-visible');
-      }
-    }, revealOptions);
-    observer.observe(node);
-    if (
-      node.getBoundingClientRect().top < window.innerHeight &&
-      node.getBoundingClientRect().bottom > 0
-    ) {
-      node.classList.add('is-visible');
-      if (!repeat) observer.unobserve(node);
-    }
-    return () => observer.disconnect();
-  }, []);
   const variantClass = revealClasses.find((name) => name === `reveal-${variant}`) ?? 'reveal-up';
+
+  // Simplified: skip Intersection Observer for faster initial render
+  // Content is always visible (no scroll-triggered animations)
+  // This reduces runtime work and eliminates jank during scrolling
+  if (typeof window !== 'undefined') {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return (
+        <div
+          ref={ref}
+          className={`is-visible ${variantClass} ${className}`}
+          style={{ '--reveal-delay': `${delay}ms`, ...style } as CSSProperties}
+        >
+          {children}
+        </div>
+      );
+    }
+  }
+
   return (
-    <div ref={ref} className={`${variantClass} ${className}`} style={{ '--reveal-delay': `${delay}ms`, ...style } as CSSProperties}>
+    <div
+      ref={ref}
+      className={`is-visible ${variantClass} ${className}`}
+      style={{ '--reveal-delay': `${delay}ms`, ...style } as CSSProperties}
+    >
       {children}
     </div>
   );

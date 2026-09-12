@@ -1405,10 +1405,7 @@
   }
 }
 
-/* ---------- Section anchor scroll snap smooth ---------- */
-html {
-  scroll-behavior: smooth;
-}
+
 
 /* ---------- Enhance focus visibility for accessibility ---------- */
 :focus-visible {

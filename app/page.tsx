@@ -225,16 +225,14 @@ const Pill = memo(function Pill({ children, tone = 'blue' }: { children: React.R
 });
 
 const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (page: string) => void }) {
-  const { lang, t } = useT();
+  const { lang } = useT();
   const navItems = navCopy[lang].navItems as readonly string[];
   const n = navCopy[lang];
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchVal, setSearchVal] = useState('');
   const [activeIdx, setActiveIdx] = useState(0);
-  const [scrollPct, setScrollPct] = useState(0);
   // Localized nav labels (e.g. 'যোগাযোग') must map back to the canonical
   // English view name the render switch keys on, otherwise Bengali nav breaks.
   const navItemViewMap = useMemo(() => {
@@ -273,27 +271,6 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
       document.removeEventListener('pointerdown', onPointerDown);
     };
   }, [open]);
-  useEffect(() => {
-    let raf = 0;
-    let pending = false;
-    const onScroll = () => {
-      if (pending) return;
-      pending = true;
-      raf = requestAnimationFrame(() => {
-        const y = window.scrollY;
-        setScrolled(y > 20);
-        const h = document.documentElement.scrollHeight - window.innerHeight;
-        setScrollPct(h > 0 ? Math.min(100, (y / h) * 100) : 0);
-        pending = false;
-      });
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
   useEffect(() => {
     const id = setInterval(() => setActiveIdx(i => (i + 1) % 3), 8000);
     return () => clearInterval(id);
@@ -340,7 +317,7 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
       </div>
 
       {/* ============ MAIN HEADER ============ */}
-      <header className={`site-header ${scrolled ? 'nav-scrolled' : ''}`}>
+      <header className="site-header nav-scrolled">
         <div className="header-glow" aria-hidden="true" />
         <div className="container header-inner">
           <button
@@ -425,11 +402,6 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
           </div>
         </div>
 
-        {/* SCROLL PROGRESS BAR */}
-        <div className="scroll-progress" aria-hidden="true">
-          <span className="scroll-progress-fill" style={{ width: `${scrollPct}%` }} />
-          <span className="scroll-progress-glow" style={{ left: `${scrollPct}%` }} />
-        </div>
         {open && (
           <div
             className="nav-backdrop"
@@ -506,7 +478,7 @@ const Footer = memo(function Footer({
     }
   }, [email]);
   const onBackToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
   return (
     <footer className="site-footer">

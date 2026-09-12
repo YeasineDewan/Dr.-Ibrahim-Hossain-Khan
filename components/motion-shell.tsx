@@ -1,36 +1,11 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
-import { ArrowUp, Sparkles } from 'lucide-react';
+import { useEffect } from 'react';
+import { Sparkles } from 'lucide-react';
 
 export function MotionShell({ onBook }: { onBook?: () => void }) {
-  const [progress, setProgress] = useState(0);
-  const [showTop, setShowTop] = useState(false);
-
   useEffect(() => {
-    let raf = 0;
-    let pending = false;
-    const onScroll = () => {
-      if (pending) return;
-      pending = true;
-      raf = requestAnimationFrame(() => {
-        const h = document.documentElement;
-        const max = h.scrollHeight - h.clientHeight;
-        const p = max > 0 ? h.scrollTop / max : 0;
-        setProgress(p);
-        setShowTop(h.scrollTop > 600);
-        pending = false;
-      });
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
-
-  useEffect(() => {
+    // Only initialize custom cursor on desktop (mouse-based, not touch)
     if (typeof window === 'undefined') return;
     if (window.matchMedia('(pointer: coarse)').matches) return;
     if (window.innerWidth < 768) return;
@@ -90,18 +65,8 @@ export function MotionShell({ onBook }: { onBook?: () => void }) {
     };
   }, []);
 
-  return (
-    <>
-      {showTop && (
-        <button
-          className="back-to-top is-visible"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          aria-label="Back to top">
-          <ArrowUp size={18} />
-        </button>
-      )}
-    </>
-  );
+  // Back-to-top button is now handled by the footer component
+  return null;
 }
 
 export function FloatingBookCta({ lang, onClick }: { lang: string; onClick: () => void }) {
