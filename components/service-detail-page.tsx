@@ -387,7 +387,7 @@ export function ServiceDetailPage({
           <div className="service-detail-art perspective tilt-3d" style={{ perspective: 1200 }}>
             <div className="service-detail-hero-media">
               <Image
-                src="/Hero_img.png"
+                src="/all_hero.png"
                 alt={isSkin ? (lang === 'bn' ? 'ত্বক ও চুলের যত্ন' : 'Skin and hair care') : isFertility ? (lang === 'bn' ? 'বন্ধ্যত্ব যত্ন' : 'Infertility care') : (lang === 'bn' ? 'চিন্তাশীল যত্ন' : 'Thoughtful care')}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
