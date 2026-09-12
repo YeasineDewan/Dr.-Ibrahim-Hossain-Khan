@@ -118,7 +118,7 @@ export function AnalyticsView({ copy }: { copy: any }) {
               { name: 'PRP Therapy', value: 92, color: '#174b78' },
               { name: 'Sexual health', value: 78, color: '#3b9b91' },
               { name: 'Skin consultation', value: 65, color: '#e3a443' },
-              { name: 'Fertility care', value: 54, color: '#6f4f9b' },
+              { name: 'Infertility care', value: 54, color: '#6f4f9b' },
               { name: 'Integrative Medicine', value: 41, color: '#a95044' },
             ].map(r => (
               <li key={r.name}>

@@ -1,5 +1,6 @@
 'use client';
 
+import { createClient } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
 
 interface AdminUser {
@@ -43,90 +44,90 @@ export function useAdminAuth(): UseAdminAuthReturn {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const stored = getStoredAuth();
-    if (stored?.user) {
-      setUser(stored.user);
-    }
-    setLoading(false);
+    const supabase = createClient();
+    let active = true;
+
+    const loadAdminSession = async () => {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (!active) return;
+      if (!authUser) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id, full_name, role')
+        .eq('id', authUser.id)
+        .maybeSingle();
+
+      if (!active) return;
+      if (profile?.role === 'admin' || profile?.role === 'doctor') {
+        setUser({
+          id: authUser.id,
+          email: authUser.email ?? '',
+          name: profile.full_name || authUser.user_metadata?.name || 'Doctor',
+          roles: [profile.role],
+        });
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    };
+
+    loadAdminSession();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      loadAdminSession();
+    });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const isAdmin = user?.roles?.includes('admin') || user?.roles?.includes('super-admin') || false;
 
   const signIn = async (email: string, password: string) => {
     try {
-      // Step 1: Get CSRF token (API sets csrf_token cookie)
-      const csrfRes = await fetch('/api/auth/route', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ action: 'csrf' }),
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password,
       });
-
-      if (!csrfRes.ok) {
-        const err = await csrfRes.json();
-        console.error('[signIn] CSRF request failed:', err);
-        return { error: { message: err.error || 'CSRF token request failed' } };
+      if (error || !data.user) {
+        return { error: { message: error?.message || 'Invalid email or password' } };
       }
 
-      // Step 2: Authenticate with credentials (cookie is auto-sent via credentials: 'include')
-      const loginRes = await fetch('/api/auth/route', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ action: 'login', email, password }),
-      });
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, full_name, role')
+        .eq('id', data.user.id)
+        .maybeSingle();
 
-      const data = await loginRes.json();
-
-      if (!loginRes.ok || data.error) {
-        console.error('[signIn] Login failed:', data);
-        return { error: { message: data.error || `HTTP ${loginRes.status}` } };
+      if (profileError) return { error: { message: profileError.message } };
+      if (!profile || !['admin', 'doctor'].includes(profile.role)) {
+        await supabase.auth.signOut();
+        return { error: { message: 'This account does not have doctor admin access.' } };
       }
 
-      if (data.requiresMfa) {
-        return { error: { message: 'MFA code required', mfaRequired: true } };
-      }
-
-      // Store user data for session persistence + token for API calls
       const userData: AdminUser = {
         id: data.user.id,
-        email: data.user.email,
-        name: data.user.name,
-        roles: data.user.roles || [],
+        email: data.user.email ?? email,
+        name: profile.full_name || data.user.user_metadata?.name || 'Doctor',
+        roles: [profile.role],
       };
-
-      storeAuth({ user: userData, accessToken: data.tokens.accessToken });
       setUser(userData);
-
-      // Notify any listeners that auth state changed (for cross-tab sync)
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY, bubbles: false, cancelable: false }));
-      }
-
       return { error: null };
-    } catch (error: any) {
-      console.error('[signIn] Caught error:', error);
-      return { error: { message: error.message || 'Login failed' } };
+    } catch (error) {
+      return { error: { message: error instanceof Error ? error.message : 'Login failed' } };
     }
   };
 
   const signOut = async () => {
-    const stored = getStoredAuth();
-    if (stored?.accessToken) {
-      try {
-        await fetch('/api/auth/route', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${stored.accessToken}`,
-          },
-          credentials: 'include',
-          body: JSON.stringify({ action: 'logout' }),
-        });
-      } catch {
-        // Ignore network errors on logout
-      }
-    }
+    const supabase = createClient();
+    await supabase.auth.signOut();
     clearStoredAuth();
     setUser(null);
   };

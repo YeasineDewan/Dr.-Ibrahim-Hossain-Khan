@@ -217,8 +217,13 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
           <form onSubmit={async (e) => {
             e.preventDefault();
             setLoginLoading(true);
-            const email = emailRef.current?.value || '';
+            const email = emailRef.current?.value.trim() || '';
             const password = passwordRef.current?.value || '';
+            if (!email || !password) {
+              setLoginLoading(false);
+              toast.show(lang === 'bn' ? 'ইমেইল ও পাসওয়ার্ড দিন' : 'Enter your email and password', 'error');
+              return;
+            }
             const { error } = await signIn(email, password);
             setLoginLoading(false);
             if (error) {
