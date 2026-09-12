@@ -787,7 +787,7 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
                     height={444}
                     priority
                     sizes="(max-width: 700px) 82vw, (max-width: 1100px) 42vw, 480px"
-                    quality={90}
+                    quality={75}
                   />
                 </div>
                 <div className="home-hero-media-chip home-hero-availability">
