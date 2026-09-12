@@ -73,10 +73,6 @@ const GalleryPage = dynamic(
   () => import('../components/page-experiences').then(m => m.GalleryPage),
   { ssr: false, loading: () => <RouteSkeleton /> }
 );
-const ServicesPage = dynamic(
-  () => import('../components/expanded-pages').then(m => m.ServicesPage),
-  { ssr: false, loading: () => <RouteSkeleton /> }
-);
 const ChambersPage = dynamic(
   () => import('../components/page-experiences').then(m => m.ChambersPage),
   { ssr: false, loading: () => <RouteSkeleton /> }
@@ -383,6 +379,16 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
                 <span className="nav-dot" aria-hidden="true" />
               </button>
             ))}
+            {open && (
+              <button
+                type="button"
+                className="nav-link nav-appointment-link"
+                onClick={() => handleNavClick('Appointment')}
+                aria-label={n.bookCta}>
+                <CalendarCheck size={16} aria-hidden="true" />
+                <span>{n.bookCta}</span>
+              </button>
+            )}
           </nav>
 
           <div className="header-actions">
@@ -400,14 +406,6 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
               <UserRound size={18} />
               <span className="icon-glow" aria-hidden="true" />
             </button>
-            <Magnetic className="header-cta-magnetic">
-              <Button
-                onClick={() => onNavigate('Appointment')}
-                className="header-cta btn-pro shadow-glow-teal press">
-                <CalendarCheck size={15} /> <span>{n.bookCta}</span>{' '}
-                <ArrowRight size={14} className="float-x" />
-              </Button>
-            </Magnetic>
             <button
               className="menu-btn press"
               onClick={handleMenuToggle}
@@ -1528,8 +1526,7 @@ export default function Page() {
       <ChambersPage onNavigate={setPage} />
     ) : page.startsWith('Chamber:') ? (
       <ChamberDetailPage slug={page.slice(8)} onNavigate={setPage} />
-    ) : page === 'Services' ? (
-      <ServicesPage onNavigate={setPage} />
+
     ) : page === 'Appointment' ? (
       <AppointmentFlow onNavigate={setPage} />
     ) : page === 'Checkout' ? (

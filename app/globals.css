@@ -1055,7 +1055,40 @@ html[lang='bn'] body {
   .header-cta { display: none; }
   .header-actions { gap: 8px; }
 }
-@media (max-width: 700px) {
+  @media (max-width: 700px) {
+  .header-inner {
+  position: relative;
+  justify-content: center;
+  padding-inline: 12px;
+  }
+  .brand {
+  margin-inline: auto;
+  justify-content: center;
+  text-align: center;
+  }
+  .brand-text small { display: none; }
+  .header-actions {
+  position: absolute;
+  inset-inline-end: 12px;
+  }
+  .header-actions .icon-btn { display: none; }
+  .menu-btn { display: grid; }
+  .main-nav.is-open {
+  position: absolute;
+  inset-inline: 12px;
+  top: calc(100% + 8px);
+  z-index: 20;
+  align-items: stretch;
+  text-align: center;
+  }
+  .main-nav.is-open .nav-link { justify-content: center; min-height: 46px; }
+  .nav-appointment-link {
+  margin-top: 8px;
+  border: 1px solid color-mix(in srgb, #3b9b91 32%, transparent);
+  border-radius: 12px;
+  color: #174b78;
+  background: #eef8f6;
+  }
   .support-chat-wrap {
     right: 14px;
     bottom: 14px;
@@ -10787,11 +10820,16 @@ h2 em {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 480px) {
+  @media (max-width: 480px) {
   .gallery-grid {
-    grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
   }
-}
+  .gallery-grid > * {
+  min-width: 0;
+  }
+  }
+
 
 /* video feature */
 .video-feature {

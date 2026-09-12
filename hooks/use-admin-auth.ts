@@ -1,14 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createClient } from '@/utils/supabase/client';
 
 interface AdminUser {
   id: string;
   email: string;
   name: string;
   roles: string[];
-  permissions: string[];
 }
 
 interface UseAdminAuthReturn {
@@ -19,119 +17,117 @@ interface UseAdminAuthReturn {
   signOut: () => Promise<void>;
 }
 
+const STORAGE_KEY = 'dr_ibrahim_admin_auth';
+
+function getStoredAuth(): { user: AdminUser; accessToken: string } | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+  } catch {
+    return null;
+  }
+}
+
+function storeAuth(data: { user: AdminUser; accessToken: string }): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function clearStoredAuth(): void {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(STORAGE_KEY);
+}
+
 export function useAdminAuth(): UseAdminAuthReturn {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const supabase = createClient();
-
-    const getUser = async () => {
-      try {
-        const { data: { user: authUser } } = await supabase.auth.getUser();
-        
-        if (authUser) {
-          const { data: profile } = await supabase
-            .from('users')
-            .select('*')
-            .eq('email', authUser.email)
-            .single();
-
-          if (profile) {
-            setUser({
-              id: profile.id,
-              email: profile.email,
-              name: profile.name,
-              roles: profile.roles || [],
-              permissions: profile.permissions || [],
-            });
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching admin user:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getUser();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        if (session?.user) {
-          const { data: profile } = await supabase
-            .from('users')
-            .select('*')
-            .eq('email', session.user.email)
-            .single();
-
-          if (profile) {
-            setUser({
-              id: profile.id,
-              email: profile.email,
-              name: profile.name,
-              roles: profile.roles || [],
-              permissions: profile.permissions || [],
-            });
-          }
-        } else {
-          setUser(null);
-        }
-        setLoading(false);
-      }
-    );
-
-    return () => subscription.unsubscribe();
+    const stored = getStoredAuth();
+    if (stored?.user) {
+      setUser(stored.user);
+    }
+    setLoading(false);
   }, []);
 
   const isAdmin = user?.roles?.includes('admin') || user?.roles?.includes('super-admin') || false;
 
   const signIn = async (email: string, password: string) => {
-    const supabase = createClient();
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      // Step 1: Get CSRF token (API sets csrf_token cookie)
+      const csrfRes = await fetch('/api/auth/route', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ action: 'csrf' }),
+      });
 
-    if (error) {
-      return { error };
-    }
+      if (!csrfRes.ok) {
+        const err = await csrfRes.json();
+        console.error('[signIn] CSRF request failed:', err);
+        return { error: { message: err.error || 'CSRF token request failed' } };
+      }
 
-    if (data.user) {
-      let profile = null;
-      const { data: profileData } = await supabase
-        .from('users')
-        .select('*')
-        .eq('email', data.user.email)
-        .single();
-      profile = profileData;
+      // Step 2: Authenticate with credentials (cookie is auto-sent via credentials: 'include')
+      const loginRes = await fetch('/api/auth/route', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ action: 'login', email, password }),
+      });
 
-      // Fall back to auth user metadata if no profile row exists
-      const fallback: AdminUser = {
+      const data = await loginRes.json();
+
+      if (!loginRes.ok || data.error) {
+        console.error('[signIn] Login failed:', data);
+        return { error: { message: data.error || `HTTP ${loginRes.status}` } };
+      }
+
+      if (data.requiresMfa) {
+        return { error: { message: 'MFA code required', mfaRequired: true } };
+      }
+
+      // Store user data for session persistence + token for API calls
+      const userData: AdminUser = {
         id: data.user.id,
-        email: data.user.email!,
-        name: data.user.user_metadata?.name || data.user.email!,
-        roles: profile?.roles || data.user.user_metadata?.roles || [],
-        permissions: profile?.permissions || data.user.user_metadata?.permissions || [],
+        email: data.user.email,
+        name: data.user.name,
+        roles: data.user.roles || [],
       };
 
-      setUser(fallback);
-    }
+      storeAuth({ user: userData, accessToken: data.tokens.accessToken });
+      setUser(userData);
 
-    return { error: null };
+      // Force a window storage event in case other tabs need to sync
+      window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }));
+
+      return { error: null };
+    } catch (error: any) {
+      console.error('[signIn] Caught error:', error);
+      return { error: { message: error.message || 'Login failed' } };
+    }
   };
 
   const signOut = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
+    const stored = getStoredAuth();
+    if (stored?.accessToken) {
+      try {
+        await fetch('/api/auth/route', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${stored.accessToken}`,
+          },
+          credentials: 'include',
+          body: JSON.stringify({ action: 'logout' }),
+        });
+      } catch {
+        // Ignore network errors on logout
+      }
+    }
+    clearStoredAuth();
     setUser(null);
   };
 
-  return {
-    user,
-    loading,
-    isAdmin,
-    signIn,
-    signOut,
-  };
+  return { user, loading, isAdmin, signIn, signOut };
 }

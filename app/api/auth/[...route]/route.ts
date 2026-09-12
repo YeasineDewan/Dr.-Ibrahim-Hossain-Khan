@@ -80,7 +80,7 @@ function createCsrfCookie(token: string): NextResponse {
   response.cookies.set('csrf_token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    sameSite: 'lax',
     maxAge: 60 * 60,
     path: '/',
   });
@@ -221,13 +221,13 @@ export async function POST(request: NextRequest) {
       response.cookies.set('access_token', tokens.accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: 'lax',
         maxAge: 15 * 60,
       });
       response.cookies.set('refresh_token', tokens.refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: 'lax',
         maxAge: rememberMe ? 7 * 24 * 60 * 60 : 24 * 60 * 60,
       });
 
@@ -294,13 +294,13 @@ export async function POST(request: NextRequest) {
       response.cookies.set('access_token', tokens.accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: 'lax',
         maxAge: 15 * 60,
       });
       response.cookies.set('refresh_token', tokens.refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: 'lax',
         maxAge: 7 * 24 * 60 * 60,
       });
       return response;
