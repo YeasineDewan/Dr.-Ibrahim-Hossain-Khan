@@ -1159,7 +1159,9 @@ html[lang='bn'] body {
 }
 .service-detail-hero-media {
   position: relative;
-  min-height: 390px;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  min-height: 420px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.68);
   border-radius: 24px;
@@ -1272,7 +1274,7 @@ html[lang='bn'] body {
   .service-detail-hero { padding: 64px 0 56px; }
   .service-detail-grid { gap: 38px; }
   .service-detail-page .service-detail-art { min-height: 300px; border-radius: 72px 14px 14px 14px; }
-  .service-detail-hero-media { min-height: 300px; border-radius: 18px; }
+  .service-detail-hero-media { min-height: 320px; border-radius: 18px; }
   .service-detail-hero-badge { top: 12px; right: 12px; font-size: 0.68rem; }
   .service-detail-hero-caption { left: 12px; right: 12px; bottom: 12px; }
 }

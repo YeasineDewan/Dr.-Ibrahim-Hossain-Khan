@@ -187,6 +187,7 @@ export const LanguageControl = memo(function LanguageControl({
   );
 });
 
+
 export function InvoiceButton({
   type = 'appointment',
   lang = 'en',
