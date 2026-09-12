@@ -318,6 +318,7 @@ img, svg { max-width: 100%; }
 html {
   background: var(--background);
   scroll-behavior: smooth;
+
 }
 .utility-bar {
   background: #e8f2f1;
@@ -16363,11 +16364,6 @@ h2 em {
 .search-chip {
   min-height: 44px;
   min-width: 44px;
-}
-
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
 }
 
 /* Prevent horizontal scroll on mobile */
