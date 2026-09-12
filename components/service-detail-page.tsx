@@ -526,5 +526,3 @@ export function ServiceDetailPage({
     </main>
   );
 }
-
-
