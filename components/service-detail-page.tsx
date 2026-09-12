@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { ArrowLeft, ArrowRight, CheckCircle2, Clock3, HeartPulse, ShieldCheck, Stethoscope, Activity, Heart, CalendarCheck } from 'lucide-react';
 import { serviceDetailsCopy, useLanguage } from '../lib/translations';
 import { ScrollReveal } from './scroll-reveal';
@@ -22,20 +23,20 @@ const details: Record<
   }
 > = {
   'infertility-care': {
-    title: { en: 'Fertility Care', bn: 'ইনফার্টিলিটি কেয়ার' },
-    label: { en: 'Fertility support', bn: 'ফার্টিলিটি সহায়তা' },
+    title: { en: 'Infertility Care', bn: 'ইনফার্টিলিটি কেয়ার' },
+    label: { en: 'Infertility support', bn: 'ইনফার্টিলিটি সহায়তা' },
     intro: {
-      en: 'A calm, confidential fertility journey with thoughtful assessment, practical guidance, and care designed around both partners.',
-      bn: 'দুই সঙ্গীকে ঘিরে পরিকল্পিত মূল্যায়ন, বাস্তবসম্মত নির্দেশনা এবং যত্নের মাধ্যমে একটি শান্ত ও গোপনীয় ফার্টিলিটি যাত্রা।',
+      en: 'A calm, confidential infertility care journey with thoughtful assessment, practical guidance, and care designed around both partners.',
+      bn: 'দুই সঙ্গীকে ঘিরে পরিকল্পিত মূল্যায়ন, বাস্তবসম্মত নির্দেশনা এবং যত্নের মাধ্যমে একটি শান্ত ও গোপনীয় ইনফার্টিলিটি কেয়ার যাত্রা।',
     },
     points: [
-      { en: 'Private fertility history and lifestyle review', bn: 'ব্যক্তিগত ফার্টিলিটি ইতিহাস ও জীবনযাত্রা পর্যালোচনা' },
-      { en: 'Evidence-informed investigation planning', bn: 'প্রমাণ-ভিত্তিক পরীক্ষা পরিকল্পনা' },
+      { en: 'Private infertility history and lifestyle review', bn: 'ব্যক্তিগত ইনফার্টিলিটি ইতিহাস ও জীবনযাত্রা পর্যালোচনা' },
+      { en: 'Evidence-informed infertility investigation planning', bn: 'প্রমাণ-ভিত্তিক ইনফার্টিলিটি পরীক্ষা পরিকল্পনা' },
       { en: 'Clear next steps for both partners', bn: 'উভয় সঙ্গীর জন্য স্পষ্ট পরবর্তী ধাপ' },
     ],
     treatmentSection: {
       pill: { en: 'Available treatments', bn: 'উপলব্ধ চিকিৎসাসমূহ' },
-      title: { en: 'Fertility care, designed around you', bn: 'আপনার জন্য পরিকল্পিত ফার্টিলিটি যত্ন' },
+      title: { en: 'Infertility care, designed around you', bn: 'আপনার জন্য পরিকল্পিত ইনফার্টিলিটি যত্ন' },
       intro: {
         en: 'We begin by listening and understanding your history, goals and concerns. These services may be combined into a clear, step-by-step plan, with specialist referral arranged when needed.',
         bn: 'আমরা আপনার ইতিহাস, লক্ষ্য ও উদ্বেগ মনোযোগ সহকারে শোনার মাধ্যমে শুরু করি। প্রয়োজনে বিশেষজ্ঞের পরামর্শের ব্যবস্থা করে এই সেবাগুলো একটি স্পষ্ট ও ধাপে ধাপে যত্ন পরিকল্পনায় সাজানো যেতে পারে।',
@@ -161,7 +162,7 @@ const skinHairTreatments = [
     title: { en: 'Acne & Scar Revision', bn: 'অ্যাকন ও দাগ সংশোধন' },
     desc: {
       en: 'Advanced protocols to reduce active breakouts and improve skin texture.',
-      bn: 'সক্রিয় ব্রেকআউট কমাতে এবং ত্বকের টেক্সচার উন্নত করার জন্য উন্নত প্রোটোকল।',
+      bn: 'সক্রিয় ব্রেকআউট কমা��ে এবং ত্বকের টেক্সচার উন্নত করার জন্য উন্নত প্রোটোকল।',
     },
   },
   {
@@ -357,10 +358,10 @@ export function ServiceDetailPage({
   return (
     <main className={`service-detail-page service-detail-${slug === 'skin-hair-care' ? 'skin' : slug === 'infertility-care' ? 'fertility' : 'general'}`} aria-labelledby="service-detail-title">
       <section
-        className="service-detail-hero aurora-bg"
+        className={`service-detail-hero service-detail-hero-${isSkin ? 'skin' : isFertility ? 'infertility' : 'general'} aurora-bg`}
         style={{ position: 'relative', overflow: 'hidden' }}>
-        <div className="blob blob-2" style={{ width: 280, height: 280, top: -60, right: -40 }} />
-        <div className="blob blob-5" style={{ width: 220, height: 220, bottom: -50, left: -30 }} />
+        <div className="service-detail-hero-glow" aria-hidden="true" />
+        <div className="service-detail-hero-grid-lines" aria-hidden="true" />
         <div className="container service-detail-grid">
           <div className="service-detail-copy appear-up">
             <button type="button" className="back-link" onClick={() => onNavigate('Services')} aria-label={c.back}>
@@ -384,16 +385,26 @@ export function ServiceDetailPage({
             </div>
           </div>
           <div className="service-detail-art perspective tilt-3d" style={{ perspective: 1200 }}>
-            <HeartPulse size={42} className="heartbeat" style={{ color: '#fff' }} />
-            <span>{lang === 'bn' ? 'চিন্তাশীল যত্ন' : 'Thoughtful care'}</span>
-            <small>{lang === 'bn' ? 'আপনাকে ঘিরে ডিজাইন করা' : 'Designed around you'}</small>
-            <div
-              className="orbit"
-              style={{ width: 160, height: 160, top: -30, right: -30, position: 'absolute' }}>
-              <span
-                className="orbit-dot"
-                style={{ background: '#fff', boxShadow: '0 0 8px 2px #fff' }}
+            <div className="service-detail-hero-media">
+              <Image
+                src="/all_hero.png"
+                alt={isSkin ? (lang === 'bn' ? 'ত্বক ও চুলের যত্ন' : 'Skin and hair care') : isFertility ? (lang === 'bn' ? 'বন্ধ্যত্ব যত্ন' : 'Infertility care') : (lang === 'bn' ? 'চিন্তাশীল যত্ন' : 'Thoughtful care')}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                style={{ objectFit: 'cover', objectPosition: 'center' }}
+                priority
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAYEBQYFBAYGBwYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaISc9Gh4gJCQnDyMmJiYiJjQkKisgMTM0JiciL/2wBDAQcHBwoIChMKChMoGhYaKtcaM46Pj5mUj5ObmVlZaKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqL/2wBDAQcICAgICAkMCAkMEQwKCgsLCgoP/8AAEQgABgAKAAcAImYnMwEaGBcSEf/EADsQAAIBAwMDAgEFAQEBAQAAABICAwUGBREGEiExBhJBUciM/8QArEQAAgIBAwUGBQEBAAAAAAAAAAECEQMhEjEEBSExIkFRURQiMoEIFEKRobHRCSMzUv/EABkRAQACAuFwYf/aAAwAQEyEVSTdC9h4x/8QALREAAgIBAwUFAQEBAQAAAAAAAAECAwQFBhIxESExQVFh/8QALhEAAgGBBQUBAQEBAAAAAAAAAAAAAAECEQMhEjJBURV/8QAtREAAgICAQUFBQAAAAAAAAAAAAAAAQIDESEEEiExBkFh/9oADAMBAAIRAxEif/AN+g=="
               />
+              <div className="service-detail-hero-media-overlay" aria-hidden="true" />
+              <div className="service-detail-hero-badge">
+                <ShieldCheck size={17} aria-hidden="true" />
+                <span>{lang === 'bn' ? 'ব্যক্তিগত, যত্নশীল চিকিৎসা' : 'Private, thoughtful care'}</span>
+              </div>
+              <div className="service-detail-hero-caption">
+                <span>{isSkin ? 'DERMATOLOGY · TRICHOLOGY' : 'REPRODUCTIVE HEALTH · WELLNESS'}</span>
+                <strong>{lang === 'bn' ? 'আপনার গল্প দিয়ে শুরু' : 'Start with your story'}</strong>
+              </div>
             </div>
           </div>
         </div>
@@ -489,7 +500,7 @@ export function ServiceDetailPage({
           {
             question: lang === 'bn' ? 'চিকিৎসার পার্শ্বপ্রতিক্রিয়া কী?' : 'What are the side effects of this treatment?',
             answer: lang === 'bn'
-              ? 'প্রতিটি চিকিৎসার মৃদু পার্শ্বপ্রতিক্রিয়া থাকতে পারে। ডাঃ ইব্রাহিম সবচেয়ে safer ব্যবস্থা ব্যবহার করেন এবং আপনাকে সম্পূর্ণ তথ্য দেন।'
+              ? 'প্রতিটি চিকিৎসার মৃদু পার্শ্বপ্রতিক্রিয়া থাকতে পারে। ডাঃ ইব্রাহিম সবচেয়ে safer ব���যবস্থা ব্যবহার করেন এবং আপনাকে সম্পূর্ণ তথ্য দেন।'
               : 'Most treatments have minimal side effects. Dr. Ibrahim uses the safest approaches and will fully inform you of any potential effects before treatment.',
           },
           {

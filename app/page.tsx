@@ -393,6 +393,14 @@ const PublicHeader = memo(function PublicHeader({ onNavigate }: { onNavigate: (p
 
           <div className="header-actions">
             <button
+              type="button"
+              className="header-cta press"
+              onClick={() => onNavigate('Appointment')}
+              aria-label={n.bookCta}>
+              <CalendarCheck size={16} />
+              <span>{n.bookCta}</span>
+            </button>
+            <button
               className="icon-btn press"
               aria-label={n.searchAria}
               onClick={handleSearchOpen}>

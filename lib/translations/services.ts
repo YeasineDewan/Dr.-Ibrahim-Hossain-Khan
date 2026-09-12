@@ -70,12 +70,12 @@ export const servicesCopy = {
       },
       infertility: {
         eyebrow: 'SECTION II',
-        title1: 'Fertility Care',
-        titleEm: 'Holistic Fertility Support',
+        title1: 'Infertility Care',
+        titleEm: 'Holistic Infertility Support',
         lead:
-          'Holistic fertility support combining medical evaluation, lifestyle optimization and reproductive wellness planning.',
+          'Holistic infertility care combining medical evaluation, lifestyle optimization and reproductive wellness planning.',
         treatments: [
-          { title: 'Fertility Assessment', body: 'Full evaluation for individuals and couples planning conception.', time: '60 min', price: 'From $150' },
+          { title: 'Infertility Assessment', body: 'Full evaluation for individuals and couples experiencing difficulty conceiving.', time: '60 min', price: 'From $150' },
           { title: 'Hormonal Optimization', body: 'Balancing cycles, thyroid, prolactin and metabolic markers.', time: '45 min', price: 'From $120' },
           { title: 'Lifestyle & Nutrition Plan', body: 'Diet, stress and exercise guidance tailored to reproductive goals.', time: '45 min', price: 'From $95' },
           { title: 'Follow-up & Monitoring', body: 'Ongoing tracking of progress with adjusted treatment plans.', time: '30 min', price: 'From $60' },
@@ -133,7 +133,7 @@ export const servicesCopy = {
       },
       {
         title: 'ইন্টিগ্রেটিভ মেডিসিন',
-        body: 'উপসর্গ, জীবনযাত্রা, প্রতিরোধ ও প্রমাণ-ভিত্তিক চিকিৎসাকে একটি পরিকল্পনায় সংযুক্ত করে ব্যক্তিগতকৃত যত্ন।',
+        body: 'উপসর্গ, জীবনযাত্রা, প্রতিরোধ ও প্রমাণ-ভিত্তিক চিকিৎসাকে একটি পরিকল্প���ায় সংযুক্ত করে ব্যক্তিগতকৃত যত্ন।',
         time: '৬০ মিনিট',
         price: '৳ ১১,০০০ থেকে',
       },
@@ -217,7 +217,7 @@ export const serviceDetailsCopy = {
       'প্রতিটি পরিকল্পনা শুরু হয় শোনার মাধ্যমে। আমরা আপনার অপশনগুলো স্পষ্টভাবে ব্যাখ্যা করি, বাস্তবসম্মত লক্ষ্য নির্ধারণ করি এবং আপনার প্রয়োজন পরিবর্তনের সাথে সাথে সংযুক্ত থাকি।',
     infoHeading: 'আপনার ভিজিটে যা অন্তর্ভুক্ত',
     infoBody:
-      'ব্যক্তিগত কনসালটেশন, স্পষ্ট সুপারিশ, লিখিত পরবর্তী ধাপ এবং আমাদের কেয়ার টিমের ফলো-আপ নির্দেশনা।',
+      'ব্যক্তিগত কনসালটেশন, স্পষ্ট সুপারিশ, লিখিত পরবর্ত�� ধাপ এবং আমাদের কেয়ার টিমের ফলো-আপ নির্দেশনা।',
     infoTime: 'সাধারণত ৩০–৪৫ মিনিট',
     chooseChamber: 'আপনার চেম্বার নির্বাচন করুন',
     bookConsult: 'কনসালটেশন বুক করুন',
