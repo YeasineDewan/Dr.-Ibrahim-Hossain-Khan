@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import {
   ArrowRight,
   Check,
@@ -95,16 +96,13 @@ export function GalleryPage() {
                 boxShadow: '0 12px 32px -12px rgba(15,42,68,0.18)',
               }}
               onClick={() => setLightbox(i)}>
-              <img
+              <Image
                 src={img.src}
-                srcSet={`${img.src} ${img.w}w`}
-                sizes="(max-width: 640px) 48vw, (max-width: 1024px) 33vw, 16vw"
                 width={img.w}
                 height={img.h}
                 alt={img.alt}
                 className="ken-burns"
-                loading="lazy"
-                decoding="async"
+                sizes="(max-width: 480px) 46vw, (max-width: 780px) 48vw, (max-width: 1100px) 31vw, 16vw"
                 style={{ width: '100%', height: 220, objectFit: 'cover', display: 'block' }}
               />
             </div>

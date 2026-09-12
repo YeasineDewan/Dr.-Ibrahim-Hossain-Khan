@@ -223,6 +223,10 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
             setLoginLoading(false);
             if (error) {
               toast.show(error.message || 'Invalid credentials', 'error');
+            } else {
+              setTimeout(() => {
+                toast.show(lang === 'bn' ? 'লগইন সফল!' : 'Login successful!', 'success');
+              }, 100);
             }
           }} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div>
@@ -286,7 +290,10 @@ export function AdminWorkspace({ onExit }: { onExit: () => void }) {
               {loginLoading ? (lang === 'bn' ? 'লগইন হচ্ছে...' : 'Signing in...') : (lang === 'bn' ? 'লগইন করুন' : 'Sign In')}
             </button>
 
-            <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.8rem', color: '#9ca3af' }}>
+            <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.75rem', color: '#9ca3af' }}>
+              {lang === 'bn' ? 'ডেমো: admin@clinic.demo / admin123' : 'Demo: admin@clinic.demo / admin123'}
+            </p>
+            <p style={{ textAlign: 'center', marginTop: '0.5rem', fontSize: '0.8rem', color: '#9ca3af' }}>
               {lang === 'bn' ? 'অ্যাক্সেসের জন্য অনুমোদিত অ্যাডমিনের সাথে যোগাযোগ করুন' : 'Contact an authorized admin for access'}
             </p>
           </form>
