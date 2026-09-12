@@ -98,8 +98,10 @@ export function useAdminAuth(): UseAdminAuthReturn {
       storeAuth({ user: userData, accessToken: data.tokens.accessToken });
       setUser(userData);
 
-      // Force a window storage event in case other tabs need to sync
-      window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }));
+      // Notify any listeners that auth state changed (for cross-tab sync)
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY, bubbles: false, cancelable: false }));
+      }
 
       return { error: null };
     } catch (error: any) {

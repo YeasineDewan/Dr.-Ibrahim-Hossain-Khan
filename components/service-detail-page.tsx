@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { ArrowLeft, ArrowRight, CheckCircle2, Clock3, HeartPulse, ShieldCheck, Stethoscope, Activity, Heart, CalendarCheck } from 'lucide-react';
 import { serviceDetailsCopy, useLanguage } from '../lib/translations';
 import { ScrollReveal } from './scroll-reveal';
@@ -384,15 +385,16 @@ export function ServiceDetailPage({
             </div>
           </div>
           <div className="service-detail-art perspective tilt-3d" style={{ perspective: 1200 }}>
-            <HeartPulse size={42} className="heartbeat" style={{ color: '#fff' }} />
-            <span>{lang === 'bn' ? 'চিন্তাশীল যত্ন' : 'Thoughtful care'}</span>
-            <small>{lang === 'bn' ? 'আপনাকে ঘিরে ডিজাইন করা' : 'Designed around you'}</small>
-            <div
-              className="orbit"
-              style={{ width: 160, height: 160, top: -30, right: -30, position: 'absolute' }}>
-              <span
-                className="orbit-dot"
-                style={{ background: '#fff', boxShadow: '0 0 8px 2px #fff' }}
+            <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: '320px', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}>
+              <Image
+                src="/all_hero.png"
+                alt={lang === 'bn' ? 'চিন্তাশীল যত্ন' : 'Thoughtful care'}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                style={{ objectFit: 'contain', objectPosition: 'center' }}
+                priority
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaISc9Gh4gJCQnDyMmJiYiJjQkKisgMTM0JiciL/2wBDAQcHBwoIChMKChMoGhYaKtcaM46Pj5mUj5ObmVlZaKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqL/2wBDAQcICAgICAkMCAkMEQwKCgsLCgoP/8AAEQgABgAKAAcAImYnMwEaGBcSEf/EADsQAAIBAwMDAgEFAQEBAQAAABICAwUGBREGEiExBhJBUciM/8QArEQAAgIBAwUGBQEBAAAAAAAAAAECEQMhEjEEBSExIkFRURQiMoEIFEKRobHRCSMzUv/EABkRAQACAuFwYf/aAAwAQEyEVSTdC9h4x/8QALREAAgIBAwUFAQEBAQAAAAAAAAECAwQFBhIxESExQVFh/8QALhEAAgGBBQUBAQEBAAAAAAAAAAAAAAECEQMhEjJBURV/8QAtREAAgICAQUFBQAAAAAAAAAAAAAAAQIDESEEEiExBkFh/9oADAMBAAIRAxEif/AN+g=="
               />
             </div>
           </div>
