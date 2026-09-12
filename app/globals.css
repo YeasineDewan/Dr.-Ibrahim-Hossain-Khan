@@ -1159,6 +1159,8 @@ html[lang='bn'] body {
 }
 .service-detail-hero-media {
   position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
   min-height: 390px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.68);

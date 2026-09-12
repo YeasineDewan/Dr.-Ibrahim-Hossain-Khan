@@ -169,7 +169,7 @@ const skinHairTreatments = [
     key: 'psoriasis-management',
     icon: <ShieldCheck size={22} />,
     tag: { en: 'Dermatology', bn: 'চর্মরোগ' },
-    title: { en: 'Psoriasis Management', bn: 'সোরিয়াসিস ম্যানেজমেন্ট' },
+    title: { en: 'Psoriasis Management', bn: 'সোরিয়াসিস ম্যানেজমেন���ট' },
     desc: {
       en: 'Long-term flare control with topical, systemic and phototherapy options.',
       bn: 'টপিকাল, সিস্টেমিক এবং ফটোথেরাপি অপশন সহ দীর্ঘমেয়াদি ফ্লেয়ার কন্ট্রোল।',
@@ -211,7 +211,7 @@ const infertilityTreatments = [
   {
     key: 'male-fertility-evaluation',
     icon: <Stethoscope size={22} />,
-    tag: { en: 'Semen analysis', bn: 'সিমেন বিশ্লেষণ' },
+    tag: { en: 'Semen analysis', bn: '��িমেন বিশ্লেষণ' },
     title: { en: 'Male Fertility Evaluation', bn: 'পুরুষ ফার্টিলিটি মূল্যায়ন' },
     desc: {
       en: 'Evaluation of semen parameters and possible causes of male-factor infertility, including low count, reduced motility, abnormal morphology or azoospermia, with appropriate follow-up or referral.',
@@ -364,7 +364,7 @@ export function ServiceDetailPage({
         <div className="service-detail-hero-grid-lines" aria-hidden="true" />
         <div className="container service-detail-grid">
           <div className="service-detail-copy appear-up">
-            <button type="button" className="back-link" onClick={() => onNavigate('Services')} aria-label={c.back}>
+            <button type="button" className="back-link" onClick={() => onNavigate('Home')} aria-label={c.back}>
               <ArrowLeft size={15} /> {c.back}
             </button>
             <span className="pill pill-teal float-soft">{label}</span>
@@ -387,7 +387,7 @@ export function ServiceDetailPage({
           <div className="service-detail-art perspective tilt-3d" style={{ perspective: 1200 }}>
             <div className="service-detail-hero-media">
               <Image
-                src="/all_hero.png"
+                src="/Hero_img.png"
                 alt={isSkin ? (lang === 'bn' ? 'ত্বক ও চুলের যত্ন' : 'Skin and hair care') : isFertility ? (lang === 'bn' ? 'বন্ধ্যত্ব যত্ন' : 'Infertility care') : (lang === 'bn' ? 'চিন্তাশীল যত্ন' : 'Thoughtful care')}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -494,7 +494,7 @@ export function ServiceDetailPage({
           {
             question: lang === 'bn' ? 'এই চিকিৎসায় কতবার ভিজিট দরকার?' : 'How many visits are needed for this treatment?',
             answer: lang === 'bn'
-              ? 'প্রয়োজনীয় ভিজিটের সংখ্যা আপনার অবস্থার উপর নির্ভর করে। ডাঃ ইব্রাহিম প্রথম কনসালটেশনে একটি ব্যক্তিগত পরিকল্পনা তৈরি করবেন।'
+              ? 'প্রয়োজনীয় ভিজি���ের সংখ্যা আপনার অবস্থার উপর নির্ভর করে। ডাঃ ইব্রাহিম প্রথম কনসালটেশনে একটি ব্যক্তিগত পরিকল্পনা তৈরি করবেন।'
               : 'The number of visits depends on your specific condition. Dr. Ibrahim will create a personalized treatment plan during your initial consultation.',
           },
           {
