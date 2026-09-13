@@ -4,6 +4,7 @@ import './motion.css';
 import { Noto_Sans_Bengali } from 'next/font/google';
 import { LanguageProvider } from '../lib/translations';
 import { AuthProvider } from '../components/auth/AuthProvider';
+import { Analytics } from '@vercel/analytics/react';
 
 const bangla = Noto_Sans_Bengali({ subsets: ['bengali'], variable: '--font-bangla', preload: true, display: 'swap' });
 
@@ -377,6 +378,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             {children}
           </AuthProvider>
         </LanguageProvider>
+        <Analytics />
       </body>
     </html>
   );
