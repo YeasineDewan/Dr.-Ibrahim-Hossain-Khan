@@ -158,7 +158,14 @@ export function GalleryPage() {
                 return (
                   <article className="gallery-video-card" key={`${slide}-${offset}`}>
                     <div className="gallery-video-media">
-                      <img src={item.image || videoImage} alt={item.title} loading="lazy" width="800" height="500" decoding="async" />
+                      <Image
+                        src={item.image || videoImage}
+                        alt={item.title}
+                        width={800}
+                        height={500}
+                        sizes="(max-width: 700px) 100vw, 50vw"
+                        loading="lazy"
+                      />
                       <span className="gallery-video-wash" />
                       <button
                         className="gallery-video-play"
@@ -246,16 +253,14 @@ export function GalleryPage() {
               boxShadow: 'none',
             }}
             onClick={e => e.stopPropagation()}>
-            <img
+            <Image
               src={galleryImages[lightbox].src}
-              srcSet={`${galleryImages[lightbox].src} ${galleryImages[lightbox].w}w`}
-              sizes="900px"
+              sizes="(max-width: 900px) 100vw, 900px"
               width={galleryImages[lightbox].w}
               height={galleryImages[lightbox].h}
               alt={galleryImages[lightbox].alt}
-              loading="eager"
-              decoding="async"
-              style={{ width: '100%', borderRadius: 16 }}
+              priority
+              style={{ width: '100%', height: 'auto', borderRadius: 16 }}
             />
             <button
               className="modal-close"
@@ -298,7 +303,7 @@ export function ChambersPage({ onNavigate }: { onNavigate: (p: string) => void }
                 <div style={{ cursor: 'pointer', width: '100%' }} onClick={() => onNavigate(`Chamber:${slug}`)}>
                   <div className="chamber-card-header">
                     {slug === 'banglamotor' ? (
-                      <img src="/medigo_logo.png" alt={c.place} className="chamber-logo" />
+                          <Image src="/medigo_logo.png" alt={c.place} width={96} height={96} className="chamber-logo" />
                     ) : (
                       <div className="chamber-logo" style={{ display: 'grid', placeItems: 'center', color: '#3b9b91' }}>
                         <MapPin size={96} />
