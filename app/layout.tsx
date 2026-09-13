@@ -4,7 +4,7 @@ import './motion.css';
 import { Noto_Sans_Bengali } from 'next/font/google';
 import { LanguageProvider } from '../lib/translations';
 import { AuthProvider } from '../components/auth/AuthProvider';
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from '@vercel/analytics/next';
 
 const bangla = Noto_Sans_Bengali({ subsets: ['bengali'], variable: '--font-bangla', preload: true, display: 'swap' });
 
