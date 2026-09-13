@@ -90,6 +90,10 @@ const SuccessPage = dynamic(
   { ssr: false, loading: () => <RouteSkeleton /> }
 );
 
+const ServicesPage = dynamic(
+  () => import('../components/expanded-pages').then(m => m.ServicesPage),
+  { ssr: false, loading: () => <RouteSkeleton /> }
+);
 const ContactPage = dynamic(() => import('../components/expanded-pages').then(m => m.ContactPage), {
   ssr: false,
   loading: () => <RouteSkeleton />,
@@ -176,6 +180,7 @@ const prefetchers: Record<string, () => Promise<any>> = {
   Appointment: () => import('../components/page-experiences').then(m => m.AppointmentFlow),
   Checkout: () => import('../components/page-experiences').then(m => m.CheckoutPage),
   Success: () => import('../components/page-experiences').then(m => m.SuccessPage),
+  Services: () => import('../components/expanded-pages').then(m => m.ServicesPage),
   Contact: () => import('../components/expanded-pages').then(m => m.ContactPage),
   Admin: () => import('../components/admin-workspace').then(m => m.AdminWorkspace),
   Patient: () => import('../components/patient-portal').then(m => m.PatientPortal),
@@ -1496,8 +1501,10 @@ export default function Page() {
   const render =
     page === 'Home' ? (
       <Home onNavigate={setPage} />
-    ) : page === 'Gallery' ? (
-      <GalleryPage />
+  ) : page === 'Gallery' ? (
+  <GalleryPage />
+  ) : page === 'Services' ? (
+  <ServicesPage onNavigate={setPage} />
   ) : page.startsWith('Service:') ? (
       <ServiceDetailPage slug={page.slice(8) as keyof typeof serviceDetails} onNavigate={setPage} />
     ) : page === 'Contact' ? (
