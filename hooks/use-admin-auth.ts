@@ -61,14 +61,16 @@ export function useAdminAuth(): UseAdminAuthReturn {
         .select('id, full_name, role')
         .eq('id', authUser.id)
         .maybeSingle();
+      const metadataRole = authUser.user_metadata?.role;
+      const role = profile?.role || metadataRole;
 
       if (!active) return;
-      if (profile?.role === 'admin' || profile?.role === 'doctor') {
+      if (role === 'admin' || role === 'doctor' || role === 'super-admin') {
         setUser({
           id: authUser.id,
           email: authUser.email ?? '',
-          name: profile.full_name || authUser.user_metadata?.name || 'Doctor',
-          roles: [profile.role],
+          name: profile?.full_name || authUser.user_metadata?.name || 'Doctor',
+          roles: [role],
         });
       } else {
         setUser(null);
@@ -87,7 +89,9 @@ export function useAdminAuth(): UseAdminAuthReturn {
     };
   }, []);
 
-  const isAdmin = user?.roles?.includes('admin') || user?.roles?.includes('super-admin') || false;
+  const isAdmin = Boolean(
+    user?.roles?.some(role => ['admin', 'doctor', 'super-admin'].includes(role))
+  );
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -105,9 +109,12 @@ export function useAdminAuth(): UseAdminAuthReturn {
         .select('id, full_name, role')
         .eq('id', data.user.id)
         .maybeSingle();
+      const role = profile?.role || data.user.user_metadata?.role;
 
-      if (profileError) return { error: { message: profileError.message } };
-      if (!profile || !['admin', 'doctor'].includes(profile.role)) {
+      if (profileError && !data.user.user_metadata?.role) {
+        return { error: { message: 'Unable to verify admin access. Please try again.' } };
+      }
+      if (!role || !['admin', 'doctor', 'super-admin'].includes(role)) {
         await supabase.auth.signOut();
         return { error: { message: 'This account does not have doctor admin access.' } };
       }
@@ -115,8 +122,8 @@ export function useAdminAuth(): UseAdminAuthReturn {
       const userData: AdminUser = {
         id: data.user.id,
         email: data.user.email ?? email,
-        name: profile.full_name || data.user.user_metadata?.name || 'Doctor',
-        roles: [profile.role],
+        name: profile?.full_name || data.user.user_metadata?.name || 'Doctor',
+        roles: [role],
       };
       setUser(userData);
       return { error: null };
