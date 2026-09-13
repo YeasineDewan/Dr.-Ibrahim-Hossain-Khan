@@ -40,6 +40,10 @@ const galleryImages = [
   { src: '/gallery/gal6.jpg', alt: 'Clinic hallway and signage', w: 1445, h: 1089 },
   { src: '/gallery/gal7.jpg', alt: 'Patient consultation area', w: 909, h: 1226 },
   { src: '/gallery/gal8.jpg', alt: 'Medical equipment and supplies', w: 1448, h: 1086 },
+  { src: '/gallery/gal9.png', alt: 'Clinic exterior and entrance', w: 2048, h: 1536 },
+  { src: '/gallery/gal10.jpg', alt: 'Clinic waiting area seating', w: 1254, h: 1254 },
+  { src: '/gallery/gal11.jpg', alt: 'Medical consultation room', w: 1217, h: 1293 },
+  { src: '/gallery/gal12.jpg', alt: 'Clinic corridor and patient rooms', w: 1216, h: 1294 },
 ] as const;
 
 export function GalleryPage() {
