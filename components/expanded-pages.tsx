@@ -87,6 +87,31 @@ const testimonials = (lang: 'en' | 'bn') =>
         ],
       ];
 
+const serviceSlugByTitle: Record<string, string> = {
+  'PRP Hair Restoration': 'prp-hair-restore',
+  'PRP চুল পুনরূদ্ধার': 'prp-hair-restore',
+  'Acne & Scar Revision': 'acne-scar-revision',
+  'অ্যাকন ও দাগ সংশোধন': 'acne-scar-revision',
+  'Psoriasis Management': 'psoriasis-management',
+  'সোরিয়াসিস ম্যানেজমেন্ট': 'psoriasis-management',
+  'Hair Loss Evaluation': 'hair-loss-evaluation',
+  'চুলের ঝড় মূল্যায়ন': 'hair-loss-evaluation',
+  'Infertility Assessment': 'comprehensive-fertility-assessment',
+  'প্রজননশীলতা মূল্যায়ন': 'comprehensive-fertility-assessment',
+  'Hormonal Optimization': 'hormonal-metabolic-optimization',
+  'হার্মোন অপ্টিমাইজেশন': 'hormonal-metabolic-optimization',
+  'Lifestyle & Nutrition Plan': 'preconception-lifestyle-monitoring',
+  'জীবনযাত্রা ও পুষ্টি পরিকল্পনা': 'preconception-lifestyle-monitoring',
+  'Follow-up & Monitoring': 'comprehensive-fertility-assessment',
+  'ফলো-আপ ও মনিটরিং': 'comprehensive-fertility-assessment',
+  'Female Fertility Evaluation': 'female-fertility-evaluation',
+  'নারী ফার্টিলিটি মূল্যায়ন': 'female-fertility-evaluation',
+  'Male Fertility Evaluation': 'male-fertility-evaluation',
+  'পুরুষ ফার্টিলিটি মূল্যায়ন': 'male-fertility-evaluation',
+  'PCOS & Ovulation Care': 'pcos-ovulation-care',
+  'PCOS ও ডিম্বক্ষেপ যত্ন': 'pcos-ovulation-care',
+};
+
 const TreatmentCard = memo(function TreatmentCard({
   x,
   i,
@@ -121,7 +146,7 @@ const TreatmentCard = memo(function TreatmentCard({
           <strong>{x.price}</strong>
         </div>
         <button
-          onClick={() => onNavigate('Appointment')}
+          onClick={() => onNavigate(serviceSlugByTitle[x.title] ? `Service:${serviceSlugByTitle[x.title]}` : 'Appointment')}
           className="text-link link-underline pill-arrow">
           {viewService} <ArrowRight size={15} className="float-x" />
         </button>

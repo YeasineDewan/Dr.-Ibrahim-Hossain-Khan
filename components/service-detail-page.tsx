@@ -6,7 +6,25 @@ import { serviceDetailsCopy, useLanguage } from '../lib/translations';
 import { ScrollReveal } from './scroll-reveal';
 import { FaqSection } from './faq-section';
 
-type ServiceKey = 'infertility-care' | 'skin-hair-care' | 'prp' | 'psoriasis' | 'vitiligo' | 'ibs' | 'integrative' | 'preventive';
+type ServiceKey =
+  | 'infertility-care'
+  | 'skin-hair-care'
+  | 'prp'
+  | 'psoriasis'
+  | 'vitiligo'
+  | 'ibs'
+  | 'integrative'
+  | 'preventive'
+  | 'prp-hair-restore'
+  | 'acne-scar-revision'
+  | 'psoriasis-management'
+  | 'hair-loss-evaluation'
+  | 'comprehensive-fertility-assessment'
+  | 'female-fertility-evaluation'
+  | 'male-fertility-evaluation'
+  | 'pcos-ovulation-care'
+  | 'hormonal-metabolic-optimization'
+  | 'preconception-lifestyle-monitoring';
 
 const details: Record<
   ServiceKey,
@@ -140,6 +158,106 @@ const details: Record<
       { en: 'Comprehensive annual review', bn: 'ব্যাপক বার্ষিক পর্যালোচনা' },
       { en: 'Personalised screening guidance', bn: 'ব্যক্তিগত স্ক্রিনিং নির্দেশনা' },
       { en: 'Clear next-step plan', bn: 'স্পষ্ট পরবর্তী ধাপ পরিকল্পনা' },
+    ],
+  },
+  'prp-hair-restore': {
+    title: { en: 'PRP Hair Restoration', bn: 'PRP চুল পুনরুদ্ধার' },
+    label: { en: 'Regenerative hair care', bn: 'রিজেনারেটিভ হেয়ার কেয়ার' },
+    intro: { en: 'A clinician-guided PRP pathway for people seeking a thoughtful, evidence-informed approach to hair density and scalp health.', bn: 'চুলের ঘনত্ব ও স্ক্যাল্পের স্বাস্থ্যের জন্য ক্লিনিশিয়ান-নির্দেশিত, প্রমাণভিত্তিক PRP যত্ন।' },
+    points: [
+      { en: 'Scalp and hair-density assessment', bn: 'স্ক্যাল্প ও চুলের ঘনত্ব মূল্যায়ন' },
+      { en: 'Personalised treatment planning', bn: 'ব্যক্তিগত চিকিৎসা পরিকল্পনা' },
+      { en: 'Structured aftercare and review', bn: 'পরিকল্পিত আফটারকেয়ার ও পর্যালোচনা' },
+    ],
+  },
+  'acne-scar-revision': {
+    title: { en: 'Acne & Scar Revision', bn: 'অ্যাকনে ও দাগ সংশোধন' },
+    label: { en: 'Texture and skin confidence', bn: 'টেক্সচার ও ত্বকের আত্মবিশ্বাস' },
+    intro: { en: 'A measured plan for active acne, post-acne marks, and uneven texture—built around your skin history and comfort.', bn: 'আপনার ত্বকের ইতিহাস ও স্বাচ্ছন্দ্য অনুযায়ী অ্যাকনে, দাগ ও অসম টেক্সচারের জন্য পরিমিত পরিকল্পনা।' },
+    points: [
+      { en: 'Acne pattern and trigger review', bn: 'অ্যাকনের ধরন ও ট্রিগার পর্যালোচনা' },
+      { en: 'Layered scar and texture planning', bn: 'দাগ ও টেক্সচারের ধাপে ধাপে পরিকল্পনা' },
+      { en: 'Gentle progress tracking', bn: 'কোমল অগ্রগতি পর্যবেক্ষণ' },
+    ],
+  },
+  'psoriasis-management': {
+    title: { en: 'Psoriasis Management', bn: 'সোরিয়াসিস ম্যানেজমেন্ট' },
+    label: { en: 'Long-term dermatology care', bn: 'দীর্ঘমেয়াদি চর্মরোগ যত্ন' },
+    intro: { en: 'Ongoing support to understand flare patterns, reduce discomfort, and build a sustainable psoriasis care routine.', bn: 'ফ্লেয়ারের ধরন বোঝা, অস্বস্তি কমানো ও টেকসই সোরিয়াসিস যত্নের রুটিন তৈরির সহায়তা।' },
+    points: [
+      { en: 'Flare and symptom mapping', bn: 'ফ্লেয়ার ও উপসর্গ ম্যাপিং' },
+      { en: 'Treatment and lifestyle guidance', bn: 'চিকিৎসা ও জীবনযাত্রার নির্দেশনা' },
+      { en: 'Regular review of response', bn: 'চিকিৎসার প্রতিক্রিয়ার নিয়মিত পর্যালোচনা' },
+    ],
+  },
+  'hair-loss-evaluation': {
+    title: { en: 'Hair Loss Evaluation', bn: 'চুল পড়ার মূল্যায়ন' },
+    label: { en: 'Scalp and hair assessment', bn: 'স্ক্যাল্প ও চুলের মূল্যায়ন' },
+    intro: { en: 'A systematic review of pattern, timing, nutrition, hormones, scalp health, and family history behind hair loss.', bn: 'চুল পড়ার ধরন, সময়, পুষ্টি, হরমোন, স্ক্যাল্পের স্বাস্থ্য ও পারিবারিক ইতিহাসের পদ্ধতিগত মূল্যায়ন।' },
+    points: [
+      { en: 'Detailed history and scalp review', bn: 'বিস্তারিত ইতিহাস ও স্ক্যাল্প পর্যালোচনা' },
+      { en: 'Targeted investigation planning', bn: 'নির্দিষ্ট পরীক্ষা পরিকল্পনা' },
+      { en: 'Clear options for next steps', bn: 'পরবর্তী ধাপের স্পষ্ট অপশন' },
+    ],
+  },
+  'comprehensive-fertility-assessment': {
+    title: { en: 'Comprehensive Fertility Assessment', bn: 'সম্পূর্ণ ফার্টিলিটি মূল্যায়ন' },
+    label: { en: 'A shared starting point', bn: 'একসাথে শুরু করার ধাপ' },
+    intro: { en: 'A confidential assessment for individuals or couples, bringing reproductive history, health, lifestyle, and next steps into one clear plan.', bn: 'ব্যক্তি বা দম্পতির প্রজনন ইতিহাস, স্বাস্থ্য ও জীবনযাত্রাকে একটি স্পষ্ট পরিকল্পনায় যুক্ত করা গোপনীয় মূল্যায়ন।' },
+    points: [
+      { en: 'Couple-centred history review', bn: 'দম্পতি-কেন্দ্রিক ইতিহাস পর্যালোচনা' },
+      { en: 'Investigation plan without guesswork', bn: 'অনুমান নয়, পরিকল্পিত পরীক্ষা' },
+      { en: 'Coordinated referral when needed', bn: 'প্রয়োজনে সমন্বিত রেফারেল' },
+    ],
+  },
+  'female-fertility-evaluation': {
+    title: { en: 'Female Fertility Evaluation', bn: 'নারী ফার্টিলিটি মূল্যায়ন' },
+    label: { en: 'Ovulation and reproductive health', bn: 'ডিম্বক্ষেপ ও প্রজনন স্বাস্থ্য' },
+    intro: { en: 'A calm evaluation of cycles, ovulation, hormones, pelvic health, and the factors that may influence conception.', bn: 'মাসিক চক্র, ডিম্বক্ষেপ, হরমোন, পেলভিক স্বাস্থ্য ও গর্ভধারণে প্রভাব ফেলতে পারে এমন কারণের শান্ত মূল্যায়ন।' },
+    points: [
+      { en: 'Cycle and ovulation review', bn: 'চক্র ও ডিম্বক্ষেপ পর্যালোচনা' },
+      { en: 'Hormonal and metabolic context', bn: 'হরমোনাল ও বিপাকীয় প্রেক্ষাপট' },
+      { en: 'Clear, respectful explanations', bn: 'স্পষ্ট ও সম্মানজনক ব্যাখ্যা' },
+    ],
+  },
+  'male-fertility-evaluation': {
+    title: { en: 'Male Fertility Evaluation', bn: 'পুরুষ ফার্টিলিটি মূল্যায়ন' },
+    label: { en: 'Male-factor fertility care', bn: 'পুরুষ-কারণীয় ফার্টিলিটি যত্ন' },
+    intro: { en: 'A confidential assessment of semen health, medical history, lifestyle, and possible male-factor contributors to infertility.', bn: 'সিমেন স্বাস্থ্য, চিকিৎসা ইতিহাস, জীবনযাত্রা ও পুরুষ-কারণীয় বন্ধ্যাত্বের সম্ভাব্য কারণের গোপনীয় মূল্যায়ন।' },
+    points: [
+      { en: 'Semen analysis interpretation', bn: 'সিমেন বিশ্লেষণের ব্যাখ্যা' },
+      { en: 'Lifestyle and medical risk review', bn: 'জীবনযাত্রা ও চিকিৎসা ঝুঁকি পর্যালোচনা' },
+      { en: 'Follow-up or referral pathway', bn: 'ফলো-আপ বা রেফারেল পথ' },
+    ],
+  },
+  'pcos-ovulation-care': {
+    title: { en: 'PCOS & Ovulation Care', bn: 'PCOS ও ডিম্বক্ষেপ যত্ন' },
+    label: { en: 'Cycle support', bn: 'চক্রের সহায়তা' },
+    intro: { en: 'Structured support for PCOS, irregular cycles, ovulation concerns, and the practical habits that support reproductive health.', bn: 'PCOS, অনিয়মিত চক্র, ডিম্বক্ষেপের সমস্যা ও প্রজনন স্বাস্থ্য সহায়ক বাস্তব অভ্যাসের পরিকল্পিত যত্ন।' },
+    points: [
+      { en: 'Cycle and symptom tracking', bn: 'চক্র ও উপসর্গ ট্র্যাকিং' },
+      { en: 'Lifestyle-led clinical guidance', bn: 'জীবনযাত্রা-ভিত্তিক ক্লিনিক্যাল নির্দেশনা' },
+      { en: 'Monitored progress over time', bn: 'সময়ের সাথে অগ্রগতি পর্যবেক্ষণ' },
+    ],
+  },
+  'hormonal-metabolic-optimization': {
+    title: { en: 'Hormonal & Metabolic Optimization', bn: 'হরমোনাল ও বিপাকীয় ভারসাম্য' },
+    label: { en: 'Whole-person reproductive care', bn: 'সামগ্রিক প্রজনন যত্ন' },
+    intro: { en: 'A connected review of thyroid, prolactin, insulin resistance, weight, sleep, and other factors influencing reproductive wellbeing.', bn: 'থাইরয়েড, প্রোল্যাক্টিন, ইনসুলিন রেজিস্ট্যান্স, ওজন, ঘুম ও প্রজনন স্বাস্থ্যের অন্যান্য কারণের সমন্বিত পর্যালোচনা।' },
+    points: [
+      { en: 'Targeted hormonal review', bn: 'নির্দিষ্ট হরমোনাল পর্যালোচনা' },
+      { en: 'Metabolic health guidance', bn: 'বিপাকীয় স্বাস্থ্য নির্দেশনা' },
+      { en: 'Prioritised, practical next steps', bn: 'অগ্রাধিকারভিত্তিক বাস্তব পরবর্তী ধাপ' },
+    ],
+  },
+  'preconception-lifestyle-monitoring': {
+    title: { en: 'Preconception Lifestyle & Monitoring', bn: 'প্রি-কনসেপশন জীবনযাত্রা ও পর্যবেক্ষণ' },
+    label: { en: 'Prepare with confidence', bn: 'আত্মবিশ্বাসের সাথে প্রস্তুতি' },
+    intro: { en: 'A practical preconception plan for nutrition, supplements, sleep, stress, exercise, and regular monitoring before pregnancy.', bn: 'গর্ভধারণের আগে পুষ্টি, সাপ্লিমেন্ট, ঘুম, মানসিক চাপ, ব্যায়াম ও নিয়মিত পর্যবেক্ষণের বাস্তব পরিকল্পনা।' },
+    points: [
+      { en: 'Personalised lifestyle priorities', bn: 'ব্যক্তিগত জীবনযাত্রার অগ্রাধিকার' },
+      { en: 'Supplement and screening guidance', bn: 'সাপ্লিমেন্ট ও স্ক্রিনিং নির্দেশনা' },
+      { en: 'Regular check-ins and adjustment', bn: 'নিয়মিত চেক-ইন ও সমন্বয়' },
     ],
   },
 };
@@ -295,7 +413,7 @@ export function ServiceDetailPage({
               type="button"
               key={t.key}
               className="service-card"
-              onClick={() => onNavigate('Appointment')}
+              onClick={() => onNavigate(`Service:${t.key}`)}
               aria-label={`${t.title[lang]} — ${t.tag[lang]}`}>
               <div className="service-icon" aria-hidden="true">{t.icon}</div>
               <span className="service-tag">{t.tag[lang]}</span>
@@ -336,7 +454,7 @@ export function ServiceDetailPage({
               type="button"
               key={t.key}
               className={`service-treatment-card${isTreatmentShowcase && index === 0 ? ' service-treatment-card-featured' : ''}`}
-              onClick={() => onNavigate('Appointment')}
+              onClick={() => onNavigate(`Service:${t.key}`)}
               aria-label={`${t.title[lang]} — ${t.tag[lang]}`}>
               <span className="service-treatment-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
               <span className="service-treatment-icon" aria-hidden="true">{t.icon}</span>
@@ -468,7 +586,7 @@ export function ServiceDetailPage({
           </div>
         </div>
       </ScrollReveal>
-      {!isSkin && !isFertility && treatmentSectionMarkup}
+      {!isSkin && !isFertility && treatments.length > 0 && treatmentSectionMarkup}
       <ScrollReveal className="cta-section" variant="scale">
         <div className="container cta-inner">
           <div>
@@ -494,7 +612,7 @@ export function ServiceDetailPage({
           {
             question: lang === 'bn' ? 'এই চিকিৎসায় কতবার ভিজিট দরকার?' : 'How many visits are needed for this treatment?',
             answer: lang === 'bn'
-              ? 'প্রয়োজনীয় ভিজি���ের সংখ্যা আপনার অবস্থার উপর নির্ভর করে। ডাঃ ইব্রাহিম প্রথম কনসালটেশনে একটি ব্যক্তিগত পরিকল্পনা তৈরি করবেন।'
+              ? 'প্রয়োজনীয় ভি��ি���ের সংখ্যা আপনার অবস্থার উপর নির্ভর করে। ডাঃ ইব্রাহিম প্রথম কনসালটেশনে একটি ব্যক্তিগত পরিকল্পনা তৈরি করবেন।'
               : 'The number of visits depends on your specific condition. Dr. Ibrahim will create a personalized treatment plan during your initial consultation.',
           },
           {
