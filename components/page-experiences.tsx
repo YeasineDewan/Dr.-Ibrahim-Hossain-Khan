@@ -617,6 +617,33 @@ export function AppointmentFlow({ onNavigate }: { onNavigate: (p: string) => voi
             )}
           </div>
         </div>
+
+        <div className="appointment-direct-contact" aria-label={lang === 'bn' ? 'সরাসরি অ্যাপয়েন্টমেন্ট যোগাযোগ' : 'Direct appointment contact'}>
+          <div className="appointment-direct-icons">
+            <a
+              className="appointment-direct-icon appointment-direct-icon-phone"
+              href="tel:+8801719939553"
+              aria-label={lang === 'bn' ? 'ফোনে অ্যাপয়েন্টমেন্ট করুন' : 'Book an appointment by phone'}>
+              <Image src="/icon/telephone.png" alt="" width={72} height={72} />
+            </a>
+            <a
+              className="appointment-direct-icon appointment-direct-icon-whatsapp"
+              href="https://wa.me/8801719939553?text=I%20would%20like%20to%20book%20an%20appointment"
+              target="_blank"
+              rel="noreferrer"
+              aria-label={lang === 'bn' ? 'হোয়াটসঅ্যাপে অ্যাপয়েন্টমেন্ট করুন' : 'Book an appointment on WhatsApp'}>
+              <Image src="/icon/whatsapp.png" alt="" width={72} height={72} />
+            </a>
+            <a
+              className="appointment-direct-icon appointment-direct-icon-messenger"
+              href="https://m.me/DrIbrahimHossainKhan"
+              target="_blank"
+              rel="noreferrer"
+              aria-label={lang === 'bn' ? 'মেসেঞ্জারে অ্যাপয়েন্টমেন্ট করুন' : 'Book an appointment on Messenger'}>
+              <Image src="/icon/messenger.png" alt="" width={72} height={72} />
+            </a>
+          </div>
+        </div>
       </div>
     </main>
   );
