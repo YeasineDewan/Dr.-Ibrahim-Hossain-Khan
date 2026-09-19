@@ -30,6 +30,7 @@ import { useAdminData } from '../lib/admin-data-supabase';
 import { TODAY, youtubeEmbedUrl } from '../lib/utils';
 import { ScrollReveal } from './scroll-reveal';
 import { Tilt3D, Magnetic, Particles } from './motion-3d';
+import { ContactSection } from './contact-section';
 
 const galleryImages = [
   { src: '/gallery/gal1.jpg', alt: 'Clinic reception and waiting area', w: 1445, h: 1088 },
@@ -618,6 +619,7 @@ export function AppointmentFlow({ onNavigate }: { onNavigate: (p: string) => voi
           </div>
         </div>
       </div>
+      <ContactSection />
     </main>
   );
 }
