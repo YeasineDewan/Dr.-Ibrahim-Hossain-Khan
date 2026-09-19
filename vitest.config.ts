@@ -6,6 +6,6 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./lib/test-setup.ts'],
     include: ['**/*.{test,spec}.{ts,tsx}'],
-    exclude: ['node_modules', '.next', 'dist'],
+    exclude: ['node_modules', '.next', '.kilo/worktrees', 'dist'],
   },
 });
