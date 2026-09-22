@@ -46,7 +46,7 @@ export const navCopy = {
     contactHeading: 'Contact',
     helpLink: 'Help & contact',
     patientPortalLink: 'Patient portal',
-    clinicAddress: 'House 45, Road 22, Dhanmondi, Dhaka 1209, Bangladesh',
+    clinicAddress: 'Rupayan Trade Center, 3rd Floor, 114 Kazi Nazrul Islam Ave, Dhaka 1100',
     clinicHours: 'Mon–Fri · 08:00–17:00',
     clinicPhone: '+880 1719-939553',
     clinicEmail: 'hello@dribrahim.clinic',
