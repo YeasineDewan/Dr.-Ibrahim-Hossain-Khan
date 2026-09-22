@@ -1,0 +1,234 @@
+'use client';
+
+import { useEffect } from 'react';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'MedicalBusiness',
+      '@id': 'https://dribrahimhossain.com/#organization',
+      name: 'Dr. Ibrahim Hossain',
+      description: 'Skin, Venereal disease & Integrative Medicine Specialist.',
+      url: 'https://dribrahimhossain.com',
+      telephone: '+8801719395553',
+      email: 'hello@dribrahim.clinic',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'House 45, Road 22, Dhanmondi',
+        addressLocality: 'Dhaka',
+        addressRegion: 'Dhaka Division',
+        postalCode: '1209',
+        addressCountry: 'BD',
+      },
+      openingHoursSpecification: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '08:00',
+        closes: '17:00',
+      },
+      image: '/logo-256.png',
+      alt: 'Dr. Ibrahim Hossain',
+      sameAs: [
+        'https://www.facebook.com/dribrahimhossainkhan/',
+        'https://www.instagram.com/dribrahimhossain',
+        'https://www.youtube.com/@dr.ibrahimhossain',
+      ],
+      physician: {
+        '@type': 'Physician',
+        name: 'Dr. Ibrahim Hossain',
+        credential: 'M.Sc \u00b7 Skin & VD Integrative Medicine Consultant',
+        specialty: 'Dermatology and Integrative Medicine',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'House 45, Road 22, Dhanmondi',
+          addressLocality: 'Dhaka',
+          addressRegion: 'Dhaka Division',
+          postalCode: '1209',
+          addressCountry: 'BD',
+        },
+        telephone: '+8801719395553',
+      },
+      priceRange: '\u09f3\u09f3',
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.9',
+        reviewCount: '2000',
+        bestRating: '5',
+        worstRating: '1',
+      },
+      areaServed: [
+        {
+          '@type': 'City',
+          name: 'Dhaka',
+        },
+      ],
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Dermatology Services',
+        itemListElement: [
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'PRP Therapy',
+              description: 'Platelet-rich plasma therapy for hair restoration and skin rejuvenation',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Psoriasis Treatment',
+              description: 'Long-term psoriasis management and flare control',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Vitiligo Treatment',
+              description: 'Personalized vitiligo care and pigmentation therapy',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'IBS & Gut Health',
+              description: 'Integrative gut health management and digestive wellness',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Integrative Medicine',
+              description: 'Whole-person care combining conventional and evidence-based complementary therapies',
+            },
+          },
+        ],
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://dribrahimhossain.com/#breadcrumb',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://dribrahimhossain.com',
+        },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://dribrahimhossain.com/#faq',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: "Where is Dr. Ibrahim Hossain's clinic located in Bangladesh?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Dr. Ibrahim Hossain's clinic is located at House 45, Road 22, Dhanmondi, Dhaka 1209, Bangladesh. Additional chambers are available at Banglamotor and Uttara in Dhaka.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What skin conditions does Dr. Ibrahim Hossain treat?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Dr. Ibrahim Hossain specializes in treating psoriasis, vitiligo, acne, hair loss, scalp disorders, pigmentation issues, and other skin conditions. He also provides veneral medicine and integrative medicine services.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Does Dr. Ibrahim offer PRP therapy in Dhaka?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes, Dr. Ibrahim Hossain offers platelet-rich plasma (PRP) therapy for hair restoration and skin rejuvenation at his Dhaka clinic. He is a qualified trichologist and dermatologist providing evidence-led regenerative treatments.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How can I book an appointment with Dr. Ibrahim Hossain?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'You can book an appointment online through our website, call us at +880 1719-939553, or visit our Dhanmondi clinic during operating hours (Mon-Fri 8:00 AM - 5:00 PM).',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is integrative medicine and does Dr. Ibrahim provide it?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Integrative medicine combines conventional medical treatments with evidence-based complementary therapies. Dr. Ibrahim creates personalized care plans that connect symptoms, lifestyle, prevention and treatment for whole-person wellness in Dhaka, Bangladesh.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Does Dr. Ibrahim treat IBS and gut health issues?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes, Dr. Ibrahim Hossain provides comprehensive IBS and gut health management with lifestyle mapping, nutrition-aware guidance and measured follow-up milestones as part of his integrative medicine services in Dhaka.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What are the consultation fees for dermatology in Dhaka?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Consultation fees vary by service. PRP therapy starts from \u09f312,000, psoriasis treatment from \u09f38,500, and preventive wellness from \u09f37,500. Contact the clinic directly for exact pricing and package details.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How many sessions of PRP therapy are needed for hair restoration?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Most patients require 4-6 PRP sessions spaced 4-6 weeks apart for optimal hair restoration results. Dr. Ibrahim will create a personalized treatment plan during your consultation based on your specific needs.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Can psoriasis be completely cured?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'While psoriasis is a chronic condition, it can be effectively managed with evidence-based treatments. Dr. Ibrahim provides long-term flare control plans including topical treatments, systemic therapies and lifestyle modifications to help you achieve clear skin.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Is vitiligo treatment available in Dhaka?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes, Dr. Ibrahim Hossain provides compassionate vitiligo care at his Dhaka clinic. Treatment includes detailed skin assessment, personalized care planning, and integrative approaches to support repigmentation and skin health confidence.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What payment methods are accepted at the clinic?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'We accept Visa, MasterCard, bKash and Nagad. Payment can be made at the clinic during your visit. For specific insurance or payment plan inquiries, please contact our clinic directly.',
+          },
+        },
+      ],
+    },
+  ],
+};
+
+export function JsonLd() {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify(jsonLd);
+    document.head.appendChild(script);
+    return () => {
+      script.remove();
+    };
+  }, []);
+
+  return null;
+}
