@@ -255,7 +255,7 @@ export const navCopy = {
     contactHeading: 'যোগাযোগ',
     helpLink: 'সাহায্য ও যোগাযোগ',
     patientPortalLink: 'রোগী পোর্টাল',
-    clinicAddress: 'বাড়ি ৪৫, রোড ২২, ধানমন্ডি, ঢাকা ১২০৯, বাংলাদেশ',
+    clinicAddress: 'রূপায়ণ ট্রেড সেন্টার, ৩য় তলা, ১১৪ কাজী নজরুল ইসলাম এভিনিউ, ঢাকা-১১০০',
     clinicHours: 'সোম–শুক্র · সকাল ৮:০০–বিকাল ৫:০০',
     clinicPhone: '+৮৮০ ১৭১৯ ৩৯৫ ৫৫৩',
     clinicEmail: 'hello@dribrahim.clinic',
