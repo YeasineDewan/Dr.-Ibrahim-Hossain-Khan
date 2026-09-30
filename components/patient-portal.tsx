@@ -140,7 +140,7 @@ export function PatientPortal({ onExit }: { onExit: () => void }) {
         <div className="patient-welcome lift">
           <Avatar name={me.name} size={42} />
           <div style={{ flex: 1, minWidth: 0 }}>
-            <strong>{lang === 'bn' ? 'আমারা মেনসাহ' : me.name}</strong>
+            <strong>{lang === 'bn' ? 'আমারা মেনসাহ' : me.name}</strong>  
             <small>{p.welcome}</small>
           </div>
           <span className="patient-online" title={p.welcome} />
