@@ -33,7 +33,6 @@ import {
   MessageCircle,
   Send,
   ExternalLink,
-  Gamepad2,
   PlaySquare,
   Quote,
 } from 'lucide-react';
@@ -1015,7 +1014,7 @@ function Home({ onNavigate }: { onNavigate: (p: string) => void }) {
             <ScrollReveal className="banner-media" delay={150}>
               <img
                 src="/visiting_card.jpg"
-                alt={lang === 'bn' ? 'ডাক্টর ইব্রাহিমের ভিসিটিং কার্ড' : "Dr. Ibrahim's visiting card"}
+                alt={lang === 'bn' ? 'ডাক্টর ইব্রাহিমের ভ���সিটিং কার্ড' : "Dr. Ibrahim's visiting card"}
                 className="banner-image"
                 loading="lazy"
                 decoding="async"
@@ -1639,14 +1638,6 @@ export default function Page() {
           </button>
           <button className="patient-launch" onClick={() => setPage('Patient')}>
             <UserRound size={15} /> {n.patientPreview}
-          </button>
-          <button
-            className="patient-launch"
-            onClick={() => {
-              window.open('/game-tictactoe.html', '_blank', 'noopener,noreferrer');
-            }}
-          >
-            <Gamepad2 size={15} /> Tic Tac Toe
           </button>
         </>
       )}

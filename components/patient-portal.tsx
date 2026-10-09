@@ -118,8 +118,24 @@ export function PatientPortal({ onExit }: { onExit: () => void }) {
           : p.greetEvening || p.goodMorning;
     setGreet(base as string);
   }, [lang, p.greetMorning, p.greetAfternoon, p.greetEvening, p.goodMorning]);
-  const me = data.patients[0];
-  const firstName = me.name.split(' ')[0];
+  const me = data.patients?.[0] ?? {
+    id: 'guest-patient',
+    name: lang === 'bn' ? 'আমারা মেনসাহ' : 'Amara Mensah',
+    dob: '',
+    gender: 'Other' as const,
+    phone: '',
+    email: '',
+    address: '',
+    bloodGroup: '',
+    allergies: [],
+    conditions: [],
+    medications: [],
+    visits: [],
+    notes: [],
+    documents: [],
+    vitals: { bp: '—', hr: '—', temp: '—', weight: '—', date: '' },
+  };
+  const firstName = (me.name || 'Patient').trim().split(/\s+/)[0] || 'Patient';
   return (
     <div className="patient-app">
       <aside className={menu ? 'patient-side is-open' : 'patient-side'}>
